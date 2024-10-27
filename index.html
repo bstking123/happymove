@@ -279,21 +279,32 @@
     const today = new Date();
     dateInput.min = today.toISOString().split('T')[0];
     
+    // 모바일에서 달력 터치 시
+    dateInput.addEventListener('touchstart', function(e) {
+        if (!this.dataset.clicked) {
+            alert('화요일과 토요일만 선택 가능합니다.');
+            this.dataset.clicked = 'true';
+        }
+    });
+    
+    // PC에서 달력 클릭 시
+    dateInput.addEventListener('click', function(e) {
+        if (!this.dataset.mobile && !this.dataset.clicked) {
+            alert('화요일과 토요일만 선택 가능합니다.');
+            this.dataset.clicked = 'true';
+        }
+    });
+    
+    // 날짜 선택 시 유효성 검사
     dateInput.addEventListener('change', function(e) {
         const selected = new Date(this.value);
         const day = selected.getDay();
         
-        // 화요일(2)과 토요일(6)이 아닌 경우
         if (day !== 2 && day !== 6) {
             alert('화요일과 토요일만 선택 가능합니다.');
             this.value = ''; // 선택 초기화
         }
     });
-
-    // 모바일에서 달력 열기 전에 안내 메시지
-    dateInput.addEventListener('click', function(e) {
-        alert('화요일과 토요일만 선택 가능합니다.');
-    }, { once: true }); // 한 번만 실행
 }
         window.onload = function() {
             setupDatePicker();
