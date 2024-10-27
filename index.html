@@ -86,12 +86,153 @@
             transform: translateY(-2px);
         }
 
-        #priceDisplay {
-            text-align: center;
-            font-size: 1.5em;
-            margin: 20px 0;
-            color: var(--accent);
+        .view-terms {
+            margin-left: 10px;
+            padding: 3px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
             font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-text {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .notice {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--button);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .terms-section {
+            margin-bottom: 20px;
+        }
+
+        .terms-section h3 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .terms-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .terms-section li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .terms-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .terms-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .terms-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .terms-item label {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .account-info {
+            margin: 15px 0 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .copy-account {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .account-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--button);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .copy-btn:active {
+            background-color: #e67e3b;
         }
 
         @media screen and (max-width: 768px) {
@@ -122,6 +263,16 @@
 
             label {
                 font-size: 15px;
+            }
+
+            .account-number {
+                font-size: 1em;
+            }
+
+            .modal-content {
+                margin: 20% auto;
+                width: 90%;
+                padding: 15px;
             }
         }
     </style>
@@ -181,7 +332,7 @@
             <option value="2">2마리</option>
             <option value="3">3마리</option>
             <option value="4">4마리</option>
-            <option value="5">5마리 이상</option>
+            <option value="5">5마리</option>
         </select>
 
         <label for="sendDate">보내는 날짜: </label>
@@ -189,20 +340,107 @@
             <option value="">선택하세요</option>
         </select>
 
-        <label for="senderName">보내는 분 이름: </label>
-        <input type="text" id="senderName" name="senderName" required>
+        <label for="senderName">보내는 분 성함: </label>
+        <input type="text" id="senderName" required>
 
         <label for="senderPhone">보내는 분 연락처: </label>
-        <input type="tel" id="senderPhone" name="senderPhone" placeholder="010-0000-0000" required>
+        <input type="tel" id="senderPhone" required>
 
-        <label for="receiverName">받는 분 이름: </label>
-        <input type="text" id="receiverName" name="receiverName" required>
+        <label for="receiverName">받는 분 성함: </label>
+        <input type="text" id="receiverName" required>
 
         <label for="receiverPhone">받는 분 연락처: </label>
-        <input type="tel" id="receiverPhone" name="receiverPhone" placeholder="010-0000-0000" required>
+        <input type="tel" id="receiverPhone" required>
 
-        <h2 id="priceDisplay">총 금액: 0원</h2>
+        <h2 id="priceDisplay">동행요금: 0원</h2>
+        <div class="account-info">
+            <p>무통장 입금 계좌:</p>
+            <div class="copy-account">
+                <div class="account-number">
+                    <span>토스뱅크</span>
+                    <span id="accountNumber">1000-1290-8652</span>
+                    <span>김보성</span>
+                </div>
+                <button onclick="copyAccount()" class="copy-btn">복사하기</button>
+            </div>
+        </div>
+
+        <div class="terms-container">
+            <div class="terms-item">
+                <input type="checkbox" id="privacyCheck" required>
+                <label for="privacyCheck">개인정보 수집 및 이용동의 (필수)</label>
+                <button type="button" class="view-terms" onclick="openPrivacyModal()">보기</button>
+            </div>
+            <div class="terms-item">
+                <input type="checkbox" id="termsCheck" required>
+                <label for="termsCheck">이용약관 동의 (필수)</label>
+                <button type="button" class="view-terms" onclick="openTermsModal()">보기</button>
+            </div>
+        </div>
+
         <button type="button" onclick="sendToGoogleSheets()">확인</button>
+    </div>
+        <!-- 개인정보 이용동의 모달 -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePrivacyModal()">&times;</span>
+            <h2>개인정보 수집과 이용에 대한 동의</h2>
+            <div class="modal-text">
+                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다. 아래 보기에서 동의 여부를 선택해 주세요.</p>
+                <p><strong>수집하는 자:</strong> 동행</p>
+                <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
+                <p><strong>수집하는 개인정보 항목:</strong> 보내는분 이름, 보내는분연락처, 받는분 이름, 받는분 연락처</p>
+                <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
+                <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 설문 보상 참여에서 제외됨을 알려드립니다.</p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closePrivacyModal()">닫기</button>
+        </div>
+    </div>
+
+    <!-- 이용약관 모달 -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTermsModal()">&times;</span>
+            <h2>서비스 이용 약관 - 책임 및 보상 관련 규정</h2>
+            <div class="modal-text">
+                <div class="terms-section">
+                    <h3>1. 보상 기준</h3>
+                    <p>서비스 과정에서 회사의 고의적 과실 또는 중대한 부주의(예: 온도 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 해당 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 건당 최대 200만 원을 초과하지 않습니다.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h3>2. 보상 예외 항목</h3>
+                    <p>위 보상 규정에도 불구하고, 아래 상황에 해당하는 경우에는 보상이 제한됩니다:</p>
+                </div>
+
+                <div class="terms-section">
+                    <h3>3. 보상 제외 사항</h3>
+                    <ul>
+                        <li>무게가 5g 미만인 개체에 발생한 문제</li>
+                        <li>돌연사로 인한 피해</li>
+                        <li>개체의 꼬리 손상</li>
+                        <li>회사가 안내한 일정을 사용자가 준수하지 않아 발생한 문제</li>
+                        <li>환기구 이상이 있거나 뚜껑에 테이핑이 누락된 용기에 담긴 개체에서 발생한 문제</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h3>4. 출발 전 및 도착 후의 책임</h3>
+                    <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대해 책임을 지며, 인도 및 수령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h3>5. 건강 이상 개체 운송 제한</h3>
+                    <p>픽업 시점에 건강에 이상이 있는 것으로 보이는 개체는 운송 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h3>6. 동행지 보관 요금 관련 안내</h3>
+                    <p>회사가 안내한 일정을 준수하지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeTermsModal()">닫기</button>
+        </div>
     </div>
 
     <script>
@@ -213,12 +451,10 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
-            // 제주도 여부 확인 함수
             function isJejuInvolved() {
                 return option1.value === "17" || option2.value === "17";
             }
             
-            // 날짜 옵션 업데이트
             function updateDateOptions() {
                 dateSelect.innerHTML = '<option value="">선택하세요</option>';
                 
@@ -226,14 +462,11 @@
                     const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
                     const day = date.getDay();
                     
-                    // 제주도 관련 배송인 경우 격주 토요일만 표시
                     if(isJejuInvolved()) {
-                        // 첫 번째 토요일부터 2주 간격으로 체크
                         if(day === 6 && (Math.floor((date - today) / (14 * 24 * 60 * 60 * 1000)) === 0)) {
                             addDateOption(date);
                         }
                     } else {
-                        // 일반 배송은 모든 화/토요일 표시
                         if(day === 2 || day === 6) {
                             addDateOption(date);
                         }
@@ -241,35 +474,30 @@
                 }
             }
             
-            // 날짜 옵션 추가 함수
             function addDateOption(date) {
-                const month = date.getMonth() + 1;
-                const dayOfMonth = date.getDate();
-                const dayName = date.getDay() === 2 ? '화' : '토';
-                
                 const option = document.createElement('option');
-                option.value = date.toISOString().split('T')[0];
-                option.text = `${month}월 ${dayOfMonth}일 (${dayName})`;
-                if(isJejuInvolved()) {
-                    option.text += ' - 제주배송';
-                }
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                option.value = `${year}-${month}-${day}`;
+                
+                const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+                const dayName = dayNames[date.getDay()];
+                
+                option.text = `${month}월 ${day}일(${dayName})${isJejuInvolved() ? ' - 제주배송' : ''}`;
                 dateSelect.appendChild(option);
             }
             
-            // 출발지/도착지 변경 시 날짜 옵션 업데이트
             option1.addEventListener('change', updateDateOptions);
             option2.addEventListener('change', updateDateOptions);
             
-            // 초기 날짜 옵션 설정
             updateDateOptions();
         }
 
-        // 페이지 로드시 실행
         window.onload = function() {
             setupDateOptions();
         };
 
-        // 자정에 자동으로 업데이트
         function scheduleNextUpdate() {
             const now = new Date();
             const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
@@ -282,6 +510,53 @@
         }
 
         scheduleNextUpdate();
+
+        function copyAccount() {
+            const accountNumber = "1000-1290-8652";
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(accountNumber).then(() => {
+                    alert('계좌번호가 복사되었습니다.');
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = accountNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('계좌번호가 복사되었습니다.');
+                } catch (err) {
+                    alert('계좌번호: ' + accountNumber);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
+        function openTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('privacyModal')) {
+                closePrivacyModal();
+            }
+            if (event.target == document.getElementById('termsModal')) {
+                closeTermsModal();
+            }
+        }
 
         function updatePrice() {
             const option1 = document.getElementById("option1").value;
@@ -329,7 +604,7 @@
                 price += additionalFee;
             }
 
-            document.getElementById("priceDisplay").innerText = "총 금액: " + price + "원";
+            document.getElementById("priceDisplay").innerText = "동행요금: " + price + "원";
         }
 
         function disableOption(selectedId, otherSelectId) {
@@ -349,7 +624,7 @@
             disableOption('option1', 'option2');
             disableOption('option2', 'option1');
             updatePrice();
-            setupDateOptions(); // 날짜 옵션 업데이트 추가
+            setupDateOptions();
         }
 
         function sendToGoogleSheets() {
@@ -371,6 +646,14 @@
                 return;
             }
 
+            const privacyCheck = document.getElementById("privacyCheck");
+            const termsCheck = document.getElementById("termsCheck");
+            
+            if (!privacyCheck.checked || !termsCheck.checked) {
+                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                return;
+            }
+
             const data = {
                 departure: option1.options[option1.selectedIndex].text,
                 arrival: option2.options[option2.selectedIndex].text,
@@ -379,8 +662,12 @@
                 senderPhone: senderPhone.value,
                 receiverName: receiverName.value,
                 receiverPhone: receiverPhone.value,
-                sendDate: sendDate.value,
-                price: priceDisplay.replace("총 금액: ", "").replace("원", "")
+                sendDate: new Date(sendDate.value).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }),
+                price: priceDisplay.replace("동행요금: ", "").replace("원", "")
             };
 
             fetch('https://script.google.com/macros/s/AKfycbwxM05eJx40M5Y4B4dypNyMzQlXKEgB0Knp4g0B9WA14q1XMcDDiPjWILll-jTkv2eU/exec', {
@@ -389,14 +676,14 @@
             })
             .then(response => {
                 if(response.ok) {
-                    alert('데이터가 성공적으로 저장되었습니다.');
+                    alert('신청이 완료되었습니다.');
                 } else {
-                    alert('저장 중 오류가 발생했습니다.');
+                    alert('신청 중 오류가 발생했습니다.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('저장 중 오류가 발생했습니다.');
+                alert('신청 중 오류가 발생했습니다.');
             });
         }
     </script>
