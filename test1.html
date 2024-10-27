@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동행 신청</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, input[type="text"], input[type="tel"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+        input[type="date"]::-webkit-datetime-edit {
+            color: #333;
+        }
+    </style>
+    <script>
+        function updatePrice() {
+            const option1 = document.getElementById("option1").value;
+            const option2 = document.getElementById("option2").value;
+            const option3 = document.getElementById("option3").value;
+            let price = 0;
+
+            const priceMatrix = {
+                "1": { "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "2": { "1": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "3": { "1": 10000, "2": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "4": { "1": 10000, "2": 10000, "3": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "5": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "6": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "7": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000 },
+                "8": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "9": 16000, "10": 16000, "11": 28000, "12": 24000, "13": 20000, "14": 20000, "15": 24000, "16": 24000 },
+                "9": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 16000, "10": 10000, "11": 20000, "12": 12000, "13": 10000, "14": 10000, "15": 20000, "16": 20000 },
+                "10": { "1": 12000, "2": 12000, "3": 12000, "4": 12000, "5": 12000, "6": 12000, "7": 12000, "8": 16000, "9": 10000, "11": 18000, "12": 10000, "13": 14000, "14": 14000, "15": 20000, "16": 20000 },
+                "11": { "1": 24000, "2": 24000, "3": 24000, "4": 24000, "5": 24000, "6": 24000, "7": 24000, "8": 28000, "9": 20000, "10": 18000, "12": 10000, "13": 18000, "14": 18000, "15": 20000, "16": 20000 },
+                "12": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 24000, "9": 12000, "10": 10000, "11": 10000, "13": 14000, "14": 14000, "15": 20000, "16": 20000 },
+                "13": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 20000, "9": 10000, "10": 14000, "11": 18000, "12": 14000, "14": 8000, "15": 10000, "16": 12000 },
+                "14": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 20000, "9": 10000, "10": 14000, "11": 18000, "12": 14000, "13": 8000, "15": 10000, "16": 12000 },
+                "15": { "1": 20000, "2": 20000, "3": 20000, "4": 20000, "5": 20000, "6": 20000, "7": 20000, "8": 24000, "9": 20000, "10": 20000, "11": 20000, "12": 20000, "13": 10000, "14": 10000, "16": 8000 },
+                "16": { "1": 24000, "2": 24000, "3": 24000, "4": 24000, "5": 24000, "6": 24000, "7": 24000, "8": 24000, "9": 20000, "10": 20000, "11": 20000, "12": 20000, "13": 12000, "14": 12000, "15": 8000 }
+            };
+
+            if (option1 === "17" || option2 === "17") {
+                const otherOption = option1 === "17" ? option2 : option1;
+                if (otherOption === "12") {  // 제주-광주
+                    price = 46000;
+                } else if (otherOption !== "") {  // 제주-다른 지역
+                    const gwangjuToDestination = priceMatrix["12"][otherOption] || priceMatrix[otherOption]["12"];
+                    price = 46000 + gwangjuToDestination;
+                }
+            } else {
+                if (priceMatrix[option1] && priceMatrix[option1][option2]) {
+                    price = priceMatrix[option1][option2];
+                } else if (priceMatrix[option2] && priceMatrix[option2][option1]) {
+                    price = priceMatrix[option2][option1];
+                }
+            }
+
+            if (option3 && option3 !== "1") {
+                const additionalFee = (parseInt(option3) - 1) * 7000;
+                price += additionalFee;
+            }
+
+            document.getElementById("priceDisplay").innerText = "총 금액: " + price + "원";
+        }
+
+        function disableOption(selectedId, otherSelectId) {
+            const selectedValue = document.getElementById(selectedId).value;
+            const otherSelect = document.getElementById(otherSelectId);
+
+            for (let i = 0; i < otherSelect.options.length; i++) {
+                if (otherSelect.options[i].value === selectedValue) {
+                    otherSelect.options[i].disabled = true;
+                } else {
+                    otherSelect.options[i].disabled = false;
+                }
+            }
+        }
+
+        function handleSelectionChange() {
+            disableOption('option1', 'option2');
+            disableOption('option2', 'option1');
+            updatePrice();
+        }
+
+        function setupDatePicker() {
+            const dateInput = document.getElementById('sendDate');
+            
+            const today = new Date();
+            dateInput.min = today.toISOString().split('T')[0];
+            
+            dateInput.addEventListener('input', function(e) {
+                const selected = new Date(this.value);
+                const day = selected.getDay();
+                
+                if (day !== 2 && day !== 6) {
+                    this.value = '';
+                    alert('화요일과 토요일만 선택 가능합니다.');
+                }
+            });
+        }
+
+        window.onload = function() {
+            setupDatePicker();
+        };
+
+        function sendToGoogleSheets() {
+            const option1 = document.getElementById("option1");
+            const option2 = document.getElementById("option2");
+            const option3 = document.getElementById("option3");
+            const senderName = document.getElementById("senderName");
+            const senderPhone = document.getElementById("senderPhone");
+            const receiverName = document.getElementById("receiverName");
+            const receiverPhone = document.getElementById("receiverPhone");
+            const sendDate = document.getElementById("sendDate");
+            const priceDisplay = document.getElementById("priceDisplay").innerText;
+            
+            if (!option1.value || !option2.value || !option3.value || 
+                !senderName.value || !senderPhone.value || 
+                !receiverName.value || !receiverPhone.value || 
+                !sendDate.value) {
+                alert('모든 항목을 입력해주세요.');
+                return;
+            }
+
+            const data = {
+                departure: option1.options[option1.selectedIndex].text,
+                arrival: option2.options[option2.selectedIndex].text,
+                quantity: option3.options[option3.selectedIndex].text,
+                senderName: senderName.value,
+                senderPhone: senderPhone.value,
+                receiverName: receiverName.value,
+                receiverPhone: receiverPhone.value,
+                sendDate: sendDate.value,
+                price: priceDisplay.replace("총 금액: ", "").replace("원", "")
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbwxM05eJx40M5Y4B4dypNyMzQlXKEgB0Knp4g0B9WA14q1XMcDDiPjWILll-jTkv2eU/exec', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if(response.ok) {
+                    alert('데이터가 성공적으로 저장되었습니다.');
+                } else {
+                    alert('저장 중 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('저장 중 오류가 발생했습니다.');
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>동행 신청</h1>
+        
+        <label for="option1">출발지: </label>
+        <select id="option1" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">경기[일산]-모프조</option>
+            <option value="2">경기[김포]-게코피아2호점</option>
+            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="4">경기[시흥]-와이엔케이렙타일</option>
+            <option value="5">경기[안산]-크레넬제이</option>
+            <option value="6">인천[계양]-위드게코</option>
+            <option value="7">인천[남동]-게코피아1호점</option>
+            <option value="8">강원[춘천]-핌프렙타일</option>
+            <option value="9">대전[서구]-히스</option>
+            <option value="10">전북[덕진]-플러스렙타일</option>
+            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="14">대구[수성]-대구곤충마트</option>
+            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="16">울산[북구]-젤리팜코리아</option>
+            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
+        <br><br>
+
+        <label for="option2">도착지: </label>
+        <select id="option2" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">경기[일산]-모프조</option>
+            <option value="2">경기[김포]-게코피아2호점</option>
+            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="4">경기[시흥]-와이엔케이렙타일</option>
+            <option value="5">경기[안산]-크레넬제이</option>
+            <option value="6">인천[계양]-위드게코</option>
+            <option value="7">인천[남동]-게코피아1호점</option>
+            <option value="8">강원[춘천]-핌프렙타일</option>
+            <option value="9">대전[서구]-히스</option>
+            <option value="10">전북[덕진]-플러스렙타일</option>
+            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="14">대구[수성]-대구곤충마트</option>
+            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="16">울산[북구]-젤리팜코리아</option>
+            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
+        <br><br>
+
+        <label for="option3">마릿수: </label>
+        <select id="option3" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">1마리</option>
+            <option value="2">2마리</option>
+            <option value="3">3마리</option>
+            <option value="4">4마리</option>
+            <option value="5">5마리 이상</option>
+        </select>
+        <br><br>
+
+        <label for="senderName">보내는 분 이름: </label>
+        <input type="text" id="senderName" name="senderName" required>
+        <br><br>
+
+        <label for="senderPhone">보내는 분 연락처: </label>
+        <input type="tel" id="senderPhone" name="senderPhone" placeholder="010-0000-0000" required>
+        <br><br>
+
+        <label for="receiverName">받는 분 이름: </label>
+        <input type="text" id="receiverName" name="receiverName" required>
+        <br><br>
+
+        <label for="receiverPhone">받는 분 연락처: </label>
+        <input type="tel" id="receiverPhone" name="receiverPhone" placeholder="010-0000-0000" required>
+        <br><br>
+
+        <label for="sendDate">보내는 날짜: </label>
+        <input type="date" id="sendDate" name="sendDate" required onkeydown="return false">
+        <br><br>
+
+        <h2 id="priceDisplay">총 금액: 0원</h2>
+        <button type="button" onclick="sendToGoogleSheets()">확인</button>
+    </div>
+</body>
+</html>
