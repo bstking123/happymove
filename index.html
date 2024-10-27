@@ -1,64 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>동행 신청</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --main-bg: #e5d3c3;
+            --form-bg: #ffffff;
+            --accent: #ff8c42;
+            --text: #4a3728;
+            --button: #ff8c42;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
+
         .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            background-color: var(--form-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px;
         }
+
         h1 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            margin-bottom: 20px;
             text-align: center;
+            color: var(--text);
         }
+
         label {
             display: block;
-            margin: 10px 0 5px;
+            margin: 15px 0 8px;
+            color: var(--text);
+            font-weight: 500;
         }
+
         select, input[type="text"], input[type="tel"], input[type="date"] {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
+
+        select:focus, input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,140,66,0.2);
+        }
+
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 15px;
+            background-color: var(--button);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #e67e3b;
+            transform: translateY(-2px);
         }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: grayscale(100%);
-            opacity: 0.6;
+
+        #priceDisplay {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: var(--accent);
+            font-weight: bold;
         }
-        input[type="date"]::-webkit-datetime-edit {
-            color: #333;
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            body {
+                height: auto;
+                padding: 20px 0;
+            }
+
+            select, input[type="text"], input[type="tel"], input[type="date"] {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            button {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            label {
+                font-size: 15px;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>동행 신청</h1>
+        
+        <label for="option1">출발지: </label>
+        <select id="option1" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">경기[일산]-모프조</option>
+            <option value="2">경기[김포]-게코피아2호점</option>
+            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="4">경기[시흥]-와이엔케이렙타일</option>
+            <option value="5">경기[안산]-크레넬제이</option>
+            <option value="6">인천[계양]-위드게코</option>
+            <option value="7">인천[남동]-게코피아1호점</option>
+            <option value="8">강원[춘천]-핌프렙타일</option>
+            <option value="9">대전[서구]-히스</option>
+            <option value="10">전북[덕진]-플러스렙타일</option>
+            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="14">대구[수성]-대구곤충마트</option>
+            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="16">울산[북구]-젤리팜코리아</option>
+            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
+
+        <label for="option2">도착지: </label>
+        <select id="option2" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">경기[일산]-모프조</option>
+            <option value="2">경기[김포]-게코피아2호점</option>
+            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="4">경기[시흥]-와이엔케이렙타일</option>
+            <option value="5">경기[안산]-크레넬제이</option>
+            <option value="6">인천[계양]-위드게코</option>
+            <option value="7">인천[남동]-게코피아1호점</option>
+            <option value="8">강원[춘천]-핌프렙타일</option>
+            <option value="9">대전[서구]-히스</option>
+            <option value="10">전북[덕진]-플러스렙타일</option>
+            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="14">대구[수성]-대구곤충마트</option>
+            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="16">울산[북구]-젤리팜코리아</option>
+            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
+
+        <label for="option3">마릿수: </label>
+        <select id="option3" onchange="handleSelectionChange()">
+            <option value="">선택하세요</option>
+            <option value="1">1마리</option>
+            <option value="2">2마리</option>
+            <option value="3">3마리</option>
+            <option value="4">4마리</option>
+            <option value="5">5마리 이상</option>
+        </select>
+
+        <label for="senderName">보내는 분 이름: </label>
+        <input type="text" id="senderName" name="senderName" required>
+
+        <label for="senderPhone">보내는 분 연락처: </label>
+        <input type="tel" id="senderPhone" name="senderPhone" placeholder="010-0000-0000" required>
+
+        <label for="receiverName">받는 분 이름: </label>
+        <input type="text" id="receiverName" name="receiverName" required>
+
+        <label for="receiverPhone">받는 분 연락처: </label>
+        <input type="tel" id="receiverPhone" name="receiverPhone" placeholder="010-0000-0000" required>
+
+        <label for="sendDate">보내는 날짜: </label>
+        <input type="date" id="sendDate" name="sendDate" required onkeydown="return false">
+
+        <h2 id="priceDisplay">총 금액: 0원</h2>
+        <button type="button" onclick="sendToGoogleSheets()">확인</button>
+    </div>
+
     <script>
         function updatePrice() {
             const option1 = document.getElementById("option1").value;
@@ -134,13 +278,13 @@
             const today = new Date();
             dateInput.min = today.toISOString().split('T')[0];
             
-            dateInput.addEventListener('input', function(e) {
+            dateInput.addEventListener('change', function(e) {
                 const selected = new Date(this.value);
                 const day = selected.getDay();
                 
                 if (day !== 2 && day !== 6) {
-                    this.value = '';
                     alert('화요일과 토요일만 선택 가능합니다.');
+                    this.value = '';
                 }
             });
         }
@@ -197,90 +341,5 @@
             });
         }
     </script>
-</head>
-<body>
-    <div class="container">
-        <h1>동행 신청</h1>
-        
-        <label for="option1">출발지: </label>
-        <select id="option1" onchange="handleSelectionChange()">
-            <option value="">선택하세요</option>
-            <option value="1">경기[일산]-모프조</option>
-            <option value="2">경기[김포]-게코피아2호점</option>
-            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
-            <option value="4">경기[시흥]-와이엔케이렙타일</option>
-            <option value="5">경기[안산]-크레넬제이</option>
-            <option value="6">인천[계양]-위드게코</option>
-            <option value="7">인천[남동]-게코피아1호점</option>
-            <option value="8">강원[춘천]-핌프렙타일</option>
-            <option value="9">대전[서구]-히스</option>
-            <option value="10">전북[덕진]-플러스렙타일</option>
-            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
-            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="14">대구[수성]-대구곤충마트</option>
-            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="16">울산[북구]-젤리팜코리아</option>
-            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
-        </select>
-        <br><br>
-
-        <label for="option2">도착지: </label>
-        <select id="option2" onchange="handleSelectionChange()">
-            <option value="">선택하세요</option>
-            <option value="1">경기[일산]-모프조</option>
-            <option value="2">경기[김포]-게코피아2호점</option>
-            <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
-            <option value="4">경기[시흥]-와이엔케이렙타일</option>
-            <option value="5">경기[안산]-크레넬제이</option>
-            <option value="6">인천[계양]-위드게코</option>
-            <option value="7">인천[남동]-게코피아1호점</option>
-            <option value="8">강원[춘천]-핌프렙타일</option>
-            <option value="9">대전[서구]-히스</option>
-            <option value="10">전북[덕진]-플러스렙타일</option>
-            <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
-            <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="14">대구[수성]-대구곤충마트</option>
-            <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="16">울산[북구]-젤리팜코리아</option>
-            <option value="17">제주[제주]-렙타일아트뮤지엄 제주점</option>
-        </select>
-        <br><br>
-
-        <label for="option3">마릿수: </label>
-        <select id="option3" onchange="handleSelectionChange()">
-            <option value="">선택하세요</option>
-            <option value="1">1마리</option>
-            <option value="2">2마리</option>
-            <option value="3">3마리</option>
-            <option value="4">4마리</option>
-            <option value="5">5마리 이상</option>
-        </select>
-        <br><br>
-
-        <label for="senderName">보내는 분 이름: </label>
-        <input type="text" id="senderName" name="senderName" required>
-        <br><br>
-
-        <label for="senderPhone">보내는 분 연락처: </label>
-        <input type="tel" id="senderPhone" name="senderPhone" placeholder="010-0000-0000" required>
-        <br><br>
-
-        <label for="receiverName">받는 분 이름: </label>
-        <input type="text" id="receiverName" name="receiverName" required>
-        <br><br>
-
-        <label for="receiverPhone">받는 분 연락처: </label>
-        <input type="tel" id="receiverPhone" name="receiverPhone" placeholder="010-0000-0000" required>
-        <br><br>
-
-        <label for="sendDate">보내는 날짜: </label>
-        <input type="date" id="sendDate" name="sendDate" required onkeydown="return false">
-        <br><br>
-
-        <h2 id="priceDisplay">총 금액: 0원</h2>
-        <button type="button" onclick="sendToGoogleSheets()">확인</button>
-    </div>
 </body>
 </html>
