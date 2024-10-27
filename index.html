@@ -50,7 +50,7 @@
             font-weight: 500;
         }
 
-        select, input[type="text"], input[type="tel"], input[type="date"] {
+        select, input[type="text"], input[type="tel"] {
             width: 100%;
             padding: 12px;
             margin-bottom: 10px;
@@ -106,7 +106,7 @@
                 padding: 20px 0;
             }
 
-            select, input[type="text"], input[type="tel"], input[type="date"] {
+            select, input[type="text"], input[type="tel"] {
                 font-size: 16px;
                 padding: 12px;
             }
@@ -184,6 +184,11 @@
             <option value="5">5마리 이상</option>
         </select>
 
+        <label for="sendDate">보내는 날짜: </label>
+        <select id="sendDate" required>
+            <option value="">선택하세요</option>
+        </select>
+
         <label for="senderName">보내는 분 이름: </label>
         <input type="text" id="senderName" name="senderName" required>
 
@@ -196,14 +201,88 @@
         <label for="receiverPhone">받는 분 연락처: </label>
         <input type="tel" id="receiverPhone" name="receiverPhone" placeholder="010-0000-0000" required>
 
-        <label for="sendDate">보내는 날짜: </label>
-        <input type="date" id="sendDate" name="sendDate" required onkeydown="return false">
-
         <h2 id="priceDisplay">총 금액: 0원</h2>
         <button type="button" onclick="sendToGoogleSheets()">확인</button>
     </div>
 
     <script>
+        function setupDateOptions() {
+            const dateSelect = document.getElementById('sendDate');
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // 제주도 여부 확인 함수
+            function isJejuInvolved() {
+                return option1.value === "17" || option2.value === "17";
+            }
+            
+            // 날짜 옵션 업데이트
+            function updateDateOptions() {
+                dateSelect.innerHTML = '<option value="">선택하세요</option>';
+                
+                for(let i = 0; i < 14; i++) {
+                    const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
+                    const day = date.getDay();
+                    
+                    // 제주도 관련 배송인 경우 격주 토요일만 표시
+                    if(isJejuInvolved()) {
+                        // 첫 번째 토요일부터 2주 간격으로 체크
+                        if(day === 6 && (Math.floor((date - today) / (14 * 24 * 60 * 60 * 1000)) === 0)) {
+                            addDateOption(date);
+                        }
+                    } else {
+                        // 일반 배송은 모든 화/토요일 표시
+                        if(day === 2 || day === 6) {
+                            addDateOption(date);
+                        }
+                    }
+                }
+            }
+            
+            // 날짜 옵션 추가 함수
+            function addDateOption(date) {
+                const month = date.getMonth() + 1;
+                const dayOfMonth = date.getDate();
+                const dayName = date.getDay() === 2 ? '화' : '토';
+                
+                const option = document.createElement('option');
+                option.value = date.toISOString().split('T')[0];
+                option.text = `${month}월 ${dayOfMonth}일 (${dayName})`;
+                if(isJejuInvolved()) {
+                    option.text += ' - 제주배송';
+                }
+                dateSelect.appendChild(option);
+            }
+            
+            // 출발지/도착지 변경 시 날짜 옵션 업데이트
+            option1.addEventListener('change', updateDateOptions);
+            option2.addEventListener('change', updateDateOptions);
+            
+            // 초기 날짜 옵션 설정
+            updateDateOptions();
+        }
+
+        // 페이지 로드시 실행
+        window.onload = function() {
+            setupDateOptions();
+        };
+
+        // 자정에 자동으로 업데이트
+        function scheduleNextUpdate() {
+            const now = new Date();
+            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const timeUntilMidnight = tomorrow - now;
+            
+            setTimeout(function() {
+                setupDateOptions();
+                scheduleNextUpdate();
+            }, timeUntilMidnight);
+        }
+
+        scheduleNextUpdate();
+
         function updatePrice() {
             const option1 = document.getElementById("option1").value;
             const option2 = document.getElementById("option2").value;
@@ -270,45 +349,8 @@
             disableOption('option1', 'option2');
             disableOption('option2', 'option1');
             updatePrice();
+            setupDateOptions(); // 날짜 옵션 업데이트 추가
         }
-
-        function setupDatePicker() {
-    const dateInput = document.getElementById('sendDate');
-    
-    // 오늘 날짜를 최소 날짜로 설정
-    const today = new Date();
-    dateInput.min = today.toISOString().split('T')[0];
-    
-    // 모바일에서 달력 터치 시
-    dateInput.addEventListener('touchstart', function(e) {
-        if (!this.dataset.clicked) {
-            alert('화요일과 토요일만 선택 가능합니다.');
-            this.dataset.clicked = 'true';
-        }
-    });
-    
-    // PC에서 달력 클릭 시
-    dateInput.addEventListener('click', function(e) {
-        if (!this.dataset.mobile && !this.dataset.clicked) {
-            alert('화요일과 토요일만 선택 가능합니다.');
-            this.dataset.clicked = 'true';
-        }
-    });
-    
-    // 날짜 선택 시 유효성 검사
-    dateInput.addEventListener('change', function(e) {
-        const selected = new Date(this.value);
-        const day = selected.getDay();
-        
-        if (day !== 2 && day !== 6) {
-            alert('화요일과 토요일만 선택 가능합니다.');
-            this.value = ''; // 선택 초기화
-        }
-    });
-}
-        window.onload = function() {
-            setupDatePicker();
-        };
 
         function sendToGoogleSheets() {
             const option1 = document.getElementById("option1");
