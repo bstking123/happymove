@@ -272,48 +272,90 @@
         
         <label for="option1">출발지</label>
         <select id="option1" onchange="handleSelectionChange()">
-    <option value="">선택하세요</option>
-    <option value="1">경기[일산]-모프조</option>
-    <option value="2">경기[김포]-게코피아2호점</option>
-    <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
-    <option value="4">경기[시흥]-와이엔케이렙타일</option>
-    <option value="5">경기[안산]-크레넬제이</option>
-    <option value="6">인천[계양]-위드게코</option>
-    <option value="7">인천[남동]-게코피아1호점</option>
-    <option value="8">강원[춘천]-핌프렙타일</option>
-    <option value="9">대전[서구]-히스</option>
-    <option value="10">전북[덕진]-플러스렙타일</option>
-    <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
-    <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
-    <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
-    <option value="14">대구[수성]-대구곤충마트</option>
-    <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
-    <option value="16">울산[북구]-젤리팜코리아</option>
-    <option value="17">부산[해운대]-렙토날드</option>
-    <option value="18">제주[제주]-렙타일아트뮤지엄 제주점</option>
-</select>
+            <option value="">선택하세요</option>
+            <!-- 수도권 (MT-로 시작) -->
+            <!-- 서울 -->
+            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
+            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
+            <!-- 경기 -->
+            <option value="MT-IS-01">경기[일산]-모프조</option>
+            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
+            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
+            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
+            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="MT-BC-01">경기[부천]-저스트팜</option>
+            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
+            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
+            <!-- 인천 -->
+            <option value="MT-GY-01">인천[계양]-위드게코</option>
+            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            
+            <!-- 강원권 (GW-로 시작) -->
+            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            
+            <!-- 충청권 (CC-로 시작) -->
+            <option value="CC-SG-01">대전[서구]-히스</option>
+            <option value="CC-YS-01">대전[유성]-안녕도마뱀</option>
+            
+            <!-- 전라권 (JL-로 시작) -->
+            <option value="JL-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="JL-DJ-01">전북[덕진]-플러스렙타일</option>
+            <option value="JL-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            
+            <!-- 경상권 (GS-로 시작) -->
+            <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="GS-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="GS-BG-02">부산[북구]-파충류샵</option>
+            <option value="GS-HD-01">부산[해운대]-렙토날드</option>
+            
+            <!-- 제주권 (JJ-로 시작) -->
+            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
         <label for="option2">도착지</label>
         <select id="option2" onchange="handleSelectionChange()">
-    <option value="">선택하세요</option>
-    <option value="1">경기[일산]-모프조</option>
-    <option value="2">경기[김포]-게코피아2호점</option>
-    <option value="3">경기[성남]-렙타일아트뮤지엄 성남점</option>
-    <option value="4">경기[시흥]-와이엔케이렙타일</option>
-    <option value="5">경기[안산]-크레넬제이</option>
-    <option value="6">인천[계양]-위드게코</option>
-    <option value="7">인천[남동]-게코피아1호점</option>
-    <option value="8">강원[춘천]-핌프렙타일</option>
-    <option value="9">대전[서구]-히스</option>
-    <option value="10">전북[덕진]-플러스렙타일</option>
-    <option value="11">전남[여수]-렙타일아트뮤지엄 여수점</option>
-    <option value="12">광주[북구]-렙타일아트뮤지엄 광주점</option>
-    <option value="13">경북[구미]-렙타일아트뮤지엄 구미점</option>
-    <option value="14">대구[수성]-대구곤충마트</option>
-    <option value="15">경남[양산]-렙타일아트뮤지엄 양산점</option>
-    <option value="16">울산[북구]-젤리팜코리아</option>
-    <option value="17">부산[해운대]-렙토날드</option>
-    <option value="18">제주[제주]-렙타일아트뮤지엄 제주점</option>
-</select>
+            <option value="">선택하세요</option>
+            <!-- 수도권 (MT-로 시작) -->
+            <!-- 서울 -->
+            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
+            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
+            <!-- 경기 -->
+            <option value="MT-IS-01">경기[일산]-모프조</option>
+            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
+            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
+            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
+            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="MT-BC-01">경기[부천]-저스트팜</option>
+            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
+            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
+            <!-- 인천 -->
+            <option value="MT-GY-01">인천[계양]-위드게코</option>
+            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            
+            <!-- 강원권 (GW-로 시작) -->
+            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            
+            <!-- 충청권 (CC-로 시작) -->
+            <option value="CC-SG-01">대전[서구]-히스</option>
+            <option value="CC-YS-01">대전[유성]-안녕도마뱀</option>
+            
+            <!-- 전라권 (JL-로 시작) -->
+            <option value="JL-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="JL-DJ-01">전북[덕진]-플러스렙타일</option>
+            <option value="JL-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            
+            <!-- 경상권 (GS-로 시작) -->
+            <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="GS-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="GS-BG-02">부산[북구]-파충류샵</option>
+            <option value="GS-HD-01">부산[해운대]-렙토날드</option>
+            
+            <!-- 제주권 (JJ-로 시작) -->
+            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
+        </select>
 
         <label for="option3">마릿수</label>
         <select id="option3" onchange="handleSelectionChange()">
@@ -330,7 +372,7 @@
             <option value="">선택하세요</option>
         </select>
 
-        <label for="salePrice">개체분양가</label>
+        <label for="salePrice">개체양가</label>
         <div class="price-input-container">
             <input type="text" id="salePrice" placeholder="0" oninput="formatSalePrice(this)" required>
             <span class="price-unit">만원</span>
@@ -387,9 +429,9 @@
                 <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
                 <p><strong>수집하는 자:</strong> 동행</p>
                 <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
-                <p><strong>수집하는 개인정보 항목:</strong> 보내는분 이름, 보내는분연락처, 받는분 이름, 받는분 연락처</p>
-                <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
-                <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
+                <p><strong>수집하는 개인정보 항목:</strong> 보내는분 이름, 보내는분연락처, 받는분 , 받는분 연락처</p>
+                <p><strong>개인정보 보유 및 이용 기간:</strong> 집 일로부터 300일</p>
+                <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
             </div>
             <button type="button" class="modal-close-btn" onclick="closePrivacyModal()">닫기</button>
         </div>
@@ -481,7 +523,7 @@
             today.setHours(0, 0, 0, 0);
             
             function isJejuInvolved() {
-                return option1.value === "17" || option2.value === "17";
+                return option1.value.startsWith('JJ-') || option2.value.startsWith('JJ-');
             }
             
             dateSelect.innerHTML = '<option value="">선택하세요</option>';
@@ -535,54 +577,93 @@
 
         // 가격 계산 로직
         function updatePrice() {
-    const option1 = document.getElementById("option1").value;
-    const option2 = document.getElementById("option2").value;
-    const option3 = document.getElementById("option3").value;
-    let price = 0;
+            const option1 = document.getElementById("option1").value;
+            const option2 = document.getElementById("option2").value;
+            const option3 = document.getElementById("option3").value;
+            let price = 0;
 
-    const priceMatrix = {
-        "1": { "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "2": { "1": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "3": { "1": 10000, "2": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "4": { "1": 10000, "2": 10000, "3": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "5": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "6": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "6": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "7": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "7": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "8": 14000, "9": 10000, "10": 12000, "11": 24000, "12": 14000, "13": 14000, "14": 14000, "15": 20000, "16": 24000, "17": 20000 },
-        "8": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "9": 16000, "10": 16000, "11": 28000, "12": 24000, "13": 20000, "14": 20000, "15": 24000, "16": 24000, "17": 24000 },
-        "9": { "1": 10000, "2": 10000, "3": 10000, "4": 10000, "5": 10000, "6": 10000, "7": 10000, "8": 16000, "10": 10000, "11": 20000, "12": 12000, "13": 10000, "14": 10000, "15": 20000, "16": 20000, "17": 20000 },
-        "10": { "1": 12000, "2": 12000, "3": 12000, "4": 12000, "5": 12000, "6": 12000, "7": 12000, "8": 16000, "9": 10000, "11": 18000, "12": 10000, "13": 14000, "14": 14000, "15": 20000, "16": 20000, "17": 20000 },
-        "11": { "1": 24000, "2": 24000, "3": 24000, "4": 24000, "5": 24000, "6": 24000, "7": 24000, "8": 28000, "9": 20000, "10": 18000, "12": 10000, "13": 18000, "14": 18000, "15": 20000, "16": 20000, "17": 20000 },
-        "12": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 24000, "9": 12000, "10": 10000, "11": 10000, "13": 14000, "14": 14000, "15": 20000, "16": 20000, "17": 20000 },
-        "13": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 20000, "9": 10000, "10": 14000, "11": 18000, "12": 14000, "14": 8000, "15": 10000, "16": 12000, "17": 10000 },
-        "14": { "1": 14000, "2": 14000, "3": 14000, "4": 14000, "5": 14000, "6": 14000, "7": 14000, "8": 20000, "9": 10000, "10": 14000, "11": 18000, "12": 14000, "13": 8000, "15": 10000, "16": 12000, "17": 10000 },
-        "15": { "1": 20000, "2": 20000, "3": 20000, "4": 20000, "5": 20000, "6": 20000, "7": 20000, "8": 24000, "9": 20000, "10": 20000, "11": 20000, "12": 20000, "13": 10000, "14": 10000, "16": 8000, "17": 8000 },
-        "16": { "1": 24000, "2": 24000, "3": 24000, "4": 24000, "5": 24000, "6": 24000, "7": 24000, "8": 24000, "9": 20000, "10": 20000, "11": 20000, "12": 20000, "13": 12000, "14": 12000, "15": 8000, "17": 8000 },
-        "17": { "1": 20000, "2": 20000, "3": 20000, "4": 20000, "5": 20000, "6": 20000, "7": 20000, "8": 24000, "9": 20000, "10": 20000, "11": 20000, "12": 20000, "13": 10000, "14": 10000, "15": 8000, "16": 8000 }
-    };
+            const priceMatrix = {
+                // 수도권 연결
+                "MT": {
+                    "MT": 10000,  // 수도권 내부
+                    "GW": 14000,  // 수도권 ↔ 강원
+                    "CC": 10000,  // 수도권 ↔ 충청
+                    "JL": 14000,  // 수도권 ↔ 전라(여수 제외)
+                    "GS": 20000   // 수도권 ↔ 경상
+                },
+                // 강원권 연결
+                "GW": {
+                    "CC": 16000,  // 강원 ↔ 충청
+                    "JL": 24000,  // 강원 ↔ 전라(여수 제외)
+                    "GS": 20000   // 강원 ↔ 경상
+                },
+                // 충청권 연결
+                "CC": {
+                    "JL": 10000,  // 충청 ↔ 전라(여수 제외)
+                    "GS": 10000   // 충청 ↔ 경상
+                },
+                // 전라권 연결
+                "JL": {
+                    "GS": 14000   // 전라 ↔ 경상
+                },
+                // 경상권 내부
+                "GS": {
+                    "GS": 10000    // 경상 내부 (8,000원에서 10,000원으로 수정)
+                }
+            };
 
-    if (option1 === "18" || option2 === "18") {
-        const otherOption = option1 === "18" ? option2 : option1;
-        if (otherOption === "12") {  // 제주-광주
-            price = 46000;
-        } else if (otherOption !== "") {  // 제주-다른 지역
-            const gwangjuToDestination = priceMatrix["12"][otherOption] || priceMatrix[otherOption]["12"];
-            price = 46000 + gwangjuToDestination;
+            // 지역 코드 추출
+            const region1 = option1.split('-')[0];
+            const region2 = option2.split('-')[0];
+            const subregion1 = option1.split('-')[1];
+            const subregion2 = option2.split('-')[1];
+
+            // 여수 특별 요금 계산
+            if (subregion1 === 'YS' || subregion2 === 'YS') {
+                const otherRegion = subregion1 === 'YS' ? option2 : option1;
+                const otherMainRegion = otherRegion.split('-')[0];
+                const otherSubRegion = otherRegion.split('-')[1];
+                
+                switch(otherMainRegion) {
+                    case 'MT': price = 24000; break;  // 여수 ↔ 수도권
+                    case 'GW': price = 28000; break;  // 여수 ↔ 강원
+                    case 'CC': price = 20000; break;  // 여수 ↔ 충청
+                    case 'JL': price = 18000; break;  // 여수 ↔ 전라
+                    case 'GS': 
+                        // 울산(BG)인 경우 4000원 추가
+                        if (otherSubRegion === 'BG') {
+                            price = 24000;  // ���수 ↔ 울산 (20000 + 4000)
+                        } else {
+                            price = 20000;  // 여수 ↔ 다른 경상권
+                        }
+                        break;
+                    default: price = 24000;
+                }
+            }
+            // 제주 관련 요금 계산
+            else if (region1 === "JJ" || region2 === "JJ") {
+                const otherRegion = region1 === "JJ" ? region2 : region1;
+                if (otherRegion === "JL") {
+                    price = 46000;  // 제주-광주 직통
+                } else {
+                    // 제주-광주 + 광주에서 목적지까지의 요금
+                    const gwangjuToDestination = priceMatrix["JL"][otherRegion] || priceMatrix[otherRegion]["JL"] || 0;
+                    price = 46000 + gwangjuToDestination;
+                }
+            }
+            // 일반 권역 간 이동
+            else {
+                price = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1] || 14000;
+            }
+
+            // 마릿수에 따른 추가 요금
+            if (option3 && option3 !== "1") {
+                const additionalFee = (parseInt(option3) - 1) * 7000;
+                price += additionalFee;
+            }
+
+            document.getElementById("priceDisplay").innerText = "동행요금: " + price.toLocaleString() + "원";
         }
-    } else {
-        if (priceMatrix[option1] && priceMatrix[option1][option2]) {
-            price = priceMatrix[option1][option2];
-        } else if (priceMatrix[option2] && priceMatrix[option2][option1]) {
-            price = priceMatrix[option2][option1];
-        }
-    }
-
-    if (option3 && option3 !== "1") {
-        const additionalFee = (parseInt(option3) - 1) * 7000;
-        price += additionalFee;
-    }
-
-    document.getElementById("priceDisplay").innerText = "동행요금: " + price.toLocaleString() + "원";
-}
 
         function handleSelectionChange() {
             const option1 = document.getElementById('option1');
@@ -685,10 +766,10 @@
                 price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbw5O68C2JvgSGccfQkW_RrI3b1v4BuZzwbJMRjU5n5RvrDjQqy1hgwOjw66-upKH0AhEg/exec', {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
+fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
+    method: 'POST',
+    body: JSON.stringify(data)
+})
             .then(response => {
                 spinner.style.display = 'none';
                 if(response.ok) {
