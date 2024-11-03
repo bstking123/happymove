@@ -392,7 +392,7 @@
             <option value="CC-SG-01">대전[서구]-히스</option>
             <option value="CC-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="JL-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="JL-DJ-01">전북[덕진]-플러스렙타일</option>
+            <option value="JL-JZ-01">전북[전주]-플러스렙타일</option>
             <option value="JL-YS1-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
             <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -429,7 +429,7 @@
             <option value="CC-SG-01">대전[서구]-히스</option>
             <option value="CC-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="JL-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="JL-DJ-01">전북[덕진]-플러스렙타일</option>
+            <option value="JL-JZ-01">전북[전주]-플러스렙타일</option>
             <option value="JL-YS1-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
             <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -535,7 +535,7 @@
                         <p>본 약관은 동행(이하 "회사")이 제공하는 동행 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
                         
                         <h4>제2조 (용어의 정의)</h4>
-                        <p>"동행 서비스"란 회사가 제공하는 파충류 운송 중개 서비스를 의미합니다.</p>
+                        <p>"동행 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
                         
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
@@ -547,7 +547,7 @@
                         <ul>
                             <li>이용자는 신청 시 정확한 정보를 제공해야 합니다.</li>
                             <li>이용자는 동물의 안전한 운송을 위해 필요한 정보를 제공해야 합니다.</li>
-                            <li>이용자는 서비스 이용 요금을 성실히 납부해야 합니다.</li>
+                            <li>이용자는 서비스 용 요금을 성실 납부해야 합니다.</li>
                         </ul>
                         
                         <h4>제5조 (서비스 이용)</h4>
@@ -811,8 +811,8 @@
                 if (otherRegion === "JL") {
                     if (otherSubRegion === 'YS1') {  // 여수-제주 경우
                         price = 46000 + 18000;  // 제주-광주(46,000원) + 광주-여수(18,000원)
-                    } else if (otherSubRegion === 'DJ') {  // 덕진-제주 경우
-                        price = 46000 + 14000;  // 제주-광주(46,000원) + 광주-덕진(14,000원)
+                    } else if (otherSubRegion === 'JZ') {  // 전주-제주 경우
+                        price = 46000 + 14000;  // 제주-광주(46,000원) + 광주-전주(14,000원)
                     } else {
                         price = 46000;  // 제주-광주 직통
                     }
@@ -1061,7 +1061,7 @@
             "CC-SG-01": { holiday: "매주 화요일", hours: "12:00 ~ 21:00" },
             "CC-YS-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:30" },
             "JL-BG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
-            "JL-DJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
+            "JL-JZ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
             "JL-YS1-01": { holiday: "휴무일 없음", hours: "13:00 ~ 19:00" },
             "GS-SS-01": { holiday: "휴무일 없음", hours: "11:00 ~ 20:00" },
             "GS-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
@@ -1102,7 +1102,7 @@
                 const arrivalDate = new Date(selectedDate);
                 
                 if (option1.value.startsWith('JJ-')) {
-                    // 제주 출발: 선택된 날짜가 속한 주의 일요일
+                    // 제주 출발: 선된 날짜가 속한 주의 일요일
                     while (arrivalDate.getDay() !== 0) {
                         arrivalDate.setDate(arrivalDate.getDate() + 1);
                     }
