@@ -824,7 +824,9 @@
                     const otherRegion = region1 === "JJ" ? option2 : option1;
                     const otherCode = otherRegion.split('-')[0];
                     
-                    if (otherCode === "GJ") {
+                    if (otherCode === "GW") {  // 제주-춘천 경우
+                        price = 70000;  // 제주-춘천 직통 요금
+                    } else if (otherCode === "GJ") {
                         if (otherRegion === 'GJ-JJ-01') {  // 전주-제주 경우
                             price = 46000 + 10000;  // 제주-광주(46,000원) + 광주-전주(10,000원)
                         } else {
@@ -833,7 +835,11 @@
                     } else {
                         // 제주-광주 + 광주에서 목적지까지의 요금
                         const gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
-                        price = 46000 + gwangjuToDestination;
+                        if (typeof gwangjuToDestination === 'number') {
+                            price = 46000 + gwangjuToDestination;
+                        } else {
+                            price = 46000;  // 기본 요금
+                        }
                     }
                 }
                 // 여수 특별 요금
