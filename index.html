@@ -396,10 +396,9 @@
             <option value="JL-YS1-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
             <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="GS-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-BG1-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-BG2-01">부산[북구]-파충류샵</option>
             <option value="GS-YS2-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="GS-BG-02">부산[북구]-파충류샵</option>
-            <option value="GS-HD-01">부산[해운대]-렙토날드</option>
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
         <div id="store1Info" class="store-info"></div>
@@ -433,10 +432,9 @@
             <option value="JL-YS1-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="GS-SS-01">대구[수성]-대구곤충마트</option>
             <option value="GS-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="GS-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-BG1-01">울산[북구]-젤리팜코리아</option>
+            <option value="GS-BG2-01">부산[북구]-파충류샵</option>
             <option value="GS-YS2-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="GS-BG-02">부산[북구]-파충류샵</option>
-            <option value="GS-HD-01">부산[해운대]-렙토날드</option>
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
         <div id="store2Info" class="store-info"></div>
@@ -540,7 +538,7 @@
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
                             <li>본 약관은 서비스를 이용하고자 하는 모든 이용자에 대하여 그 효력을 발생합니다.</li>
-                            <li>회사는 약관의 내용을 변경할 수 있으며, 변경된 약관은 공지사항을 통하여 공시합니다.</li>
+                            <li>회사는 약관의 내용을 변경할 수 있으며, 변경된 약은 공지사항을 통하여 공시합니다.</li>
                         </ul>
                         
                         <h4>제4조 (이용자의 의무)</h4>
@@ -582,7 +580,7 @@
                         <p>픽업 시점에 건강에 이상이 있는 것으로 보이는 개체는 동행 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지 않습니다.</p>
 
                         <h4>6. 동행지 보관 요금 관련 안내</h4>
-                        <p>회사가 안내한 일정을 준수지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
+                        <p>회사가 안내한 일정을 준수지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
                     </div>
                 </div>
             </div>
@@ -694,7 +692,6 @@
                 return weekNumber === 2 || weekNumber === 4;
             }
 
-            // 제주도 관련된 경우 30일, 그 외는 14일
             const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
 
             for(let i = 0; i < daysToShow; i++) {
@@ -702,26 +699,23 @@
                 const day = date.getDay();
 
                 if (isJejuDeparture()) {
-                    // 제주 출발: 2,4째주 화요일만 가능
                     if (day === 2 && isSecondOrFourthWeek(date)) {
                         addDateOption(date);
                     }
                 } else if (isJejuArrival()) {
-                    // 제주 도착: 2,4째주 월요일만 가능
                     if (day === 1 && isSecondOrFourthWeek(date)) {
                         addDateOption(date);
                     }
                 } else {
-                    // 기 로직 (휴무에 따른 날짜 선택)
                     const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
 
-                    if (holidayNumber !== null) {
-                        if(day === holidayNumber - 1 || day === 5) {
+                    if (holidayNumber === 1) {  // 월요일 휴무
+                        if (day === 0 || day === 5) {  // 일요일 또는 금요일
                             addDateOption(date);
                         }
                     } else {
-                        if(day === 1 || day === 5) {
+                        if (day === 1 || day === 5) {  // 월요일 또는 금요일
                             addDateOption(date);
                         }
                     }
@@ -793,65 +787,71 @@
                 },
                 // 경상권 내부
                 "GS": {
-                    "GS": 10000    // 경상 내부 (원래대로 10,000원으로 복구)
+                    "GS": 10000   // 경상 내부
                 }
             };
 
-            // 지역 코드 추출
-            const region1 = option1.split('-')[0];
-            const region2 = option2.split('-')[0];
-            const subregion1 = option1.split('-')[1];
-            const subregion2 = option2.split('-')[1];
+            if (option1 && option2) {
+                // 지역 코드 추출
+                const region1 = option1.split('-')[0];
+                const region2 = option2.split('-')[0];
+                const subregion1 = option1.split('-')[1];
+                const subregion2 = option2.split('-')[1];
 
-            // 제주 관련 요금을 먼저 계산
-            if (region1 === "JJ" || region2 === "JJ") {
-                const otherRegion = region1 === "JJ" ? region2 : region1;
-                const otherSubRegion = region1 === "JJ" ? subregion2 : subregion1;
-                
-                if (otherRegion === "JL") {
-                    if (otherSubRegion === 'YS1') {  // 여수-제주 경우
-                        price = 46000 + 18000;  // 제주-광주(46,000원) + 광주-여수(18,000원)
-                    } else if (otherSubRegion === 'JZ') {  // 전주-제주 경우
-                        price = 46000 + 14000;  // 제주-광주(46,000원) + 광주-전주(14,000원)
-                    } else {
-                        price = 60000;  // 제주-광주 직통
-                    }
-                } else {
-                    // 제주-광주 + 광주에서 목적지까지의 요금
-                    const gwangjuToDestination = priceMatrix["JL"][otherRegion] || priceMatrix[otherRegion]["JL"] || 0;
-                    price = 46000 + gwangjuToDestination;
-                }
-            }
-            // 여수 특별 요금은 제주 요금이 아닐 경우에만 계산
-            else if (subregion1 === 'YS1' || subregion2 === 'YS1') {
-                const otherRegion = subregion1 === 'YS1' ? option2 : option1;
-                const otherMainRegion = otherRegion.split('-')[0];
-                const otherSubRegion = otherRegion.split('-')[1];
-                
-                switch(otherMainRegion) {
-                    case 'MT': price = 24000; break;  // 여수 ↔ 수도권
-                    case 'GW': price = 28000; break;  // 여수 ↔ 강원
-                    case 'CC': price = 20000; break;  // 여수 ↔ 충청
-                    case 'JL': price = 18000; break;  // 여수 ↔ 전라
-                    case 'GS': 
-                        if (otherSubRegion === 'BG') {
-                            price = 24000;  // 여수 ↔ 울산
+                // 제주 관련 요금
+                if (region1 === "JJ" || region2 === "JJ") {
+                    const otherRegion = region1 === "JJ" ? region2 : region1;
+                    const otherSubRegion = region1 === "JJ" ? subregion2 : subregion1;
+                    
+                    if (otherRegion === "JL") {
+                        if (otherSubRegion === 'YS1') {  // 여수-제주 경우
+                            price = 46000 + 18000;  // 제주-광주(46,000원) + 광주-여수(18,000원)
+                        } else if (otherSubRegion === 'JZ') {  // 전주-제주 경우
+                            price = 46000 + 14000;  // 제주-광주(46,000원) + 광주-전주(14,000원)
                         } else {
-                            price = 20000;  // 여수 ↔ 다른 경상권
+                            price = 50000;  // 제주-광주 직통
                         }
-                        break;
-                    default: price = 24000;
+                    } else {
+                        // 제주-광주 + 광주에서 목적지까지의 요금
+                        const gwangjuToDestination = priceMatrix["JL"][otherRegion] || priceMatrix[otherRegion]["JL"] || 0;
+                        price = 46000 + gwangjuToDestination;
+                    }
                 }
-            }
-            // 일반 권역 간 동행
-            else {
-                price = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
-            }
+                // 여수 특별 요금
+                else if (subregion1 === 'YS1' || subregion2 === 'YS1') {
+                    const otherRegion = subregion1 === 'YS1' ? option2 : option1;
+                    const otherMainRegion = otherRegion.split('-')[0];
+                    const otherSubRegion = otherRegion.split('-')[1];
+                    
+                    switch(otherMainRegion) {
+                        case 'MT': price = 24000; break;  // 여수 ↔ 수도권
+                        case 'GW': price = 28000; break;  // 여수 ↔ 강원
+                        case 'CC': price = 20000; break;  // 여수 ↔ 충청
+                        case 'JL': price = 18000; break;  // 여수 ↔ 전라
+                        case 'GS': 
+                            if (otherSubRegion === 'BG1') {  // 울산 북구
+                                price = 24000;  // 여수 ↔ 울산
+                            } else {
+                                price = 20000;  // 여수 ↔ 다른 경상권
+                            }
+                            break;
+                        default: price = 20000;
+                    }
+                }
+                // 일반 권역 간 동행
+                else {
+                    price = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1] || 0;
+                }
 
-            // 마릿수에 따른 추가 요금
-            if (option3 && option3 !== "1") {
-                const additionalFee = (parseInt(option3) - 1) * 7000;
-                price += additionalFee;
+                // 마릿수에 따른 추가 요금
+                if (option3 && option3 !== "1") {
+                    if (option3 === "5-20") {
+                        price += 28000;  // 5마리 이상일 경우 28,000원 추가
+                    } else {
+                        const additionalFee = (parseInt(option3) - 1) * 7000;
+                        price += additionalFee;
+                    }
+                }
             }
 
             document.getElementById("priceDisplay").innerText = `동행요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
@@ -1065,10 +1065,9 @@
             "JL-YS1-01": { holiday: "휴무일 없음", hours: "13:00 ~ 19:00" },
             "GS-SS-01": { holiday: "휴무일 없음", hours: "11:00 ~ 20:00" },
             "GS-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
-            "GS-BG-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
-            "GS-YS2-01": { holiday: "매주 수요일", hours: "13:00 ~ 20:00" },
-            "GS-BG-02": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
-            "GS-HD-01": { holiday: "매주 수요일", hours: "12:00 ~ 22:00" },
+            "GS-BG1-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
+            "GS-BG2-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
+            "GS-YS2-01": { holiday: "매주 수요일", hours: "12:00 ~ 19:00" },
             "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" }
         };
 
