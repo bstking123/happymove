@@ -342,20 +342,6 @@
             font-weight: 500;
             color: #333;
         }
-
-        .store-info {
-            color: #ff0000;
-            font-size: 0.9em;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-
-        .arrival-notice {
-            color: #ff0000;
-            font-size: 0.9em;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
@@ -402,8 +388,6 @@
             <option value="GS-HD-01">부산[해운대]-렙토날드</option>
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
-        <div id="store1Info" class="store-info"></div>
-
         <label for="option2">도착지</label>
         <select id="option2" onchange="handleSelectionChange()">
             <option value="">도착지 선택</option>
@@ -439,7 +423,6 @@
             <option value="GS-HD-01">부산[해운대]-렙토날드</option>
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
-        <div id="store2Info" class="store-info"></div>
 
         <label for="option3">마릿수</label>
         <select id="option3" onchange="handleSelectionChange()">
@@ -451,11 +434,10 @@
             <option value="5-20">5~20마리</option>
         </select>
 
-        <label for="sendDate">맡기는 날짜</label>
+        <label for="sendDate">보내는 날짜</label>
         <select id="sendDate" required>
-            <option value="">맡기는 날짜 선택</option>
+            <option value="">보내는 날짜 선택</option>
         </select>
-        <div id="arrivalNotice" class="arrival-notice"></div>
 
         <label for="salePrice">개체 분양가</label>
         <div class="price-input-container">
@@ -463,7 +445,7 @@
             <span class="price-unit">만원</span>
         </div>
 
-        <label for="senderName">보내는 분 성함 (업체명으로 입력해주세요)</label>
+        <label for="senderName">보내는 분 성함 (동행지 대표님은 업체명으로 입력해주세요)</label>
         <input type="text" id="senderName" required>
 
         <label for="senderPhone">보내는 분 연락처</label>
@@ -485,7 +467,7 @@
                     <span id="accountNumber">1000-1290-8652</span>
                     <span>김보성</span>
                 </div>
-                <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주세요)</p>
+                <p class="account-notice">(동행지 대표님은 업체명으로 입금해주세요)</p>
                 <button onclick="copyAccount()" class="copy-btn">계좌번호 복사하기</button>
             </div>
         </div>
@@ -511,10 +493,10 @@
             <span class="close" onclick="closePrivacyModal()">&times;</span>
             <h2>개인정보 수집과 이용에 대한 동의</h2>
             <div class="modal-text">
-                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받자 합니다.</p>
+                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
                 <p><strong>수집하는 자:</strong> 동행</p>
                 <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
-                <p><strong>수집하는 개인정보 항목:</strong> 보내는 이름, 보내는분연락처, 받는분 이름, 받는분 연락처</p>
+                <p><strong>수집하는 개인정보 항목:</strong> 보내는분 이름, 보내는분연락처, 받는분 이름, 받는분 연락처</p>
                 <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
                 <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
             </div>
@@ -539,7 +521,7 @@
                         
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
-                            <li>본 관은 서비스를 이용하고자 하는 모든 이용자에 대하여 그 효력을 발생합니다.</li>
+                            <li>본 약관은 서비스를 이용하고자 하는 모든 이용자에 대하여 그 효력을 발생합니다.</li>
                             <li>회사는 약관의 내용을 변경할 수 있으며, 변경된 약관은 공지사항을 통하여 공시합니다.</li>
                         </ul>
                         
@@ -576,13 +558,13 @@
                         <p>보상 청구는 개체 수령 후 24시간 이내에 이루어져야 하며, 수의사의 소견서 등 관련 증빙 자료를 함께 제출해야 합니다.</p>
 
                         <h4>4. 책임의 한계</h4>
-                        <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대해 책임을 지며, 인도 및 수령 시 개체의 건 상태를 반드시 확인해야 합니다.</p>
+                        <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대해 책임을 지며, 인도 및 령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
 
                         <h4>5. 건강 이상 개체 운송 제한</h4>
                         <p>픽업 시점에 건강에 이상이 있는 것으로 보이는 개체는 운송 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지 않습니다.</p>
 
                         <h4>6. 동행지 보관 요금 관련 안내</h4>
-                        <p>회사가 안내한 일정을 준수지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
+                        <p>회사가 안내한 일정을 준수하지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
                     </div>
                 </div>
             </div>
@@ -599,7 +581,7 @@
                 <p><strong>출발지:</strong> <span id="confirm-departure"></span></p>
                 <p><strong>도착지:</strong> <span id="confirm-arrival"></span></p>
                 <p><strong>마릿수:</strong> <span id="confirm-quantity"></span></p>
-                <p><strong>맡기는 날짜:</strong> <span id="confirm-date"></span></p>
+                <p><strong>보내는 날짜:</strong> <span id="confirm-date"></span></p>
                 <p><strong>개체 분양가:</strong> <span id="confirm-price"></span>만원</p>
                 <p><strong>보내는 분:</strong> <span id="confirm-sender"></span></p>
                 <p><strong>보내는 분 연락처:</strong> <span id="confirm-sender-phone"></span></p>
@@ -614,7 +596,7 @@
                     <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 양해 부탁드립니다.</div>
                     <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
                     <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전날까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구될 수 있습니다.</div>
-                    <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 동행의 영업시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
+                    <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 동행지의 영업시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
                 </div>
                 <div class="confirm-checkbox">
                     <label class="checkbox-label">
@@ -678,52 +660,23 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            function isJejuInvolved() {
+                return option1.value.startsWith('JJ-') || option2.value.startsWith('JJ-');
+            }
+            
             dateSelect.innerHTML = '<option value="">선택하세요</option>';
-
-            function isJejuDeparture() {
-                return option1.value.startsWith('JJ-');
-            }
-
-            function isJejuArrival() {
-                return option2.value.startsWith('JJ-');
-            }
-
-            function isSecondOrFourthWeek(date) {
-                const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-                const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
-                return weekNumber === 2 || weekNumber === 4;
-            }
-
-            // 제주도 관련된 경우 30일, 그 외는 14일
-            const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
-
-            for(let i = 0; i < daysToShow; i++) {
+            
+            for(let i = 0; i < 14; i++) {
                 const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
                 const day = date.getDay();
-
-                if (isJejuDeparture()) {
-                    // 제주 출발: 2,4째주 화요일만 가능
-                    if (day === 2 && isSecondOrFourthWeek(date)) {
-                        addDateOption(date);
-                    }
-                } else if (isJejuArrival()) {
-                    // 제주 도착: 2,4째주 월요일만 가능
-                    if (day === 1 && isSecondOrFourthWeek(date)) {
+                
+                if(isJejuInvolved()) {
+                    if(day === 6) {
                         addDateOption(date);
                     }
                 } else {
-                    // 기존 로직 (휴무일에 따른 날짜 선택)
-                    const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
-                    const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
-
-                    if (holidayNumber !== null) {
-                        if(day === holidayNumber - 1 || day === 5) {
-                            addDateOption(date);
-                        }
-                    } else {
-                        if(day === 1 || day === 5) {
-                            addDateOption(date);
-                        }
+                    if(day === 2 || day === 6) {
+                        addDateOption(date);
                     }
                 }
             }
@@ -825,7 +778,7 @@
                     default: price = 24000;
                 }
             }
-            // 제주 관련 요 계산
+            // 제주 관련 요금 계산
             else if (region1 === "JJ" || region2 === "JJ") {
                 const otherRegion = region1 === "JJ" ? region2 : region1;
                 if (otherRegion === "JL") {
@@ -838,7 +791,17 @@
             }
             // 일반 권역 간 동행
             else {
-                price = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1] || 14000;
+                // 같은 권역 내 이동인 경우
+                if (region1 === region2) {
+                    price = priceMatrix[region1]?.[region2] || 10000; // 같은 권역 내부는 10000원
+                } else {
+                    // 다른 권역 간 이동인 경우
+                    price = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                    if (!price) {
+                        console.error('설정되지 않은 권역 간 이동:', region1, region2);
+                        price = 0; // 정의되지 않은 경로는 0원으로 표시
+                    }
+                }
             }
 
             // 마릿수에 따른 추가 요금
@@ -865,8 +828,6 @@
 
             updatePrice();
             setupDateOptions();
-            updateStoreInfo();
-            updateArrivalNotice();
             autoSaveForm();
         }
 
@@ -991,7 +952,7 @@
                 price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbw8-U1zW8givvQlyvpD4_eYadY8LWxjs98ai7Pmap1gu9jwzmoHHqveh-v6nfDFEUA-dg/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
                 method: 'POST',
                 body: JSON.stringify(data)
             })
@@ -1008,7 +969,7 @@
             .catch(error => {
                 spinner.style.display = 'none';
                 console.error('Error:', error);
-                alert('청 중 오류가 발생했습다.');
+                alert('신청 중 오류가 발생했습니다.');
             });
         }
 
@@ -1030,130 +991,6 @@
                 }
             }
         });
-
-        const storeInfo = {
-            "MT-MP-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
-            "MT-GN-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
-            "MT-EP-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
-            "MT-YD-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
-            "MT-GB-01": { holiday: "매주 수요일", hours: "12:30 ~ 20:00" },
-            "MT-IS-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" },
-            "MT-IS-02": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
-            "MT-GP-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
-            "MT-GR-01": { holiday: "매주 화요일", hours: "13:00 ~ 20:00" },
-            "MT-SN-01": { holiday: "매주 월요일", hours: "12:00 ~ 21:00" },
-            "MT-BC-01": { holiday: "매주 월요일", hours: "13:00 ~ 21:00" },
-            "MT-SH-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
-            "MT-AS-01": { holiday: "휴무일 없음", hours: "12:00 ~ 20:00" },
-            "MT-YI-01": { holiday: "매주 화,수요일", hours: "13:00 ~ 20:00" },
-            "MT-SW-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
-            "MT-HS-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
-            "MT-GY-01": { holiday: "매주 월요일", hours: "13:00 ~ 19:00" },
-            "MT-ND-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
-            "GW-CC-01": { holiday: "매주 월요일", hours: "13:00 ~ 22:00" },
-            "CC-SG-01": { holiday: "매주 화요일", hours: "12:00 ~ 21:00" },
-            "CC-YS-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:30" },
-            "JL-BG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
-            "JL-DJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
-            "JL-YS-01": { holiday: "휴무일 없음", hours: "13:00 ~ 19:00" },
-            "GS-SS-01": { holiday: "휴무일 없음", hours: "11:00 ~ 20:00" },
-            "GS-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
-            "GS-BG-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
-            "GS-YS-01": { holiday: "매주 수요일", hours: "13:00 ~ 20:00" },
-            "GS-BG-02": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
-            "GS-HD-01": { holiday: "매주 수요일", hours: "12:00 ~ 22:00" },
-            "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" }
-        };
-
-        function updateStoreInfo() {
-            const option1 = document.getElementById('option1');
-            const option2 = document.getElementById('option2');
-            const info1 = document.getElementById('store1Info');
-            const info2 = document.getElementById('store2Info');
-            
-            if (option1.value && storeInfo[option1.value]) {
-                info1.textContent = `휴무일: ${storeInfo[option1.value].holiday} / 운영시간: ${storeInfo[option1.value].hours}`;
-            } else {
-                info1.textContent = '';
-            }
-            
-            if (option2.value && storeInfo[option2.value]) {
-                info2.textContent = `휴무일: ${storeInfo[option2.value].holiday} / 운영시간: ${storeInfo[option2.value].hours}`;
-            } else {
-                info2.textContent = '';
-            }
-        }
-
-        function updateArrivalNotice() {
-            const dateSelect = document.getElementById('sendDate');
-            const option1 = document.getElementById('option1');
-            const option2 = document.getElementById('option2');
-            const arrivalNotice = document.getElementById('arrivalNotice');
-            
-            if (dateSelect.value) {
-                const selectedDate = new Date(dateSelect.value);
-                const arrivalDate = new Date(selectedDate);
-                
-                if (option1.value.startsWith('JJ-')) {
-                    // 제주 출발: 선택된 날짜가 속한 주의 일요일
-                    while (arrivalDate.getDay() !== 0) {
-                        arrivalDate.setDate(arrivalDate.getDate() + 1);
-                    }
-                    const month = arrivalDate.getMonth() + 1;
-                    const date = arrivalDate.getDate();
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(일)`;
-                } 
-                else if (option2.value.startsWith('JJ-')) {
-                    // 제주 도착: 선택된 날짜가 속한 주의 금요일
-                    while (arrivalDate.getDay() !== 5) {
-                        arrivalDate.setDate(arrivalDate.getDate() + 1);
-                    }
-                    const month = arrivalDate.getMonth() + 1;
-                    const date = arrivalDate.getDate();
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(금)`;
-                } 
-                else {
-                    // 일반 지역: 돌아오는 수요일 또는 일요일
-                    const selectedDay = selectedDate.getDay();
-                    
-                    if (selectedDay <= 3) { // 일~수요일에 맡기면 그 주 수요일
-                        while (arrivalDate.getDay() !== 3) {
-                            arrivalDate.setDate(arrivalDate.getDate() + 1);
-                        }
-                    } else { // 목~토요일에 맡기면 그 주 일요일
-                        while (arrivalDate.getDay() !== 0) {
-                            arrivalDate.setDate(arrivalDate.getDate() + 1);
-                        }
-                    }
-                    
-                    const month = arrivalDate.getMonth() + 1;
-                    const date = arrivalDate.getDate();
-                    const dayName = arrivalDate.getDay() === 0 ? '일' : '수';
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(${dayName})`;
-                }
-            } else {
-                arrivalNotice.textContent = '';
-            }
-        }
-
-        // sendDate의 change 이벤트에 updateArrivalNotice 추가
-        document.getElementById('sendDate').addEventListener('change', updateArrivalNotice);
-
-        function getHolidayNumber(holiday) {
-            const dayMap = {
-                '매주 월요일': 1,
-                '매주 화요일': 2,
-                '매주 수요일': 3,
-                '매주 목요일': 4,
-                '매주 금요일': 5,
-                '매주 토요일': 6,
-                '매주 일요일': 0,
-                '매주 화,수요일': [2, 3],  // 용인점 특수 케이스
-                '휴무일 없음': null
-            };
-            
-            return dayMap[holiday];
-        }
     </script>
 </body>
 </html>
