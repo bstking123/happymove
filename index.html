@@ -1161,7 +1161,7 @@
                     }
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(일)`;
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 } 
                 else if (option2.value.startsWith('JJ-')) {
                     // 제주 도착: 선택된 날짜가 속한 주의 금요일
@@ -1170,7 +1170,7 @@
                     }
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(금)`;
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(금)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 } 
                 else {
                     // 일반 지역: 돌아오는 수요일 또는 일요일
@@ -1189,7 +1189,7 @@
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
                     const dayName = arrivalDate.getDay() === 0 ? '일' : '수';
-                    arrivalNotice.textContent = `동행 도착예정일: ${month}월 ${date}일(${dayName})`;
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(${dayName})<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
             } else {
                 arrivalNotice.textContent = '';
