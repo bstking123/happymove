@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>동행 신청</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
             --main-bg: #e5d3c3;
@@ -27,6 +28,7 @@
         }
 
         .container {
+            position: relative;
             background-color: var(--form-bg);
             padding: 30px;
             border-radius: 20px;
@@ -267,14 +269,79 @@
 
         @media screen and (max-width: 768px) {
             .container {
-                width: 90%;
-                margin: 20px auto;
-                padding: 20px;
+                width: 95%;
+                margin: 10px auto;
+                padding: 20px 15px;
             }
 
             body {
-                height: auto;
-                padding: 20px 0;
+                padding: 10px 0;
+            }
+
+            h1 {
+                font-size: 1.6em;
+                margin-top: 25px;
+            }
+
+            select, input[type="text"], input[type="tel"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .home-button {
+                width: 35px;
+                height: 35px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .material-icons {
+                font-size: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 85vh;
+            }
+
+            .account-info {
+                padding: 12px;
+                margin: 12px 0 20px;
+            }
+
+            .terms-container {
+                padding: 12px;
+                margin: 15px 0;
+            }
+
+            .confirmation-notice {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            button {
+                padding: 12px;
+            }
+
+            .view-terms {
+                padding: 1px 6px;
+                height: 22px;
+            }
+        }
+
+        @media screen and (max-width: 320px) {
+            .container {
+                padding: 15px 10px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            select, input[type="text"], input[type="tel"] {
+                font-size: 13px;
             }
         }
 
@@ -356,15 +423,114 @@
             margin-top: 5px;
             margin-bottom: 15px;
         }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--button-gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: var(--button-hover);
+        }
+
+        .material-icons {
+            font-size: 24px;
+        }
+
+        .floating-buttons {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-button {
+            width: auto;
+            height: 45px;
+            padding: 0 20px;
+            border-radius: 25px;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .floating-button .material-icons {
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        .floating-button.apply-btn {
+            width: auto;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        @media screen and (min-width: 769px) {
+            .floating-buttons {
+                display: none;  /* PC에서는 숨김 */
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .home-button {
+                display: none;  /* 모바일에서는 기존 홈버튼 숨김 */
+            }
+            
+            .floating-buttons {
+                bottom: 30px;
+                right: 20px;
+            }
+
+            .floating-button {
+                height: 40px;
+                padding: 0 15px;
+            }
+
+            .floating-button.apply-btn {
+                height: 45px;
+                padding: 0 15px;
+            }
+
+            .floating-button .material-icons {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="spinner-overlay">
-        <div class="spinner"></div>
-    </div>
-    <div class="save-status">자동 저장됨</div>
-
     <div class="container">
+        <button onclick="location.href='https://happymove.co.kr'" class="home-button">
+            <span class="material-icons">home</span>
+        </button>
         <h1>동행 신청</h1>
         
         <label for="option1">출발지</label>
@@ -377,7 +543,7 @@
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
             <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
-            <option value="MT-GP-01">경기[김포]-게코피2호점</option>
+            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
             <option value="MT-GR-01">경기[구리]-제이콥슨</option>
             <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
             <option value="MT-BC-01">경기[부천]-저스트팜</option>
@@ -630,6 +796,15 @@
                 <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
             </div>
         </div>
+    </div>
+
+    <div class="floating-buttons">
+        <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
+            <span class="material-icons">home</span>홈
+        </button>
+        <button onclick="location.href='https://bstking123.github.io/happymove/price_table.html'" class="floating-button apply-btn">
+            요금표
+        </button>
     </div>
 
     <script>
@@ -1111,7 +1286,7 @@
             "MT-ND-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
             "GW-CC-01": { holiday: "매주 월요일", hours: "13:00 ~ 22:00" },
             "DJ-SG-01": { holiday: "매주 화요일", hours: "12:00 ~ 21:00" },
-            "DJ-YS-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:30" },
+            "DJ-YS-01": { holiday: "휴무일 없음", hours: "15:00 ~ 19:30" },
             "GJ-BG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
             "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
             "YE-YS-01": { holiday: "휴무일 없음", hours: "13:00 ~ 19:00" },
