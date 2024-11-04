@@ -297,9 +297,10 @@
         }
 
         .floating-button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: auto;
+            height: 45px;
+            padding: 0 20px;
+            border-radius: 25px;
             background: var(--button-gradient);
             color: white;
             border: none;
@@ -309,16 +310,22 @@
             cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-        }
-
-        .floating-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            background: var(--button-hover);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .floating-button .material-icons {
-            font-size: 24px;
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        .floating-button.apply-btn {
+            width: auto;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         @media screen and (min-width: 769px) {
@@ -338,8 +345,13 @@
             }
 
             .floating-button {
-                width: 45px;
+                height: 40px;
+                padding: 0 15px;
+            }
+
+            .floating-button.apply-btn {
                 height: 45px;
+                padding: 0 15px;
             }
 
             .floating-button .material-icons {
@@ -753,7 +765,7 @@
         </div>
 
         <div class="price-section">
-            <h2>특별 노선 요금</h2>
+            <h2>특��� 노선 요금</h2>
             <table class="price-table">
                 <tr>
                     <th colspan="2">제주 노선</th>
@@ -835,7 +847,7 @@
                         <span>66,000원</span>
                     </div>
                     <div class="price-row">
-                        <span>제주 �� 광주</span>
+                        <span>제주  광주</span>
                         <span>50,000원</span>
                     </div>
                     <div class="price-row">
@@ -919,10 +931,10 @@
 
     <div class="floating-buttons">
         <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
-            <span class="material-icons">home</span>
+            <span class="material-icons">home</span>홈
         </button>
         <button onclick="location.href='https://bstking123.github.io/happymove/'" class="floating-button">
-            <span class="material-icons">edit</span>
+            신청
         </button>
     </div>
 
