@@ -189,26 +189,27 @@
         }
 
         @media screen and (max-width: 768px) {
-            .price-table {
-                min-width: 800px;
+            .table-container {
+                display: none;
             }
 
-            .price-table th, .price-table td {
-                padding: 10px 8px;
-                font-size: 14px;
+            .mobile-price-table {
+                display: block;
             }
 
-            .price-table th:first-child,
-            .price-table td:first-child {
-                position: sticky;
-                left: 0;
-                background: white;
-                z-index: 1;
-                border-right: 2px solid var(--border);
+            .accordion-button.active {
+                background: var(--button-gradient);
+                color: white;
             }
 
-            .price-table th:first-child {
-                background: #f8f9fa;
+            .accordion-button:after {
+                content: '+';
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .accordion-button.active:after {
+                content: '-';
             }
         }
 
@@ -704,7 +705,7 @@
                     <td>46,000원</td>
                 </tr>
                 <tr>
-                    <td>제주 ↔ 춘천</td>
+                    <td>제주 ↔ 강원</td>
                     <td>90,000원</td>
                     <td>여수 ↔ 강원</td>
                     <td>54,000원</td>
@@ -761,7 +762,7 @@
                         <span>70,000원</span>
                     </div>
                     <div class="price-row">
-                        <span>제주 ↔ 춘천</span>
+                        <span>제주 ↔ 강원</span>
                         <span>90,000원</span>
                     </div>
                     <div class="price-row">
