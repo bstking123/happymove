@@ -189,8 +189,8 @@
         }
 
         @media screen and (max-width: 768px) {
-            .table-container {
-                display: none;
+            .table-container, .price-table {
+                display: none !important;
             }
 
             .mobile-price-table {
@@ -283,6 +283,67 @@
 
             .accordion-button.active:after {
                 content: '-';
+            }
+        }
+
+        .floating-buttons {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .floating-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: var(--button-hover);
+        }
+
+        .floating-button .material-icons {
+            font-size: 24px;
+        }
+
+        @media screen and (min-width: 769px) {
+            .floating-buttons {
+                display: none;  /* PC에서는 숨김 */
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .home-button {
+                display: none;  /* 모바일에서는 기존 홈버튼 숨김 */
+            }
+            
+            .floating-buttons {
+                bottom: 30px;
+                right: 20px;
+            }
+
+            .floating-button {
+                width: 45px;
+                height: 45px;
+            }
+
+            .floating-button .material-icons {
+                font-size: 20px;
             }
         }
     </style>
@@ -774,7 +835,7 @@
                         <span>66,000원</span>
                     </div>
                     <div class="price-row">
-                        <span>제주 ↔ 광주</span>
+                        <span>제주 �� 광주</span>
                         <span>50,000원</span>
                     </div>
                     <div class="price-row">
@@ -854,6 +915,15 @@
                 <li class="highlight">개체를 맡기는날보다 일찍 맡기거나 늦게 데려가실경우 매장에 따른 추가 호텔링비가 청구됩니다</li>
             </ul>
         </div>
+    </div>
+
+    <div class="floating-buttons">
+        <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
+            <span class="material-icons">home</span>
+        </button>
+        <button onclick="location.href='https://bstking123.github.io/happymove/'" class="floating-button">
+            <span class="material-icons">edit</span>
+        </button>
     </div>
 
     <script>
