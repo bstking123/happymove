@@ -211,6 +211,79 @@
                 background: #f8f9fa;
             }
         }
+
+        .mobile-price-table {
+            display: none;
+            width: 100%;
+        }
+
+        .accordion-button {
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            text-align: left;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-row:last-child {
+            border-bottom: none;
+        }
+
+        .special-routes {
+            margin-top: 20px;
+        }
+
+        .special-routes h3 {
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        @media screen and (max-width: 768px) {
+            .table-container {
+                display: none;
+            }
+
+            .mobile-price-table {
+                display: block;
+            }
+
+            .accordion-button.active {
+                background: var(--button-gradient);
+                color: white;
+            }
+
+            .accordion-button:after {
+                content: '+';
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .accordion-button.active:after {
+                content: '-';
+            }
+        }
     </style>
 </head>
 <body>
@@ -325,6 +398,296 @@
                     </tr>
                 </table>
             </div>
+
+            <div class="mobile-price-table">
+                <button class="accordion-button">수도권 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>46,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">강원 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>30,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>46,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">충북 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>30,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>38,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">대전 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>38,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">광주/전주 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>38,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">대구/경북 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>30,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>22,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>18,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">부산/경남 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>30,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>26,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>18,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">울산 출발</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>수도권</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>강원</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>충북</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대전</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>광주/전주</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>대구/경북</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>부산/경남</span>
+                        <span>18,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>울산</span>
+                        <span>18,000원</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="price-section">
@@ -389,6 +752,84 @@
                     <td>-</td>
                 </tr>
             </table>
+
+            <div class="mobile-price-table">
+                <button class="accordion-button">제주 노선</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>제주 ↔ 수도권</span>
+                        <span>70,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 춘천</span>
+                        <span>90,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 충북</span>
+                        <span>70,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 대전</span>
+                        <span>66,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 광주</span>
+                        <span>50,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 전주</span>
+                        <span>56,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 대구</span>
+                        <span>70,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 부산</span>
+                        <span>70,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>제주 ↔ 울산</span>
+                        <span>82,000원</span>
+                    </div>
+                </div>
+
+                <button class="accordion-button">여수 노선</button>
+                <div class="accordion-content">
+                    <div class="price-row">
+                        <span>여수 ↔ 수도권</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 강원</span>
+                        <span>54,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 충북</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 대전</span>
+                        <span>38,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 광주/전주</span>
+                        <span>34,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 대구/경북</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 부산/경남</span>
+                        <span>46,000원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>여수 ↔ 울산</span>
+                        <span>46,000원</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="notice">
@@ -413,5 +854,33 @@
             </ul>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+        
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                } else {
+                    // 다른 열린 콘텐츠 닫기
+                    document.querySelectorAll('.accordion-content').forEach(item => {
+                        item.style.display = 'none';
+                    });
+                    document.querySelectorAll('.accordion-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    content.style.display = 'block';
+                    this.classList.add('active');
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html> 
