@@ -389,6 +389,7 @@
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
@@ -396,9 +397,10 @@
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
         <div id="store1Info" class="store-info"></div>
@@ -425,6 +427,7 @@
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
@@ -432,9 +435,10 @@
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                    
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
         </select>
         <div id="store2Info" class="store-info"></div>
@@ -766,11 +770,21 @@
                 "MT": {
                     "MT": 10000,    // 수도권 내부
                     "GW": 14000,    // 수도권 ↔ 강원
+                    "CB": 12000,    // 수도권 ↔ 충북
                     "DJ": 10000,    // 수도권 ↔ 대전
                     "GJ": 14000,    // 수도권 ↔ 광주/전주
-                    "DG": 14000,    // 수도권 ↔ 대구/경북 (20,000원에서 14,000원으로 수정)
+                    "DG": 14000,    // 수도권 ↔ 대구/경북
                     "BS": 20000,    // 수도권 ↔ 부산/경남
                     "UL": 24000     // 수도권 ↔ 울산
+                },
+                // 충북 연결 추가
+                "CB": {
+                    "GW": 10000,    // 충북 ↔ 강원
+                    "DJ": 10000,    // 충북 ↔ 대전
+                    "GJ": 14000,    // 충북 ↔ 광주/전주
+                    "DG": 14000,    // 충북 ↔ 대구/경북
+                    "BS": 20000,    // 충북 ↔ 부산/경남
+                    "UL": 20000     // 충북 ↔ 울산
                 },
                 // 강원 연결
                 "GW": {
@@ -793,7 +807,7 @@
                 // 광주/전주 연결
                 "GJ": {
                     "GJ": 10000,    // 광주/전주 내부
-                    "DG": 14000,    // 광주/전주 ↔ 대구/경북
+                    "DG": 14000,    // 광주/전주 ↔ 대구/북
                     "BS": 14000,    // 광주/전주 ↔ 부산/경남
                     "UL": 20000     // 광주/전주 ↔ 울산 (14,000원에서 20,000원으로 수정)
                 },
@@ -1105,7 +1119,9 @@
             "DG-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
             "UL-BG-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
             "BS-BG-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
-            "BS-YS-01": { holiday: "매주 수요일", hours: "12:00 ~ 19:00" },
+            "BS-HU-01": { holiday: "매주 수요일", hours: "12:00 ~ 22:00" },
+            "BS-YS-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
+            "CB-CJ-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
             "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" }
         };
 
@@ -1139,7 +1155,7 @@
                 const arrivalDate = new Date(selectedDate);
                 
                 if (option1.value.startsWith('JJ-')) {
-                    // 제주 출발: 선된 날짜가 속한 주의 일요일
+                    // 제주 출발: 선택된 날짜가 속한 주의 일요일
                     while (arrivalDate.getDay() !== 0) {
                         arrivalDate.setDate(arrivalDate.getDate() + 1);
                     }
