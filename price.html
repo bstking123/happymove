@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동행 서비스 가격표</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #e5d3c3;
+            --form-bg: #ffffff;
+            --text: #4a3728;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--form-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        h1, h2 {
+            color: var(--text);
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .price-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid var(--border);
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .price-table th, .price-table td {
+            padding: 15px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .price-table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .notice {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .notice h3 {
+            color: var(--text);
+            margin-top: 0;
+        }
+
+        .highlight {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .region-header {
+            background-color: #f8f9fa;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+                margin: 10px auto;
+            }
+
+            .price-table th, .price-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .price-section {
+                padding: 10px;
+            }
+        }
+
+        .notice ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .notice li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .notice li:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>동행 서비스 가격표</h1>
+
+        <div class="price-section">
+            <h2>지역별 동행 요금</h2>
+            <table class="price-table">
+                <tr>
+                    <th>출발/도착</th>
+                    <th>수도권</th>
+                    <th>강원</th>
+                    <th>충북</th>
+                    <th>대전</th>
+                    <th>광주/전주</th>
+                    <th>대구/경북</th>
+                    <th>부산/경남</th>
+                    <th>울산</th>
+                </tr>
+                <tr class="region-header">
+                    <td><strong>수도권</strong></td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>22,000원</td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>26,000원</td>
+                    <td>38,000원</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>강원</strong></td>
+                    <td>26,000원</td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>26,000원</td>
+                    <td>46,000원</td>
+                    <td>30,000원</td>
+                    <td>46,000원</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>충북</strong></td>
+                    <td>22,000원</td>
+                    <td>26,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>22,000원</td>
+                    <td>30,000원</td>
+                    <td>38,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>대전</strong></td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                    <td>22,000원</td>
+                    <td>22,000원</td>
+                    <td>26,000원</td>
+                    <td>38,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>광주/전주</strong></td>
+                    <td>26,000원</td>
+                    <td>46,000원</td>
+                    <td>26,000원</td>
+                    <td>22,000원</td>
+                    <td>18,000원</td>
+                    <td>26,000원</td>
+                    <td>26,000원</td>
+                    <td>38,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>대구/경북</strong></td>
+                    <td>26,000원</td>
+                    <td>30,000원</td>
+                    <td>22,000원</td>
+                    <td>22,000원</td>
+                    <td>26,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>부산/경남</strong></td>
+                    <td>38,000원</td>
+                    <td>46,000원</td>
+                    <td>30,000원</td>
+                    <td>26,000원</td>
+                    <td>26,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                </tr>
+                <tr>
+                    <td><strong>울산</strong></td>
+                    <td>46,000원</td>
+                    <td>46,000원</td>
+                    <td>38,000원</td>
+                    <td>38,000원</td>
+                    <td>38,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                    <td>18,000원</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="price-section">
+            <h2>특별 노선 요금</h2>
+            <table class="price-table">
+                <tr>
+                    <th colspan="2">제주 노선</th>
+                    <th colspan="2">여수 노선</th>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 수도권</td>
+                    <td>70,000원</td>
+                    <td>여수 ↔ 수도권</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 춘천</td>
+                    <td>90,000원</td>
+                    <td>여수 ↔ 강원</td>
+                    <td>54,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 충북</td>
+                    <td>70,000원</td>
+                    <td>여수 ↔ 충북</td>
+                    <td>38,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 대전</td>
+                    <td>66,000원</td>
+                    <td>여수 ↔ 대전</td>
+                    <td>38,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 광주</td>
+                    <td>50,000원</td>
+                    <td>여수 ↔ 광주/전주</td>
+                    <td>34,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 전주</td>
+                    <td>56,000원</td>
+                    <td>여수 ↔ 대구/경북</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 대구</td>
+                    <td>70,000원</td>
+                    <td>여수 ↔ 부산/경남</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 부산</td>
+                    <td>70,000원</td>
+                    <td>여수 ↔ 울산</td>
+                    <td>46,000원</td>
+                </tr>
+                <tr>
+                    <td>제주 ↔ 울산</td>
+                    <td>82,000원</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="notice">
+            <h3>추가 요금 안내</h3>
+            <ul>
+                <li>1마리: 기본요금</li>
+                <li>2마리: 기본요금 + 7,000원</li>
+                <li>3마리: 기본요금 + 14,000원</li>
+                <li>4마리: 기본요금 + 21,000원</li>
+                <li>5마리 이상: 기본요금 + 28,000원</li>
+            </ul>
+        </div>
+
+        <div class="notice">
+            <h3>유의사항</h3>
+            <ul>
+                <li>모든 요금은 1회 운송 기준입니다.</li>
+                <li>일반 노선은 화요일, 토요일 픽업 하고 수요일, 일요일에 도착합니다.</li>
+                <li>제주 노선은 매월 둘째 주, 넷째 주에 운영됩니다.</li>
+                <li>여수 노선은 주 1회 운영됩니다.</li>
+                <li class="highlight">개체를 맡기는날보다 일찍 맡기거나 늦게 데려가실경우 매장에 따른 추가 호텔링비가 청구됩니다</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
