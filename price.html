@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>동행 서비스 가격표</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
             --main-bg: #e5d3c3;
             --form-bg: #ffffff;
             --text: #4a3728;
             --border: #e0e0e0;
+            --button-gradient: linear-gradient(145deg, #8B4513, #654321);
+            --button-hover: linear-gradient(145deg, #654321, #8B4513);
         }
 
         body {
@@ -23,6 +26,7 @@
         }
 
         .container {
+            position: relative;
             background-color: var(--form-bg);
             padding: 30px;
             border-radius: 20px;
@@ -103,6 +107,17 @@
             .price-section {
                 padding: 10px;
             }
+
+            .home-button {
+                top: 15px;
+                right: 15px;
+                width: 35px;
+                height: 35px;
+            }
+
+            .material-icons {
+                font-size: 20px;
+            }
         }
 
         .notice ul {
@@ -118,115 +133,198 @@
         .notice li:last-child {
             margin-bottom: 0;
         }
+
+        .home-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--button-gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: var(--button-hover);
+        }
+
+        .material-icons {
+            font-size: 24px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        @media screen and (max-width: 768px) {
+            .price-table {
+                min-width: 800px;
+            }
+
+            .price-table th, .price-table td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+
+            .price-table th:first-child,
+            .price-table td:first-child {
+                position: sticky;
+                left: 0;
+                background: white;
+                z-index: 1;
+                border-right: 2px solid var(--border);
+            }
+
+            .price-table th:first-child {
+                background: #f8f9fa;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <button onclick="location.href='https://happymove.co.kr'" class="home-button">
+            <span class="material-icons">home</span>
+        </button>
         <h1>동행 서비스 가격표</h1>
 
         <div class="price-section">
             <h2>지역별 동행 요금</h2>
-            <table class="price-table">
-                <tr>
-                    <th>출발/도착</th>
-                    <th>수도권</th>
-                    <th>강원</th>
-                    <th>충북</th>
-                    <th>대전</th>
-                    <th>광주/전주</th>
-                    <th>대구/경북</th>
-                    <th>부산/경남</th>
-                    <th>울산</th>
-                </tr>
-                <tr class="region-header">
-                    <td><strong>수도권</strong></td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>22,000원</td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>26,000원</td>
-                    <td>38,000원</td>
-                    <td>46,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>강원</strong></td>
-                    <td>26,000원</td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>26,000원</td>
-                    <td>46,000원</td>
-                    <td>30,000원</td>
-                    <td>46,000원</td>
-                    <td>46,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>충북</strong></td>
-                    <td>22,000원</td>
-                    <td>26,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>22,000원</td>
-                    <td>30,000원</td>
-                    <td>38,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>대전</strong></td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                    <td>22,000원</td>
-                    <td>22,000원</td>
-                    <td>26,000원</td>
-                    <td>38,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>광주/전주</strong></td>
-                    <td>26,000원</td>
-                    <td>46,000원</td>
-                    <td>26,000원</td>
-                    <td>22,000원</td>
-                    <td>18,000원</td>
-                    <td>26,000원</td>
-                    <td>26,000원</td>
-                    <td>38,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>대구/경북</strong></td>
-                    <td>26,000원</td>
-                    <td>30,000원</td>
-                    <td>22,000원</td>
-                    <td>22,000원</td>
-                    <td>26,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>부산/경남</strong></td>
-                    <td>38,000원</td>
-                    <td>46,000원</td>
-                    <td>30,000원</td>
-                    <td>26,000원</td>
-                    <td>26,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                </tr>
-                <tr>
-                    <td><strong>울산</strong></td>
-                    <td>46,000원</td>
-                    <td>46,000원</td>
-                    <td>38,000원</td>
-                    <td>38,000원</td>
-                    <td>38,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                    <td>18,000원</td>
-                </tr>
-            </table>
+            <div class="table-container">
+                <table class="price-table">
+                    <tr>
+                        <th>출발/도착</th>
+                        <th>수도권</th>
+                        <th>강원</th>
+                        <th>충북</th>
+                        <th>대전</th>
+                        <th>광주/전주</th>
+                        <th>대구/경북</th>
+                        <th>부산/경남</th>
+                        <th>울산</th>
+                    </tr>
+                    <tr class="region-header">
+                        <td><strong>수도권</strong></td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>22,000원</td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>26,000원</td>
+                        <td>38,000원</td>
+                        <td>46,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>강원</strong></td>
+                        <td>26,000원</td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>26,000원</td>
+                        <td>46,000원</td>
+                        <td>30,000원</td>
+                        <td>46,000원</td>
+                        <td>46,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>충북</strong></td>
+                        <td>22,000원</td>
+                        <td>26,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>22,000원</td>
+                        <td>30,000원</td>
+                        <td>38,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>대전</strong></td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                        <td>22,000원</td>
+                        <td>22,000원</td>
+                        <td>26,000원</td>
+                        <td>38,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>광주/전주</strong></td>
+                        <td>26,000원</td>
+                        <td>46,000원</td>
+                        <td>26,000원</td>
+                        <td>22,000원</td>
+                        <td>18,000원</td>
+                        <td>26,000원</td>
+                        <td>26,000원</td>
+                        <td>38,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>대구/경북</strong></td>
+                        <td>26,000원</td>
+                        <td>30,000원</td>
+                        <td>22,000원</td>
+                        <td>22,000원</td>
+                        <td>26,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>부산/경남</strong></td>
+                        <td>38,000원</td>
+                        <td>46,000원</td>
+                        <td>30,000원</td>
+                        <td>26,000원</td>
+                        <td>26,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                    </tr>
+                    <tr>
+                        <td><strong>울산</strong></td>
+                        <td>46,000원</td>
+                        <td>46,000원</td>
+                        <td>38,000원</td>
+                        <td>38,000원</td>
+                        <td>38,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                        <td>18,000원</td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
         <div class="price-section">
