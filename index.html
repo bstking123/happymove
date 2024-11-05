@@ -787,7 +787,7 @@
                 <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
                 <div class="notice-list">
                     <div class="notice-item">✓ 입력하신 정보가 모두 정확한지 확인해주세요.</div>
-                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 양해 부탁드립니다.</div>
+                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 양해 부탁드���니다.</div>
                     <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
                     <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전날까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
                     <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 동행지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
@@ -887,10 +887,26 @@
                 return weekNumber === 2 || weekNumber === 4;
             }
 
+            function isBlockedDate(date) {
+                // 2024년 11월 10일부터 15일까지 날짜 차단
+                const blockedStart = new Date('2024-11-10');
+                const blockedEnd = new Date('2024-11-15');
+                blockedStart.setHours(0, 0, 0, 0);
+                blockedEnd.setHours(0, 0, 0, 0);
+                
+                return date >= blockedStart && date <= blockedEnd;
+            }
+
             const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
 
             for(let i = 0; i < daysToShow; i++) {
                 const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
+                
+                // 차단된 날짜인 경우 건너뛰기
+                if (isBlockedDate(date)) {
+                    continue;
+                }
+
                 const day = date.getDay();
 
                 if (isJejuDeparture()) {
