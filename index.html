@@ -595,7 +595,7 @@
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
-            <option value="GJ-BG-01">광주[북구]-렙타일아트��지엄 광주점</option>
+            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
             <option value="WD-WD-01">전남[완도]-쭌이네</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
@@ -1416,7 +1416,7 @@
                 const arrivalDate = new Date(selectedDate);
                 
                 if (option1.value.startsWith('WD-') && option2.value.startsWith('JJ-')) {  // 완도→제주
-                    // ��음 주 금요일로 설정
+                    // 다음 주 금요일로 설정
                     while (arrivalDate.getDay() !== 5) {  // 금요일까지 이동
                         arrivalDate.setDate(arrivalDate.getDate() + 1);
                     }
