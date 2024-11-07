@@ -13,6 +13,7 @@
             --button-gradient: linear-gradient(145deg, #8B4513, #654321);
             --text: #4a3728;
             --button-hover: linear-gradient(145deg, #654321, #8B4513);
+            --accent: #ff8c42; /* 추가된 부분 */
         }
 
         body {
@@ -485,9 +486,41 @@
                 font-size: 20px;
             }
         }
+
+        /* 기존 스타일... */
+        
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
     <div class="container">
         <button onclick="location.href='https://happymove.co.kr'" class="home-button">
             <span class="material-icons">home</span>
@@ -503,7 +536,7 @@
             <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
-            <option value="MT-IS-02">경기[산]-게코스리퍼블릭</option>
+            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
             <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
             <option value="MT-GR-01">경기[구리]-제이콥슨</option>
             <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
@@ -522,6 +555,7 @@
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="WD-WD-01">전남[완도]-쭌이네</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -530,7 +564,7 @@
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
             <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
-            <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            
             
         </select>
         <div id="store1Info" class="store-info"></div>
@@ -561,8 +595,9 @@
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
-            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="GJ-BG-01">광주[북구]-렙타일아트��지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="WD-WD-01">전남[완도]-쭌이네</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -571,7 +606,7 @@
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
             <option value="BS-HU-01">부산[해운대]-렙토날드</option>                    
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
-            <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            
             
         </select>
         <div id="store2Info" class="store-info"></div>
@@ -759,7 +794,7 @@
                 </div>
             </div>
             <div class="modal-buttons">
-                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 제출</button>
+                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 신청</button>
                 <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
             </div>
         </div>
@@ -772,6 +807,32 @@
         <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button apply-btn">
             요금표
         </button>
+    </div>
+
+    <!-- 계좌 입금 안내 모달 추가 -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAccountModal()">&times;</span>
+            <h2>동행 신청이 완료되었습니다.</h2>
+            <div class="modal-text">
+                <div class="account-info" style="margin-top: 20px;">
+                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 동행요금을 입금해주세요.</p>
+                    <div class="copy-account" style="margin: 20px 0;">
+                        <div class="account-number" style="font-size: 1.2em;">
+                            <span>토스뱅크</span>
+                            <span id="modalAccountNumber">1000-1290-8652</span>
+                            <span>김보성</span>
+                        </div>
+                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
+                        <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
+                    </div>
+                    <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-close-btn" onclick="closeAccountModal()">확인</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -804,7 +865,7 @@
                         }, 2000);
                     }
                 } catch (error) {
-                    console.error('자동 저장 중 오 발생:', error);
+                    console.error('자동 저장 중 오류 발생:', error);
                 }
             }, 1000);
         }
@@ -1217,10 +1278,8 @@
                     return;
                 }
 
-                const spinner = document.querySelector('.spinner-overlay');
-                if (spinner) {
-                    spinner.style.display = 'flex';
-                }
+                // 스피너 표시
+                document.querySelector('.spinner-overlay').style.display = 'flex';
 
                 const option1 = document.getElementById('option1');
                 const option2 = document.getElementById('option2');
@@ -1245,21 +1304,21 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
-                    spinner.style.display = 'none';
+                    document.querySelector('.spinner-overlay').style.display = 'none';
                     if(response.ok) {
-                        alert('신청이 완료되었습니다.');
                         localStorage.removeItem('donghaengFormData');
-                        location.reload();
+                        openAccountModal();  // 계좌 입금 안내 모달 표시
                     } else {
                         alert('신청 중 오류가 발생했습니다.');
                     }
                 })
                 .catch(error => {
-                    spinner.style.display = 'none';
+                    document.querySelector('.spinner-overlay').style.display = 'none';
                     console.error('Error:', error);
                     alert('신청 중 오류가 발생했습니다.');
                 });
             } catch (error) {
+                document.querySelector('.spinner-overlay').style.display = 'none';
                 console.error('폼 제출 중 오류 발생:', error);
                 alert('제출 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
@@ -1357,7 +1416,7 @@
                 const arrivalDate = new Date(selectedDate);
                 
                 if (option1.value.startsWith('WD-') && option2.value.startsWith('JJ-')) {  // 완도→제주
-                    // 다음 주 금요일로 설정
+                    // ��음 주 금요일로 설정
                     while (arrivalDate.getDay() !== 5) {  // 금요일까지 이동
                         arrivalDate.setDate(arrivalDate.getDate() + 1);
                     }
@@ -1455,6 +1514,16 @@
             
             // 1주차 또는 3주차인 경우에만 true 반환
             return weekNumber === 1 || weekNumber === 3;
+        }
+
+        // 계좌 모달 관련 함수 추가
+        function openAccountModal() {
+            document.getElementById('accountModal').style.display = 'block';
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').style.display = 'none';
+            location.reload();  // 모달을 닫으면 페이지 새로고침
         }
     </script>
 </body>
