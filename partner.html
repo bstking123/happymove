@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동행 신청(동행지전용)</title>
+    <title>동행 신청</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -13,7 +13,6 @@
             --button-gradient: linear-gradient(145deg, #8B4513, #654321);
             --text: #4a3728;
             --button-hover: linear-gradient(145deg, #654321, #8B4513);
-            --accent: #ff8c42; /* 추가된 부분 */
         }
 
         body {
@@ -197,18 +196,20 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-content {
             position: relative;
             background-color: #fff;
-            margin: 2% auto;
-            padding: 20px;
-            width: 80%;
+            width: 90%;
             max-width: 500px;
             border-radius: 10px;
-            max-height: 80vh;
+            padding: 20px;
+            max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .modal-close-btn {
@@ -445,7 +446,7 @@
 
         .floating-button .material-icons {
             font-size: 18px;
-            margin-right: 2px;
+            margin-right: 8px;
         }
 
         .floating-button.apply-btn {
@@ -468,8 +469,9 @@
             }
             
             .floating-buttons {
-                bottom: 30px;
+                bottom: 20px;
                 right: 20px;
+                flex-direction: column;
             }
 
             .floating-button {
@@ -515,110 +517,9 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .cart-button {
-            background: var(--button-gradient);
-            margin-right: 10px;
-        }
-
-        .cart-panel {
-            display: none;
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .cart-item {
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-            margin-bottom: 10px;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: red;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .cart-toggle {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--button-gradient);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
-        }
-
-        .progress-bar {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #f0f0f0;
-            z-index: 1002;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0;
-            transition: width 0.3s ease;
-        }
     </style>
 </head>
 <body>
-    <div class="progress-bar">
-        <div class="progress-bar-fill"></div>
-    </div>
-
-    <button class="cart-toggle" onclick="toggleCart()">
-        <span class="material-icons">shopping_cart</span>
-        <span class="cart-badge" style="display: none;">0</span>
-    </button>
-
-    <div class="cart-panel">
-        <h3>장바구니</h3>
-        <div class="cart-items"></div>
-        <div class="cart-total"></div>
-        <button onclick="submitAllOrders()" class="modal-close-btn" style="margin-top: 20px;">전체 신청하기</button>
-    </div>
-
     <div class="spinner-overlay">
         <div class="spinner"></div>
     </div>
@@ -626,7 +527,7 @@
         <button onclick="location.href='https://happymove.co.kr'" class="home-button">
             <span class="material-icons">home</span>
         </button>
-        <h1>동행 신청(동행지전용)</h1>
+        <h1>동행 신청</h1>
         
         <label for="option1">출발지</label>
         <select id="option1" onchange="handleSelectionChange()">
@@ -652,7 +553,7 @@
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
-            <option value="DJ-SG-01">대전[서]-히스</option>
+            <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
@@ -705,7 +606,7 @@
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                    
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
             
             
@@ -774,10 +675,7 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <button type="button" class="cart-button" onclick="addToCart()">장바구니 담기</button>
-            <button type="button" onclick="showConfirmationModal()">바로 신청하기</button>
-        </div>
+        <button type="button" onclick="showSpeciesModal()">신청하기</button>
     </div>
     <!-- 모달 창들 -->
     <div id="privacyModal" class="modal">
@@ -814,7 +712,7 @@
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
                             <li>본 약관은 서비스를 이용하고자 하는 모든 이용자에 대하여 그 효력을 발생합니다.</li>
-                            <li>회사는 약관의 내용을 변경할 수 있으며, 변경된 약관은 공지사항을 통하여 공시합니다.</li>
+                            <li>회사는 관의 내용을 변경할 수 있으며, 변경된 약관은 공지사항을 통하여 공시합니다.</li>
                         </ul>
                         
                         <h4>제4조 (이용자의 의무)</h4>
@@ -827,7 +725,7 @@
                         <h4>제5조 (서비스 이용)</h4>
                         <ul>
                             <li>서비스 신청은 온라인으로 진행됩니다.</li>
-                            <li>동행 정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
+                            <li>동행 규정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
                             <li>천재지변, 기상 악화 등의 불가항력적인 사유로 서비스가 제한될 수 있습니다.</li>
                         </ul>
                     </div>
@@ -838,10 +736,10 @@
                         <h4>1. 보상 기준</h4>
                         <p>서비스 과정에서 회사의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
 
-                        <h4>2. 보상 제외 항</h4>
+                        <h4>2. 보상 제외 항목</h4>
                         <p>다음과 같은 경우에는 보상이 이루어지지 않습니다:</p>
                         <ul>
-                            <li>사용자가 개체의 상태를 위로 기재한 경우</li>
+                            <li>사용자가 개체의 상태를 허위로 기재한 경우</li>
                             <li>개체의 선천적 질병이나 기형으로 인한 문제</li>
                             <li>천재지변, 전쟁, 폭동 등 불가항력적 사유로 인한 손실</li>
                         </ul>
@@ -850,13 +748,13 @@
                         <p>보상 청구는 개체 수령 후 24시간 이내에 이루어져야 하며, 수의사의 소견서 등 관련 증빙 자료를 함께 제출해야 합니다.</p>
 
                         <h4>4. 책임의 한계</h4>
-                        <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대 책임을 지며, 인 및 수령 시 개체의 건강 상태를 반드시 확해야 합니다.</p>
+                        <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대한 책임을 지며, 픽업 및 수령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
 
                         <h4>5. 건강 이상 개체 운송 제한</h4>
                         <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 동행 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
 
                         <h4>6. 동행지 보관 요금 관련 안내</h4>
-                        <p>회사가 안내한 일정을 준수하지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
+                        <p>회사가 안내한 일정을 준수하 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
                     </div>
                 </div>
             </div>
@@ -885,15 +783,15 @@
                 <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
                 <div class="notice-list">
                     <div class="notice-item">✓ 입력하신 정보가 모두 정확한지 확인해주세요.</div>
-                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 양해 부탁드립니다.</div>
+                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 이해 부탁드립니다.</div>
                     <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
-                    <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전날까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
-                    <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 동행지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
+                    <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
+                    <div class="notice-item">✓ 개체를 맡기나 찾으실 때는 동행지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
                 </div>
                 <div class="confirm-checkbox">
                     <label class="checkbox-label">
                         <input type="checkbox" id="confirmCheck" required>
-                        <span>위 필수 확인항 모두 확인하였으며 이에 동의합니다.</span>
+                        <span>위 필수 확인 사항 모두 확인하였으며 이에 동의합니다.</span>
                     </label>
                 </div>
             </div>
@@ -908,8 +806,11 @@
         <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
             <span class="material-icons">home</span>홈
         </button>
-        <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button apply-btn">
-            요금표
+        <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button">
+            <span class="material-icons">list_alt</span>요금표
+        </button>
+        <button onclick="showSpeciesModal()" class="floating-button">
+            <span class="material-icons">shopping_cart</span>신청
         </button>
     </div>
 
@@ -927,7 +828,7 @@
                             <span id="modalAccountNumber">1000-1290-8652</span>
                             <span>김보성</span>
                         </div>
-                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
+                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주세요.)</p>
                         <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
                     </div>
                     <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
@@ -935,6 +836,31 @@
             </div>
             <div class="modal-buttons">
                 <button type="button" class="modal-close-btn" onclick="closeAccountModal()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 개체 정보 모달 추가 -->
+    <div id="speciesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSpeciesModal()">&times;</span>
+            <h2>개체 정보 입력</h2>
+            <div class="modal-text">
+                <div id="speciesInputContainer">
+                    <!-- 여기에 동적으로 개체 선택창들이 추가됨 -->
+                </div>
+                
+                <!-- 5~20마리 선택시에만 보이는 추가 버튼 -->
+                <div id="addSpeciesButton" style="display: none; margin-top: 20px; text-align: center;">
+                    <button type="button" class="modal-close-btn" onclick="addSpeciesInput()" 
+                        style="width: 200px; padding: 15px 20px; font-size: 16px; margin: 0 auto;">
+                        개체 추가하기
+                    </button>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-close-btn" onclick="confirmSpecies()">확인</button>
+                <button type="button" class="modal-close-btn" onclick="closeSpeciesModal()" style="background: #666;">취소</button>
             </div>
         </div>
     </div>
@@ -1011,7 +937,7 @@
             }
 
             function isBlockedDate(date) {
-                // 2024년 11월 10일부터 15일까지 날짜 차단
+                // 2024년 11월 10일부터 15일까지 날짜 차트
                 const blockedStart = new Date('2024-11-10');
                 const blockedEnd = new Date('2024-11-15');
                 blockedStart.setHours(0, 0, 0, 0);
@@ -1109,157 +1035,111 @@
             const option1 = document.getElementById('option1').value;
             const option2 = document.getElementById('option2').value;
             const option3 = document.getElementById('option3').value;
-            let price = 0;
+            const sendDate = document.getElementById('sendDate').value;
+            let basePrice = 0;  // 기본 요금
+            let additionalFee = 0;  // 마릿수 추가 요금
 
             if (!option1 || !option2) {
                 document.getElementById("priceDisplay").innerText = "동행요금: 0원";
                 return;
             }
-            
-            const priceMatrix = {
-                // 수도권 연결
-                "MT": {
-                    "MT": 10000,    // 수도권 내부
-                    "GW": 14000,    // 수도권 ↔ 강원
-                    "CB": 12000,    // 수도권 ↔ 충북
-                    "DJ": 10000,    // 수도권 ↔ 대전
-                    "GJ": 14000,    // 수도권 ↔ 광주/전주
-                    "DG": 14000,    // 수도권 ↔ 대구/경북
-                    "BS": 20000,    // 수도권 ↔ 부산/경남
-                    "UL": 24000     // 수도권 ↔ 울산
-                },
-                // 충북 연결 추가
-                "CB": {
-                    "GW": 10000,    // 충북 ↔ 강원
-                    "DJ": 10000,    // 충북 ↔ 대전
-                    "GJ": 14000,    // 충북 ↔ 광주/전주
-                    "DG": 14000,    // 충북 ↔ 대구/경북
-                    "BS": 20000,    // 충북 ↔ 부산/경남
-                    "UL": 20000     // 충북 ↔ 울산
-                },
-                // 강원 연결
-                "GW": {
-                    "DJ": 16000,    // 강원 ↔ 대전
-                    "GJ": {         // 강원 ↔ 광주/전주 차등 요금 설정
-                        "GJ-BG-01": 24000,  // 강원 ↔ 광주
-                        "GJ-JJ-01": 16000   // 강원 ↔ 전주
-                    },
-                    "DG": 20000,    // 강원 ↔ 대구/경북
-                    "BS": 24000,    // 강원 ↔ 부산/경남
-                    "UL": 24000     // 강원 ↔ 울산
-                },
-                // 대전 연결
-                "DJ": {
-                    "GJ": 10000,    // 대전 ↔ 광주/전주
-                    "DG": 10000,    // 대전 ↔ 대구/경북
-                    "BS": 16000,    // 대전 ↔ 부산/경남 (10,000원에서 16,000원으로 수정)
-                    "UL": 20000     // 대전 ↔ 울산
-                },
-                // 광주/전주 연결
-                "GJ": {
-                    "GJ": 10000,    // 광주/전주 내부
-                    "DG": 14000,    // 광주/전주 ↔ 대구/북
-                    "BS": 14000,    // 광주/전주 ↔ 부산/경남
-                    "UL": 20000     // 광주/전주 ↔ 울산 (14,000원에서 20,000원으로 수정)
-                },
-                // 대구/경북 연결
-                "DG": {
-                    "DG": 10000,    // 대구/경북 내부
-                    "BS": 10000,    // 대구/경북 ↔ 부산/경남
-                    "UL": 12000     // 대구/경북 ↔ 울산 (10,000원에서 12,000원으로 수정)
-                },
-                // 부산/경남 연결
-                "BS": {
-                    "BS": 10000,    // 부산/경남 내부
-                    "UL": 10000     // 부산/경남 ↔ 울산
-                },
-                // 울산 내부
-                "UL": {
-                    "UL": 10000     // 울산 내부
-                }
-            };
 
             if (option1 && option2) {
-                // 지역 코드 추출
                 const region1 = option1.split('-')[0];
                 const region2 = option2.split('-')[0];
 
-                // 제주 관련 요금
+                // 1. 기본 요금 계산
                 if (region1 === "JJ" || region2 === "JJ") {
                     const otherRegion = region1 === "JJ" ? option2 : option1;
                     const otherCode = otherRegion.split('-')[0];
                     
-                    if (otherCode === "GW") {  // 제주-춘천
-                        price = 70000;
-                    } else if (otherCode === "WD" || otherCode === "YE") {  // 제주-완도/여수
-                        price = 64000;  // 제주-완도/여수 직통 요금
-                    } else if (otherCode === "GJ") {
-                        if (otherRegion === 'GJ-JJ-01') {  // 제주-전주
-                            price = 42000 + 10000;
-                        } else {
-                            price = 50000;  // 제주-광주
-                        }
+                    if (otherCode === "WD" || otherCode === "YE") {
+                        basePrice = 64000;  // 제주 ↔ 완도/여수
+                    } else if (otherCode === "GJ" && otherRegion !== 'GJ-JJ-01') {
+                        basePrice = 50000;  // 제주 ↔ 광주
                     } else {
-                        // 제주-광주 + 광주에서 목적지까지의 요금
-                        const gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
-                        if (typeof gwangjuToDestination === 'number') {
-                            price = 42000 + gwangjuToDestination;
+                        let gwangjuToDestination = 0;
+                        
+                        // 강원의 경우 광주까지의 요금을 특별히 처리
+                        if (otherCode === "GW") {
+                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-BG-01"];  // 강원-광주 요금: 48,000원
                         } else {
-                            price = 42000;
+                            gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
                         }
+                        
+                        basePrice = 42000 + gwangjuToDestination;  // 제주 기본요금 + 광주에서의 요금
                     }
-                }
-                // 여수 특별 요금
-                else if (region1 === "YE" || region2 === "YE" || region1 === "WD" || region2 === "WD") {
+                } else if (region1 === "YE" || region2 === "YE" || region1 === "WD" || region2 === "WD") {
+                    // 여수/완도 특별 요금...
                     const otherRegion = (region1 === "YE" || region1 === "WD") ? option2 : option1;
                     const otherCode = otherRegion.split('-')[0];
                     
                     switch(otherCode) {
-                        case 'MT': price = 24000; break;  // 여수/완도 ↔ 수도권
-                        case 'GW': price = 28000; break;  // 여수/완도 ↔ 강원
-                        case 'DJ': price = 20000; break;  // 여수/완도 ↔ 대전
-                        case 'GJ': price = 18000; break;  // 여수/완도 ↔ 광주/전주
-                        case 'DG': price = 24000; break;  // 여수/완도 ↔ 대구/경북
-                        case 'BS': price = 24000; break;  // 여수/완도 ↔ 부산/경남
-                        case 'UL': price = 24000; break;  // 수/완도 ↔ 울산
-                        default: price = 20000;
+                        case 'MT': basePrice = 48000; break;
+                        case 'GW': basePrice = 56000; break;
+                        case 'DJ': basePrice = 40000; break;
+                        case 'GJ': basePrice = 36000; break;
+                        case 'DG': basePrice = 48000; break;
+                        case 'BS': basePrice = 48000; break;
+                        case 'UL': basePrice = 48000; break;
+                        default: basePrice = 35000;
                     }
-                }
-                // 일반 권역 간 동행
-                else {
-                    // 강원-광주/전주 특별 요금 리
+                } else {
+                    // 일반 권역 간 동행...
                     if ((region1 === "GW" && region2 === "GJ") || (region2 === "GW" && region1 === "GJ")) {
                         const gjLocation = region1 === "GJ" ? option1 : option2;
-                        if (gjLocation === "GJ-BG-01") {  // 광주
-                            price = 24000;
-                        } else if (gjLocation === "GJ-JJ-01") {  // 전주
-                            price = 16000;
+                        if (gjLocation === "GJ-BG-01") {
+                            basePrice = 48000;
+                        } else if (gjLocation === "GJ-JJ-01") {
+                            basePrice = 32000;
                         }
                     } else {
-                        // 일반 매트릭스 가격 처리
                         const matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
                         if (typeof matrixPrice === 'object') {
-                            // 객체인 경우 (차등 요금) - 이 경우는 처리하지 않음
-                            price = 0;
+                            basePrice = 0;
                         } else {
-                            // 숫자인 경우 (일반 요금)
-                            price = matrixPrice || 0;
+                            basePrice = matrixPrice || 0;
                         }
                     }
                 }
 
-                // 마릿수에 따른 추가 요금
-                if (option3 && option3 !== "1") {
-                    if (option3 === "5-20") {
-                        price += 14000;  // 5마리 이상일 경우 28,000원 추가
-                    } else {
-                        const additionalFee = (parseInt(option3) - 1) * 3500;
-                        price += additionalFee;
+                // 2. 날짜별 할인 적용 (기본 요금에만)
+                let displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+
+                if (sendDate) {
+                    const selectedDate = new Date(sendDate);
+                    const month = selectedDate.getMonth() + 1;
+                    const day = selectedDate.getDate();
+                    
+                    if ((month === 11 && day >= 9) || (month === 12 && day <= 17)) {
+                        displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice * 0.8).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (20% 할인)`;
+                        basePrice = basePrice * 0.8;
+                    } else if (month === 12 && day >= 18) {
+                        displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
+                        basePrice = basePrice - 3000;
                     }
                 }
-            }
 
-            document.getElementById("priceDisplay").innerText = `동행요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+                // 3. 마릿수 추가 요금 계산 (할인 제외)
+                if (option3 && option3 !== "1") {
+                    if (option3 === "5-20") {
+                        additionalFee = 28000;
+                    } else {
+                        additionalFee = (parseInt(option3) - 1) * 7000;
+                    }
+                }
+
+                // 최종 가격 = 할인된 기본 요금 + 마릿수 추가 요금
+                const totalPrice = basePrice + additionalFee;
+                if (additionalFee > 0) {
+                    displayText += ` + ${additionalFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (마릿수 추가)`;
+                    displayText += ` = ${totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+                } else {
+                    displayText = displayText.replace(/동행요금: (\d+,*\d*)원/, '동행요금: $1원');
+                }
+
+                document.getElementById("priceDisplay").innerHTML = displayText;
+            }
         }
 
         function handleSelectionChange() {
@@ -1304,7 +1184,7 @@
             }
         }
 
-        // 모달 관련 함수들
+        // 모달 련 함수들
         function openPrivacyModal() {
             document.getElementById('privacyModal').style.display = 'block';
         }
@@ -1355,8 +1235,60 @@
                 alert('필수 확인사항에 동의해주세요.');
                 return;
             }
-            closeConfirmationModal();
-            sendToGoogleSheets();
+
+            // 스피너 표시
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+            
+            // 개체 정보 수집
+            const container = document.getElementById('speciesInputContainer');
+            const selects = container.getElementsByTagName('select');
+            const speciesInfo = [];
+            
+            for (let i = 0; i < selects.length; i++) {
+                let species = selects[i].value;
+                if (species === '기타') {
+                    species = document.getElementById(`otherSpecies${i + 1}`).value;
+                }
+                speciesInfo.push(`${i + 1}번: ${species}`);
+            }
+            
+            const data = {
+                timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                departure: option1.options[option1.selectedIndex].text,
+                arrival: option2.options[option2.selectedIndex].text,
+                quantity: option3.options[option3.selectedIndex].text,
+                sendDate: document.getElementById('sendDate').value,
+                salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                senderName: document.getElementById('senderName').value,
+                senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                receiverName: document.getElementById('receiverName').value,
+                receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                price: document.getElementById('priceDisplay').innerText.match(/(\d+,*\d*)원$/)[1].replace(/,/g, ''),  // 최종 금액만 추출
+                species: speciesInfo.join(', ')
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if(response.ok) {
+                    document.querySelector('.spinner-overlay').style.display = 'none';
+                    localStorage.removeItem('donghaengFormData');
+                    openAccountModal();
+                } else {
+                    throw new Error('전송 실패');
+                }
+            })
+            .catch(error => {
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                console.error('Error:', error);
+                alert('신청 중 오류가 발생했습니다.');
+            });
         }
 
         // 폼 제출  
@@ -1487,7 +1419,8 @@
             "CB-CJ-01": { holiday: "매주 수요일", hours: "월화목일 13:00 ~ 20:00, 금토 12:00 ~ 21:00" },
             "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-PT-01": { holiday: "휴무일 없음", hours: "13:00 ~ 21:00" },
-            "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" }
+            "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" },
+            "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" }
         };
 
         function updateStoreInfo() {
@@ -1630,11 +1563,118 @@
             location.reload();  // 모달을 닫으면 페이지 새로고침
         }
 
-        // 장바구니 관련 함수들
-        let cartItems = [];
+        // priceMatrix는 전역 변수로 한 번 정의
 
-        function addToCart() {
-            // 필수 필드 검증
+        // sendDate의 change 이벤트에 updatePrice 추가
+        document.getElementById('sendDate').addEventListener('change', function() {
+            updateArrivalNotice();
+            updatePrice();  // 날짜 변경 시 가격 업데이트 추가
+        });
+
+        // 맨 위에 priceMatrix 전역 변수로 정의
+        const priceMatrix = {
+            "MT": {
+                "MT": 20000,    // 수도권 내부
+                "GW": 28000,    // 수도권 ↔ 강원
+                "CB": 24000,    // 수도권 ↔ 충북
+                "DJ": 20000,    // 수도권 ↔ 대전
+                "GJ": 28000,    // 수도권 ↔ 광주/전주
+                "DG": 28000,    // 수도권 ↔ 대구/경북
+                "BS": 40000,    // 수도권 ↔ 부산/경남
+                "UL": 48000     // 수도권 ↔ 울산
+            },
+            "CB": {
+                "GW": 20000,    // 충북 ↔ 강원
+                "DJ": 16000,    // 충북 ↔ 대전
+                "GJ": 28000,    // 충북 ↔ 광주/전주
+                "DG": 28000,    // 충북 ↔ 대구/경북
+                "BS": 40000,    // 충북 ↔ 부산/경남
+                "UL": 40000     // 충북 ↔ 울산
+            },
+            "GW": {
+                "DJ": 32000,    // 강원 ↔ 대전
+                "GJ": {         // 강원 ↔ 광주/전주 차등 요금 설정
+                    "GJ-BG-01": 48000,  // 강원 ↔ 광주
+                    "GJ-JJ-01": 32000   // 강원 ↔ 전주 (기존 GJ-JU-01에서 변경)
+                },
+                "DG": 40000,    // 강원 ↔ 대구/경북
+                "BS": 48000,    // 강원 ↔ 부산/경남
+                "UL": 48000     // 강원 ↔ 울산
+            },
+            "DJ": {
+                "GJ": 20000,    // 대전 ↔ 광주/전주
+                "DG": 20000,    // 대전 ↔ 대구/경북
+                "BS": 32000,    // 대전 ↔ 부산/경남
+                "UL": 40000     // 대전 ↔ 울산
+            },
+            "GJ": {
+                "GJ": 16000,    // 광주/전주 내부
+                "DG": 28000,    // 광주/전주 ↔ 대구/경북
+                "BS": 28000,    // 광주/전주 ↔ 부산/경남
+                "UL": 40000     // 광주/전주 ↔ 울산
+            },
+            "DG": {
+                "DG": 16000,    // 대구/경북 내부
+                "BS": 16000,    // 대구/경북 ↔ 부산/경남
+                "UL": 24000     // 대구/경북 ↔ 울산
+            },
+            "BS": {
+                "BS": 16000,    // 부산/경남 내부
+                "UL": 16000     // 부산/경남 ↔ 울산
+            },
+            "UL": {
+                "UL": 16000     // 울산 내부
+            }
+        };
+
+        // 개체 정보 모 관련 함수들
+        function openSpeciesModal() {
+            const modal = document.getElementById('speciesModal');
+            modal.style.display = 'flex';  // display: flex로 변경하여 중앙 정렬
+            createSpeciesInputs();
+        }
+
+        function closeSpeciesModal() {
+            document.getElementById('speciesModal').style.display = 'none';
+        }
+
+        function handleSpeciesChange() {
+            const speciesSelect = document.getElementById('species');
+            const otherSpeciesInput = document.getElementById('otherSpeciesInput');
+            
+            if (speciesSelect.value === '기타') {
+                otherSpeciesInput.style.display = 'block';
+            } else {
+                otherSpeciesInput.style.display = 'none';
+            }
+        }
+
+        function confirmSpecies() {
+            // 모든 개체 정보가 선택되었는지 확인
+            const container = document.getElementById('speciesInputContainer');
+            const inputs = container.getElementsByTagName('select');
+            
+            for (let i = 0; i < inputs.length; i++) {
+                if (!inputs[i].value) {
+                    alert(`${i + 1}번 개체의 종류를 선택해주세요.`);
+                    return;
+                }
+                if (inputs[i].value === '기타') {
+                    const otherInput = document.getElementById(`otherSpecies${i + 1}`);
+                    if (!otherInput.value.trim()) {
+                        alert(`${i + 1}번 개체의 종류를 입력해주세요.`);
+                        return;
+                    }
+                }
+            }
+            
+            closeSpeciesModal();
+            showConfirmationModal();  // 신청 내용 확인 모달로 이동
+        }
+
+        // 신청하기 버튼 클릭 시 개체 정보 모달 먼저 표시
+        function showSpeciesModal() {
+            // 필수 입력 항목 체크
             const requiredFields = [
                 'option1', 'option2', 'option3', 'sendDate',
                 'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
@@ -1649,134 +1689,96 @@
                 }
             }
 
-            const option1 = document.getElementById('option1');
-            const option2 = document.getElementById('option2');
-            const option3 = document.getElementById('option3');
+            if (!document.getElementById('privacyCheck')?.checked || 
+                !document.getElementById('termsCheck')?.checked) {
+                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                return;
+            }
 
-            const item = {
-                departure: option1.options[option1.selectedIndex].text,
-                arrival: option2.options[option2.selectedIndex].text,
-                quantity: option3.options[option3.selectedIndex].text,
-                sendDate: document.getElementById('sendDate').value,
-                salePrice: document.getElementById('salePrice').value,
-                senderName: document.getElementById('senderName').value,
-                senderPhone: document.getElementById('senderPhone').value,
-                receiverName: document.getElementById('receiverName').value,
-                receiverPhone: document.getElementById('receiverPhone').value,
-                price: document.getElementById('priceDisplay').innerText
-            };
-
-            cartItems.push(item);
-            updateCartBadge();
-            updateCartPanel();
-            alert('장바구니에 추가되었습니다.');
+            openSpeciesModal();  // 개체 정보 모달 표시
         }
 
-        function updateCartBadge() {
-            const badge = document.querySelector('.cart-badge');
-            if (cartItems.length > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = cartItems.length;
+        // 개체 선택창 생성 함수
+        function createSpeciesInputs() {
+            const option3 = document.getElementById('option3').value;
+            const container = document.getElementById('speciesInputContainer');
+            const addButton = document.getElementById('addSpeciesButton');
+            container.innerHTML = ''; // 기존 입력창 초기화
+            
+            let count = 0;
+            
+            if (option3 === '5-20') {
+                // 5~20마리 선택 시 기본 5개 생성
+                count = 5;
+                addButton.style.display = 'block';  // 추가 버튼 표시
+            } else if (option3) {
+                count = parseInt(option3);
+                addButton.style.display = 'none';  // 추가 버튼 숨김
+            }
+
+            for (let i = 1; i <= count; i++) {
+                addSpeciesSelect(i);
+            }
+        }
+
+        // 개체 선택창 추가 함수
+        function addSpeciesSelect(number) {
+            const container = document.getElementById('speciesInputContainer');
+            const div = document.createElement('div');
+            div.style.marginBottom = '20px';
+            
+            div.innerHTML = `
+                <label for="species${number}">${number}번 개체</label>
+                <select id="species${number}" onchange="handleSpeciesChange(${number})" style="width: 100%; margin-top: 5px;">
+                    <option value="">선택해주세요</option>
+                    <option value="크레스티드 게코">크레스티드 게코</option>
+                    <option value="리키에너스">리키에너스</option>
+                    <option value="차화 게코">차화 게코</option>
+                    <option value="가고일 게코">가고일 게코</option>
+                    <option value="펫테일 게코">펫테일 게코</option>
+                    <option value="레오파드 게코">레오파드 게코</option>
+                    <option value="비어디 드래곤">비어디 드래곤</option>
+                    <option value="기타">기타</option>
+                </select>
+                <div id="otherSpeciesInput${number}" style="display: none; margin-top: 10px;">
+                    <input type="text" id="otherSpecies${number}" placeholder="개체 종 입력" style="width: 100%;">
+                    <p class="notice" style="color: #ff0000; font-size: 0.9em; margin-top: 5px;">
+                        ※ 기타 개체의 경우 추가요금이 발생할 수 있습니다.
+                    </p>
+                </div>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        // 개체 추가 버튼 클릭 시
+        function addSpeciesInput() {
+            const container = document.getElementById('speciesInputContainer');
+            const currentCount = container.children.length;
+            if (currentCount < 20) {
+                addSpeciesSelect(currentCount + 1);
+            }
+            if (currentCount + 1 >= 20) {
+                document.getElementById('addSpeciesButton').style.display = 'none';
+            }
+        }
+
+        // 기존 handleSpeciesChange 함수 수정
+        function handleSpeciesChange(number) {
+            const speciesSelect = document.getElementById(`species${number}`);
+            const otherSpeciesInput = document.getElementById(`otherSpeciesInput${number}`);
+            
+            if (speciesSelect.value === '기타') {
+                otherSpeciesInput.style.display = 'block';
             } else {
-                badge.style.display = 'none';
+                otherSpeciesInput.style.display = 'none';
             }
         }
 
-        function updateCartPanel() {
-            const cartItemsDiv = document.querySelector('.cart-items');
-            cartItemsDiv.innerHTML = '';
-            let totalPrice = 0;
-
-            cartItems.forEach((item, index) => {
-                const price = parseInt(item.price.replace(/[^0-9]/g, ''));
-                totalPrice += price;
-
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'cart-item';
-                itemDiv.innerHTML = `
-                    <p><strong>출발:</strong> ${item.departure}</p>
-                    <p><strong>도착:</strong> ${item.arrival}</p>
-                    <p><strong>마릿수:</strong> ${item.quantity}</p>
-                    <p><strong>날짜:</strong> ${item.sendDate}</p>
-                    <p><strong>요금:</strong> ${item.price}</p>
-                    <div class="cart-item-controls">
-                        <button onclick="removeFromCart(${index})" class="view-terms">삭제</button>
-                    </div>
-                `;
-                cartItemsDiv.appendChild(itemDiv);
-            });
-
-            const cartTotal = document.querySelector('.cart-total');
-            cartTotal.innerHTML = `<h4>총 금액: ${totalPrice.toLocaleString()}원</h4>`;
-        }
-
-        function removeFromCart(index) {
-            cartItems.splice(index, 1);
-            updateCartBadge();
-            updateCartPanel();
-        }
-
-        function toggleCart() {
-            const panel = document.querySelector('.cart-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // submitAllOrders 함수 수정
-        async function submitAllOrders() {
-            if (!cartItems.length) {
-                alert('장바구니가 비어있습니다.');
-                return;
-            }
-
-            if (!confirm('모든 신청을 진행하시겠습니까?')) {
-                return;
-            }
-
-            try {
-                // 스피너 표시
-                const spinnerOverlay = document.querySelector('.spinner-overlay');
-                spinnerOverlay.style.display = 'flex';
-
-                for (let i = 0; i < cartItems.length; i++) {
-                    const item = cartItems[i];
-                    
-                    const data = {
-                        timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
-                        departure: item.departure,
-                        arrival: item.arrival,
-                        quantity: item.quantity,
-                        sendDate: item.sendDate,
-                        salePrice: item.salePrice.replace(/,/g, ''),
-                        senderName: item.senderName,
-                        senderPhone: item.senderPhone.replace(/-/g, ''),
-                        receiverName: item.receiverName,
-                        receiverPhone: item.receiverPhone.replace(/-/g, ''),
-                        price: item.price.replace(/[^0-9]/g, '')
-                    };
-
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
-                        method: 'POST',
-                        body: JSON.stringify(data)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`${i + 1}번째 주문 처리 중 오류가 발생했습니다.`);
-                    }
-                }
-
-                // 모든 처리가 성공적으로 완료됨
-                cartItems = [];
-                updateCartBadge();
-                updateCartPanel();
-                toggleCart();
-                spinnerOverlay.style.display = 'none';
-                openAccountModal();
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert(error.message || '주문 처리 중 오류가 발생했습니다.');
-                document.querySelector('.spinner-overlay').style.display = 'none';
-            }
+        // 개체 정보 모달 열 때 입력창 생성
+        function openSpeciesModal() {
+            document.getElementById('speciesModal').style.display = 'block';
+            createSpeciesInputs();
         }
     </script>
 </body>
