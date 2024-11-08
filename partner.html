@@ -725,7 +725,7 @@
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
-            <option value="DJ-SG-01">대전[서]-히스</option>
+            <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
@@ -998,14 +998,14 @@
             <h2>동행 신청이 완료되었습니다.</h2>
             <div class="modal-text">
                 <div class="account-info" style="margin-top: 20px;">
-                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 동행요금을 입금해주세요.</p>
+                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 동행요금 <span style="color: #ff0000;">0원</span>을 입금해주세요.</p>
                     <div class="copy-account" style="margin: 20px 0;">
-                        <div class="account-number" style="font-size: 1.2em;">
+                        <div class="account-number">
                             <span>토스뱅크</span>
                             <span id="modalAccountNumber">1000-1290-8652</span>
                             <span>김보성</span>
                         </div>
-                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
+                        <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
                         <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
                     </div>
                     <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
@@ -1406,6 +1406,28 @@
         }
 
         function showConfirmationModal() {
+            // 필수 필드 검증
+            const requiredFields = [
+                'option1', 'option2', 'option3', 'sendDate',
+                'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
+            ];
+
+            for (const fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field?.value) {
+                    alert('모든 항목을 입력해주세요.');
+                    field?.focus();
+                    return;
+                }
+            }
+
+            // 약관 동의 검증
+            if (!document.getElementById('privacyCheck')?.checked || 
+                !document.getElementById('termsCheck')?.checked) {
+                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                return;
+            }
+
             const modal = document.getElementById('confirmationModal');
             const option1 = document.getElementById('option1');
             const option2 = document.getElementById('option2');
@@ -1419,7 +1441,7 @@
             document.getElementById('confirm-sender-phone').textContent = document.getElementById('senderPhone').value;
             document.getElementById('confirm-receiver').textContent = document.getElementById('receiverName').value;
             document.getElementById('confirm-receiver-phone').textContent = document.getElementById('receiverPhone').value;
-            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent;
+            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent.replace('동행요금: ', '');
             
             modal.style.display = 'block';
         }
@@ -1428,13 +1450,58 @@
             document.getElementById('confirmationModal').style.display = 'none';
         }
 
-        function finalSubmit() {
+        async function finalSubmit() {
             if (!document.getElementById('confirmCheck').checked) {
                 alert('필수 확인사항에 동의해주세요.');
                 return;
             }
-            closeConfirmationModal();
-            sendToGoogleSheets();
+
+            try {
+                // 스피너 표시
+                const spinnerOverlay = document.querySelector('.spinner-overlay');
+                spinnerOverlay.style.display = 'flex';
+                
+                // 확인 모달 닫기
+                document.getElementById('confirmationModal').style.display = 'none';
+
+                // 단일 주문 처리
+                const option1 = document.getElementById('option1');
+                const option2 = document.getElementById('option2');
+                const option3 = document.getElementById('option3');
+
+                const data = {
+                    timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                    departure: option1.options[option1.selectedIndex].text,
+                    arrival: option2.options[option2.selectedIndex].text,
+                    quantity: option3.options[option3.selectedIndex].text,
+                    sendDate: document.getElementById('sendDate').value,
+                    salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                    senderName: document.getElementById('senderName').value,
+                    senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                    receiverName: document.getElementById('receiverName').value,
+                    receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                    price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                };
+
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('주문 처리 중 오류가 발생했습니다.');
+                }
+
+                // 스피너 숨기기
+                spinnerOverlay.style.display = 'none';
+                // 계좌 입금 안내 모달 표시
+                openAccountModal();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message || '주문 처리 중 오류가 발생했습니다.');
+                document.querySelector('.spinner-overlay').style.display = 'none';
+            }
         }
 
         // 폼 제출  
@@ -1700,7 +1767,14 @@
 
         // 계좌 모달 관련 함수 추가
         function openAccountModal() {
-            document.getElementById('accountModal').style.display = 'block';
+            const modal = document.getElementById('accountModal');
+            const priceText = document.getElementById('confirm-fee').textContent;
+            
+            // 금액 안내 문구 업데이트
+            const accountInfoText = document.querySelector('#accountModal .account-info p:first-child');
+            accountInfoText.innerHTML = `아래 계좌로 동행요금 <span style="color: #ff0000;">${priceText}</span>을 입금해주세요.`;
+            
+            modal.style.display = 'block';
         }
 
         function closeAccountModal() {
@@ -1806,55 +1880,28 @@
                 return;
             }
 
-            if (!confirm('모든 신청을 진행하시겠습니까?')) {
-                return;
-            }
+            // 장바구니 내용으로 확인 모달 업데이트
+            document.getElementById('confirm-departure').textContent = cartItems.map(item => item.departure).join('\n');
+            document.getElementById('confirm-arrival').textContent = cartItems.map(item => item.arrival).join('\n');
+            document.getElementById('confirm-quantity').textContent = cartItems.map(item => item.quantity).join('\n');
+            document.getElementById('confirm-date').textContent = cartItems.map(item => item.sendDate).join('\n');
+            document.getElementById('confirm-price').textContent = cartItems.map(item => item.salePrice).join('\n');
+            document.getElementById('confirm-sender').textContent = cartItems[0].senderName;
+            document.getElementById('confirm-sender-phone').textContent = cartItems[0].senderPhone;
+            document.getElementById('confirm-receiver').textContent = cartItems[0].receiverName;
+            document.getElementById('confirm-receiver-phone').textContent = cartItems[0].receiverPhone;
+            
+            // 총 금액 계산
+            const totalPrice = cartItems.reduce((sum, item) => {
+                return sum + parseInt(item.price.replace(/[^0-9]/g, ''));
+            }, 0);
+            document.getElementById('confirm-fee').textContent = `${totalPrice.toLocaleString()}원`;
 
-            try {
-                // 스피너 표시
-                const spinnerOverlay = document.querySelector('.spinner-overlay');
-                spinnerOverlay.style.display = 'flex';
-
-                for (let i = 0; i < cartItems.length; i++) {
-                    const item = cartItems[i];
-                    
-                    const data = {
-                        timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
-                        departure: item.departure,
-                        arrival: item.arrival,
-                        quantity: item.quantity,
-                        sendDate: item.sendDate,
-                        salePrice: item.salePrice.replace(/,/g, ''),
-                        senderName: item.senderName,
-                        senderPhone: item.senderPhone.replace(/-/g, ''),
-                        receiverName: item.receiverName,
-                        receiverPhone: item.receiverPhone.replace(/-/g, ''),
-                        price: item.price.replace(/[^0-9]/g, '')
-                    };
-
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
-                        method: 'POST',
-                        body: JSON.stringify(data)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`${i + 1}번째 주문 처리 중 오류가 발생했습니다.`);
-                    }
-                }
-
-                // 모든 처리가 성공적으로 완료됨
-                cartItems = [];
-                updateCartBadge();
-                updateCartPanel();
-                toggleCart();
-                spinnerOverlay.style.display = 'none';
-                openAccountModal();
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert(error.message || '주문 처리 중 오류가 발생했습니다.');
-                document.querySelector('.spinner-overlay').style.display = 'none';
-            }
+            // 장바구니 패널 닫기
+            document.querySelector('.cart-panel').style.display = 'none';
+            
+            // 확인 모달 표시
+            document.getElementById('confirmationModal').style.display = 'block';
         }
     </script>
 </body>
