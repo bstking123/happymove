@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동행 신청</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #e5d3c3;
+            --form-bg: #ffffff;
+            --button-gradient: linear-gradient(145deg, #8B4513, #654321);
+            --text: #4a3728;
+            --button-hover: linear-gradient(145deg, #654321, #8B4513);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            position: relative;
+            background-color: var(--form-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text);
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        select, input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,140,66,0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .view-terms {
+            margin-left: 10px;
+            padding: 2px 8px;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto;
+            height: 24px;
+            line-height: 20px;
+            margin-top: 0;
+        }
+
+        .account-info {
+            margin: 15px 0 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .account-info p {
+            margin: 0 0 15px 0;
+            font-weight: 500;
+        }
+
+        .copy-account {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .account-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .account-notice {
+            text-align: center;
+            color: #666;
+            margin: 5px 0 10px;
+            font-size: 0.9em;
+        }
+
+        .price-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .price-input-container input {
+            margin-bottom: 0;
+            padding-right: 45px;
+        }
+
+        .price-unit {
+            position: absolute;
+            right: 12px;
+            color: #666;
+        }
+
+        .terms-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .terms-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terms-item input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+        }
+
+        .terms-item label {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 2% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-close-btn {
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            padding: 15px;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .modal-text {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 10px auto;
+                padding: 20px 15px;
+            }
+
+            body {
+                padding: 10px 0;
+            }
+
+            h1 {
+                font-size: 1.6em;
+                margin-top: 25px;
+            }
+
+            select, input[type="text"], input[type="tel"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .home-button {
+                width: 35px;
+                height: 35px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .material-icons {
+                font-size: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 85vh;
+            }
+
+            .account-info {
+                padding: 12px;
+                margin: 12px 0 20px;
+            }
+
+            .terms-container {
+                padding: 12px;
+                margin: 15px 0;
+            }
+
+            .confirmation-notice {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            button {
+                padding: 12px;
+            }
+
+            .view-terms {
+                padding: 1px 6px;
+                height: 22px;
+            }
+        }
+
+        @media screen and (max-width: 320px) {
+            .container {
+                padding: 15px 10px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            select, input[type="text"], input[type="tel"] {
+                font-size: 13px;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-buttons {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding-top: 15px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .confirmation-notice {
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .notice-list {
+            margin-bottom: 20px;
+        }
+
+        .notice-item {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: #333;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .notice-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .confirm-checkbox {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-label span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .store-info {
+            color: #ff0000;
+            font-size: 0.9em;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .arrival-notice {
+            color: #ff0000;
+            font-size: 0.9em;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--button-gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: var(--button-hover);
+        }
+
+        .material-icons {
+            font-size: 24px;
+        }
+
+        .floating-buttons {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-button {
+            width: auto;
+            height: 45px;
+            padding: 0 20px;
+            border-radius: 25px;
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .floating-button .material-icons {
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        .floating-button.apply-btn {
+            width: auto;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        @media screen and (min-width: 769px) {
+            .floating-buttons {
+                display: none;  /* PC에서는 숨김 */
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .home-button {
+                display: none;  /* 모바일에서는 기존 홈버튼 숨김 */
+            }
+            
+            .floating-buttons {
+                bottom: 30px;
+                right: 20px;
+            }
+
+            .floating-button {
+                height: 40px;
+                padding: 0 15px;
+            }
+
+            .floating-button.apply-btn {
+                height: 45px;
+                padding: 0 15px;
+            }
+
+            .floating-button .material-icons {
+                font-size: 20px;
+            }
+        }
+
+        /* 기존 스타일... */
+        
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="container">
+        <button onclick="location.href='https://happymove.co.kr'" class="home-button">
+            <span class="material-icons">home</span>
+        </button>
+        <h1>동행 신청</h1>
+        
+        <label for="option1">출발지</label>
+        <select id="option1" onchange="handleSelectionChange()">
+            <option value="">출발지 선택</option>
+            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
+            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
+            <option value="MT-EP-01">서울[은평]-더부쉬</option>
+            <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
+            <option value="MT-GB-01">서울[강북]-렉사리움</option>
+            <option value="MT-IS-01">경기[일산]-모프조</option>
+            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
+            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
+            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
+            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="MT-BC-01">경기[부천]-저스트팜</option>
+            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
+            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
+            <option value="MT-YI-01">경기[용인]-렙틸리스 용인점</option>
+            <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
+            <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
+            <option value="MT-PT-01">경기[평택]-5G크레</option>
+            <option value="MT-GY-01">인천[계양]-위드게코</option>
+            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            <option value="CB-CJ-01">충북[청주]-킹크레</option>
+            <option value="DJ-SG-01">대전[서구]-히스</option>
+            <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
+            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="BS-BG-01">부산[북구]-파충류샵</option>
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
+            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
+            
+            
+        </select>
+        <div id="store1Info" class="store-info"></div>
+
+        <label for="option2">도착지</label>
+        <select id="option2" onchange="handleSelectionChange()">
+            <option value="">도착지 선택</option>
+            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
+            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
+            <option value="MT-EP-01">서울[은평]-더부쉬</option>
+            <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
+            <option value="MT-GB-01">서울[강북]-렉사리움</option>
+            <option value="MT-IS-01">경기[일산]-모프조</option>
+            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
+            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
+            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
+            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
+            <option value="MT-BC-01">경기[부천]-저스트팜</option>
+            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
+            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
+            <option value="MT-YI-01">경기[용인]-렙틸리스 용인점</option>
+            <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
+            <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
+            <option value="MT-PT-01">경기[평택]-5G크레</option>
+            <option value="MT-GY-01">인천[계양]-위드게코</option>
+            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
+            <option value="CB-CJ-01">충북[청주]-킹크레</option>
+            <option value="DJ-SG-01">대전[서구]-히스</option>
+            <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
+            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
+            <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
+            <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
+            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
+            <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
+            <option value="BS-BG-01">부산[북구]-파충류샵</option>
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
+            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
+            
+            
+        </select>
+        <div id="store2Info" class="store-info"></div>
+
+        <label for="option3">마릿수</label>
+        <select id="option3" onchange="handleSelectionChange()">
+            <option value="">마릿수 선택</option>
+            <option value="1">1마리</option>
+            <option value="2">2마리</option>
+            <option value="3">3마리</option>
+            <option value="4">4마리</option>
+            <option value="5-20">5~20마리</option>
+        </select>
+
+        <label for="sendDate">맡기는 날짜 <span style="color: #ff0000; font-size: 0.9em;">(선택한 날에 맡겨주세요)</span></label>
+        <select id="sendDate" required>
+            <option value="">맡기는 날짜 선택</option>
+        </select>
+        <div id="arrivalNotice" class="arrival-notice"></div>
+
+        <label for="salePrice">개체 분양가</label>
+        <div class="price-input-container">
+            <input type="text" id="salePrice" placeholder="0" oninput="formatSalePrice(this)" required>
+            <span class="price-unit">만원</span>
+        </div>
+
+        <label for="senderName">보내는 분 성함</label>
+        <input type="text" id="senderName" required>
+
+        <label for="senderPhone">보내는 분 연락처</label>
+        <input type="tel" id="senderPhone" oninput="autoHyphen(this)" required>
+
+        <label for="receiverName">받는 분 성함</label>
+        <input type="text" id="receiverName" required>
+
+        <label for="receiverPhone">받는 분 연락처</label>
+        <input type="tel" id="receiverPhone" oninput="autoHyphen(this)" required>
+
+        <h2 id="priceDisplay">동행요금: 0원</h2>
+        
+        <div class="account-info">
+            <p>무통장 입금 계좌</p>
+            <div class="copy-account">
+                <div class="account-number">
+                    <span>토스뱅크</span>
+                    <span id="accountNumber">1000-1290-8652</span>
+                    <span>김보성</span>
+                </div>
+                <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
+                <button onclick="copyAccount()" class="copy-btn">계좌번호 복사하기</button>
+            </div>
+        </div>
+
+        <div class="terms-container">
+            <div class="terms-item">
+                <input type="checkbox" id="privacyCheck" required>
+                <label for="privacyCheck">개인정보 수집 및 이용동의 (필수)</label>
+                <button type="button" class="view-terms" onclick="openPrivacyModal()">보기</button>
+            </div>
+            <div class="terms-item">
+                <input type="checkbox" id="termsCheck" required>
+                <label for="termsCheck">이용약관 및 보상관련 동의 (필수)</label>
+                <button type="button" class="view-terms" onclick="openTermsModal()">보기</button>
+            </div>
+        </div>
+
+        <button type="button" onclick="showSpeciesModal()">신청하기</button>
+    </div>
+    <!-- 모달 창들 -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePrivacyModal()">&times;</span>
+            <h2>개인정보 수집과 이용에 대한 동의</h2>
+            <div class="modal-text">
+                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
+                <p><strong>수집하는 자:</strong> 동행</p>
+                <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
+                <p><strong>수집하는 개인정보 항목:</strong> 보내는 분 이름, 보내는 분 연락처, 받는 분 이름, 받는 분 연락처</p>
+                <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
+                <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closePrivacyModal()">닫기</button>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTermsModal()">&times;</span>
+            <h2>이용약관 및 보상관련 동의</h2>
+            <div class="modal-text">
+                <div class="terms-section">
+                    <!-- 기본 약관 카테고리 -->
+                    <h3>제1장 기본 약관</h3>
+                    <div class="basic-terms">
+                        <h4>제1조 (목적)</h4>
+                        <p>본 약관은 동행(이하 "회사")이 제공하는 동행 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+                        
+                        <h4>2조 (용어의 정의)</h4>
+                        <p>"동행 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
+                        
+                        <h4>제3조 (약관의 효력 및 변경)</h4>
+                        <ul>
+                            <li>본 약관은 서비스를 이용하고자 하는 모든 이용자에 대하여 그 효력을 발생합니다.</li>
+                            <li>회사는 관의 내용을 변경할 수 있으며, 변경된 약관은 공지사항을 통하여 공시합니다.</li>
+                        </ul>
+                        
+                        <h4>제4조 (이용자의 의무)</h4>
+                        <ul>
+                            <li>이용자는 신청 시 정확한 정보를 제공해야 합니다.</li>
+                            <li>이용자는 동물의 안전한 운송을 위해 필요한 정보를 제공해야 합니다.</li>
+                            <li>이용자는 서비스 요금을 성실히 납부해야 합니다.</li>
+                        </ul>
+                        
+                        <h4>제5조 (서비스 이용)</h4>
+                        <ul>
+                            <li>서비스 신청은 온라인으로 진행됩니다.</li>
+                            <li>동행 규정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
+                            <li>천재지변, 기상 악화 등의 불가항력적인 사유로 서비스가 제한될 수 있습니다.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 보상 관련 약관 -->
+                    <h3>제2장 서비스 이용 약관 - 책임 및 보상 관련 규정</h3>
+                    <div class="compensation-terms">
+                        <h4>1. 보상 기준</h4>
+                        <p>서비스 과정에서 회사의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
+
+                        <h4>2. 보상 제외 항목</h4>
+                        <p>다음과 같은 경우에는 보상이 이루어지지 않습니다:</p>
+                        <ul>
+                            <li>사용자가 개체의 상태를 허위로 기재한 경우</li>
+                            <li>개체의 선천적 질병이나 기형으로 인한 문제</li>
+                            <li>천재지변, 전쟁, 폭동 등 불가항력적 사유로 인한 손실</li>
+                        </ul>
+
+                        <h4>3. 보상 청구 절차</h4>
+                        <p>보상 청구는 개체 수령 후 24시간 이내에 이루어져야 하며, 수의사의 소견서 등 관련 증빙 자료를 함께 제출해야 합니다.</p>
+
+                        <h4>4. 책임의 한계</h4>
+                        <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대한 책임을 지며, 픽업 및 수령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
+
+                        <h4>5. 건강 이상 개체 운송 제한</h4>
+                        <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 동행 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
+
+                        <h4>6. 동행지 보관 요금 관련 안내</h4>
+                        <p>회사가 안내한 일정을 준수하 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 회사의 책임이 아닙니다.</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeTermsModal()">닫기</button>
+        </div>
+    </div>
+
+    <!-- 최종 확인 모달 추가 -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeConfirmationModal()">&times;</span>
+            <h2>신청 내용 확인</h2>
+            <div class="modal-text">
+                <p><strong>출발지:</strong> <span id="confirm-departure"></span></p>
+                <p><strong>도착지:</strong> <span id="confirm-arrival"></span></p>
+                <p><strong>마릿수:</strong> <span id="confirm-quantity"></span></p>
+                <p><strong>맡기는 날짜:</strong> <span id="confirm-date"></span></p>
+                <p><strong>개체 분양가:</strong> <span id="confirm-price"></span>만원</p>
+                <p><strong>보내는 분:</strong> <span id="confirm-sender"></span></p>
+                <p><strong>보내는 분 연락처:</strong> <span id="confirm-sender-phone"></span></p>
+                <p><strong>받는 분:</strong> <span id="confirm-receiver"></span></p>
+                <p><strong>받는 분 연락처:</strong> <span id="confirm-receiver-phone"></span></p>
+                <p><strong>동행요금:</strong> <span id="confirm-fee"></span></p>
+            </div>
+            <div class="confirmation-notice">
+                <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
+                <div class="notice-list">
+                    <div class="notice-item">✓ 입력하신 정보가 모두 정확한지 확인해주세요.</div>
+                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 해 부탁드립니다.</div>
+                    <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
+                    <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
+                    <div class="notice-item">✓ 개체를 맡기나 찾으실 때는 동행지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
+                </div>
+                <div class="confirm-checkbox">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="confirmCheck" required>
+                        <span>위 필수 확인 사항 모두 확인하였으며 이에 동의합니다.</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 신청</button>
+                <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-buttons">
+        <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
+            <span class="material-icons">home</span>홈
+        </button>
+        <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button apply-btn">
+            요금표
+        </button>
+    </div>
+
+    <!-- 계좌 입금 안내 모달 추가 -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAccountModal()">&times;</span>
+            <h2>동행 신청이 완료되었습니다.</h2>
+            <div class="modal-text">
+                <div class="account-info" style="margin-top: 20px;">
+                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 동행요금을 입금해주세요.</p>
+                    <div class="copy-account" style="margin: 20px 0;">
+                        <div class="account-number" style="font-size: 1.2em;">
+                            <span>토스뱅크</span>
+                            <span id="modalAccountNumber">1000-1290-8652</span>
+                            <span>김보성</span>
+                        </div>
+                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주세요.)</p>
+                        <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
+                    </div>
+                    <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-close-btn" onclick="closeAccountModal()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 개체 정보 모달 추가 -->
+    <div id="speciesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSpeciesModal()">&times;</span>
+            <h2>개체 정보 입력</h2>
+            <div class="modal-text">
+                <div id="speciesInputContainer">
+                    <!-- 여기에 동적으로 개체 선택창들이 추가됨 -->
+                </div>
+                
+                <!-- 5~20마리 선택시에만 보이는 추가 버튼 -->
+                <div id="addSpeciesButton" style="display: none; margin-top: 20px; text-align: center;">
+                    <button type="button" class="modal-close-btn" onclick="addSpeciesInput()" 
+                        style="width: 200px; padding: 15px 20px; font-size: 16px; margin: 0 auto;">
+                        개체 추가하기
+                    </button>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-close-btn" onclick="confirmSpecies()">확인</button>
+                <button type="button" class="modal-close-btn" onclick="closeSpeciesModal()" style="background: #666;">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 폼 데이터 자동 저장
+        let saveTimeout;
+        function autoSaveForm() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                try {
+                    const formData = {
+                        option1: document.getElementById('option1')?.value || '',
+                        option2: document.getElementById('option2')?.value || '',
+                        option3: document.getElementById('option3')?.value || '',
+                        sendDate: document.getElementById('sendDate')?.value || '',
+                        salePrice: document.getElementById('salePrice')?.value || '',
+                        senderName: document.getElementById('senderName')?.value || '',
+                        senderPhone: document.getElementById('senderPhone')?.value || '',
+                        receiverName: document.getElementById('receiverName')?.value || '',
+                        receiverPhone: document.getElementById('receiverPhone')?.value || ''
+                    };
+                    localStorage.setItem('donghaengFormData', JSON.stringify(formData));
+                    
+                    const saveStatus = document.querySelector('.save-status');
+                    if (saveStatus) {
+                        saveStatus.style.display = 'block';
+                        setTimeout(() => {
+                            if (saveStatus) {  // 타이머 실행 시점에도 존재하는지 확인
+                                saveStatus.style.display = 'none';
+                            }
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.error('자동 저장 중 오류 발생:', error);
+                }
+            }, 1000);
+        }
+
+        // 폼 데이터 복구
+        function restoreFormData() {
+            const savedData = localStorage.getItem('donghaengFormData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                Object.keys(formData).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) element.value = formData[key];
+                });
+                handleSelectionChange();
+            }
+        }
+
+        // 날짜 옵션 설정
+        function setupDateOptions() {
+            const dateSelect = document.getElementById('sendDate');
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            dateSelect.innerHTML = '<option value="">선택하세요</option>';
+
+            function isJejuDeparture() {
+                return option1.value.startsWith('JJ-');
+            }
+
+            function isJejuArrival() {
+                return option2.value.startsWith('JJ-');
+            }
+
+            function isWandoYeosuInvolved() {
+                return option1.value.startsWith('WD-') || option2.value.startsWith('WD-') ||
+                       option1.value.startsWith('YE-') || option2.value.startsWith('YE-');
+            }
+
+            function isBlockedDate(date) {
+                // 2024년 11월 10일부터 15일까지 날짜 차트
+                const blockedStart = new Date('2024-11-10');
+                const blockedEnd = new Date('2024-11-15');
+                blockedStart.setHours(0, 0, 0, 0);
+                blockedEnd.setHours(0, 0, 0, 0);
+                
+                return date >= blockedStart && date <= blockedEnd;
+            }
+
+            const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
+
+            function isWandoToJeju() {
+                return option1.value.startsWith('WD-') && option2.value.startsWith('JJ-');
+            }
+
+            for(let i = 0; i < daysToShow; i++) {
+                const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
+                
+                if (isBlockedDate(date)) {
+                    continue;
+                }
+
+                const day = date.getDay();
+                let shouldAdd = false;
+
+                // 완도→제주 특별 케이스를 가장 먼저 체크
+                if (isWandoToJeju()) {
+                    // 완도→제주: 향후 2주 이내의 첫째주, 셋째주 목요일만 선택 가능
+                    const twoWeeksLater = new Date(today);
+                    twoWeeksLater.setDate(today.getDate() + 14);
+                    
+                    if (date <= twoWeeksLater && day === 4 && isFirstOrThirdWeek(date)) {
+                        shouldAdd = true;
+                    }
+                }
+                // 그 외의 모든 경우는 기존 로직 유지
+                else if (isJejuDeparture()) {
+                    shouldAdd = (day === 2 && isSecondOrFourthWeek(date));
+                }
+                else if (isJejuArrival()) {
+                    shouldAdd = (day === 1 && isSecondOrFourthWeek(date));
+                }
+                else if (isWandoYeosuInvolved()) {
+                    shouldAdd = (day === 5);  // 금요일
+                }
+                else {
+                    const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
+                    const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
+
+                    if (holidayNumber === 1) {
+                        shouldAdd = (day === 0 || day === 5);
+                    } else {
+                        shouldAdd = (day === 1 || day === 5);
+                    }
+                }
+
+                if (shouldAdd) {
+                    addDateOption(date);
+                }
+            }
+        }
+
+        function addDateOption(date) {
+            const dateSelect = document.getElementById('sendDate');
+            const option = document.createElement('option');
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+            
+            option.value = `${year}-${month}-${day}`;
+            option.text = `${month}월 ${day}일(${dayNames[date.getDay()]})`;
+            dateSelect.appendChild(option);
+        }
+
+        function formatSalePrice(input) {
+            // 숫자만 추출
+            let value = input.value.replace(/[^0-9]/g, '');
+            
+            // 앞자리 0 제거
+            value = value.replace(/^0+/, '');
+            
+            // 값이 비어있으면 0으로 설정
+            if (value === '') {
+                value = '0';
+            }
+            
+            // 콤 추가
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            input.value = value;
+        }
+
+        // 가격 계산 로직
+        function updatePrice() {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const option3 = document.getElementById('option3').value;
+            const sendDate = document.getElementById('sendDate').value;
+            let basePrice = 0;  // 기본 요금
+            let additionalFee = 0;  // 마릿수 추가 요금
+
+            if (!option1 || !option2) {
+                document.getElementById("priceDisplay").innerText = "동행요금: 0원";
+                return;
+            }
+
+            if (option1 && option2) {
+                const region1 = option1.split('-')[0];
+                const region2 = option2.split('-')[0];
+
+                // 1. 기본 요금 계산
+                if (region1 === "JJ" || region2 === "JJ") {
+                    // 제주 관련 요금...
+                    const otherRegion = region1 === "JJ" ? option2 : option1;
+                    const otherCode = otherRegion.split('-')[0];
+                    
+                    if (otherCode === "WD" || otherCode === "YE") {
+                        basePrice = 64000;
+                    } else if (otherCode === "GJ" && otherRegion !== 'GJ-JJ-01') {
+                        basePrice = 50000;
+                    } else {
+                        const gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
+                        if (typeof gwangjuToDestination === 'number') {
+                            basePrice = 42000 + gwangjuToDestination;
+                        } else {
+                            basePrice = 42000;
+                        }
+                    }
+                } else if (region1 === "YE" || region2 === "YE" || region1 === "WD" || region2 === "WD") {
+                    // 여수/완도 특별 요금...
+                    const otherRegion = (region1 === "YE" || region1 === "WD") ? option2 : option1;
+                    const otherCode = otherRegion.split('-')[0];
+                    
+                    switch(otherCode) {
+                        case 'MT': basePrice = 48000; break;
+                        case 'GW': basePrice = 56000; break;
+                        case 'DJ': basePrice = 40000; break;
+                        case 'GJ': basePrice = 36000; break;
+                        case 'DG': basePrice = 48000; break;
+                        case 'BS': basePrice = 48000; break;
+                        case 'UL': basePrice = 48000; break;
+                        default: basePrice = 35000;
+                    }
+                } else {
+                    // 일반 권역 간 동행...
+                    if ((region1 === "GW" && region2 === "GJ") || (region2 === "GW" && region1 === "GJ")) {
+                        const gjLocation = region1 === "GJ" ? option1 : option2;
+                        if (gjLocation === "GJ-BG-01") {
+                            basePrice = 48000;
+                        } else if (gjLocation === "GJ-JJ-01") {
+                            basePrice = 32000;
+                        }
+                    } else {
+                        const matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                        if (typeof matrixPrice === 'object') {
+                            basePrice = 0;
+                        } else {
+                            basePrice = matrixPrice || 0;
+                        }
+                    }
+                }
+
+                // 2. 날짜별 할인 적용 (기본 요금에만)
+                let displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+
+                if (sendDate) {
+                    const selectedDate = new Date(sendDate);
+                    const month = selectedDate.getMonth() + 1;
+                    const day = selectedDate.getDate();
+                    
+                    if ((month === 11 && day >= 9) || (month === 12 && day <= 17)) {
+                        displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice * 0.8).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (20% 할인)`;
+                        basePrice = basePrice * 0.8;
+                    } else if (month === 12 && day >= 18) {
+                        displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
+                        basePrice = basePrice - 3000;
+                    }
+                }
+
+                // 3. 마릿수 추가 요금 계산 (할인 제외)
+                if (option3 && option3 !== "1") {
+                    if (option3 === "5-20") {
+                        additionalFee = 28000;
+                    } else {
+                        additionalFee = (parseInt(option3) - 1) * 7000;
+                    }
+                }
+
+                // 최종 가격 = 할인된 기본 요금 + 마릿수 추가 요금
+                const totalPrice = basePrice + additionalFee;
+                if (additionalFee > 0) {
+                    displayText += ` + ${additionalFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (마릿수 추가)`;
+                    displayText += ` = ${totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+                } else {
+                    displayText = displayText.replace(/동행요금: (\d+,*\d*)원/, '동행요금: $1원');
+                }
+
+                document.getElementById("priceDisplay").innerHTML = displayText;
+            }
+        }
+
+        function handleSelectionChange() {
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            
+            // 출발지와 도착지가 같은 옵션 비활성
+            Array.from(option2.options).forEach(opt => {
+                opt.disabled = (opt.value === option1.value && opt.value !== "");
+            });
+            
+            Array.from(option1.options).forEach(opt => {
+                opt.disabled = (opt.value === option2.value && opt.value !== "");
+            });
+
+            updatePrice();  // 가격 업데이트
+            setupDateOptions();
+            updateStoreInfo();
+            updateArrivalNotice();
+        }
+
+        // 계좌번호 복사
+        function copyAccount() {
+            const accountNumber = "1000-1290-8652";
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(accountNumber).then(() => {
+                    alert('계좌번호가 복사되었습니다.');
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = accountNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('계좌번호가 복사되었습니다.');
+                } catch (err) {
+                    alert('계좌번호: ' + accountNumber);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // 모달 련 함수들
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
+        function openTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        // 전화번호 자동 하이픈 함수 추가
+        function autoHyphen(tel) {
+            tel.value = tel.value.replace(/[^0-9]/g, '')
+                .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+        }
+
+        function showConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            
+            document.getElementById('confirm-departure').textContent = option1.options[option1.selectedIndex].text;
+            document.getElementById('confirm-arrival').textContent = option2.options[option2.selectedIndex].text;
+            document.getElementById('confirm-quantity').textContent = document.getElementById('option3').options[document.getElementById('option3').selectedIndex].text;
+            document.getElementById('confirm-date').textContent = document.getElementById('sendDate').value;
+            document.getElementById('confirm-price').textContent = document.getElementById('salePrice').value;
+            document.getElementById('confirm-sender').textContent = document.getElementById('senderName').value;
+            document.getElementById('confirm-sender-phone').textContent = document.getElementById('senderPhone').value;
+            document.getElementById('confirm-receiver').textContent = document.getElementById('receiverName').value;
+            document.getElementById('confirm-receiver-phone').textContent = document.getElementById('receiverPhone').value;
+            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent;
+            
+            modal.style.display = 'block';
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        function finalSubmit() {
+            if (!document.getElementById('confirmCheck').checked) {
+                alert('필수 확인사항에 동의해주세요.');
+                return;
+            }
+
+            // 스피너 표시
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+            
+            // 개체 정보 수집
+            const container = document.getElementById('speciesInputContainer');
+            const selects = container.getElementsByTagName('select');
+            const speciesInfo = [];
+            
+            for (let i = 0; i < selects.length; i++) {
+                let species = selects[i].value;
+                if (species === '기타') {
+                    species = document.getElementById(`otherSpecies${i + 1}`).value;
+                }
+                speciesInfo.push(`${i + 1}번: ${species}`);
+            }
+            
+            const data = {
+                timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                departure: option1.options[option1.selectedIndex].text,
+                arrival: option2.options[option2.selectedIndex].text,
+                quantity: option3.options[option3.selectedIndex].text,
+                sendDate: document.getElementById('sendDate').value,
+                salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                senderName: document.getElementById('senderName').value,
+                senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                receiverName: document.getElementById('receiverName').value,
+                receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                price: document.getElementById('priceDisplay').innerText.match(/(\d+,*\d*)원$/)[1].replace(/,/g, ''),  // 최종 금액만 추출
+                species: speciesInfo.join(', ')
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if(response.ok) {
+                    document.querySelector('.spinner-overlay').style.display = 'none';
+                    localStorage.removeItem('donghaengFormData');
+                    openAccountModal();
+                } else {
+                    throw new Error('전송 실패');
+                }
+            })
+            .catch(error => {
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                console.error('Error:', error);
+                alert('신청 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 폼 제출  
+        function sendToGoogleSheets() {
+            try {
+                const requiredFields = [
+                    'option1', 'option2', 'option3', 'sendDate',
+                    'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
+                ];
+
+                for (const fieldId of requiredFields) {
+                    const field = document.getElementById(fieldId);
+                    if (!field?.value) {
+                        alert('모든 항목을 입력해주세요.');
+                        field?.focus();
+                        return;
+                    }
+                }
+
+                if (!document.getElementById('privacyCheck')?.checked || 
+                    !document.getElementById('termsCheck')?.checked) {
+                    alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                    return;
+                }
+
+                // 스피너 표시
+                document.querySelector('.spinner-overlay').style.display = 'flex';
+
+                const option1 = document.getElementById('option1');
+                const option2 = document.getElementById('option2');
+                const option3 = document.getElementById('option3');
+                
+                const data = {
+                    timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                    departure: option1.options[option1.selectedIndex].text,
+                    arrival: option2.options[option2.selectedIndex].text,
+                    quantity: option3.options[option3.selectedIndex].text,
+                    sendDate: document.getElementById('sendDate').value,
+                    salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                    senderName: document.getElementById('senderName').value,
+                    senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                    receiverName: document.getElementById('receiverName').value,
+                    receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                    price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                };
+
+                fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    document.querySelector('.spinner-overlay').style.display = 'none';
+                    if(response.ok) {
+                        localStorage.removeItem('donghaengFormData');
+                        openAccountModal();  // 계좌 입금 안내 모달 표시
+                    } else {
+                        alert('신청 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => {
+                    document.querySelector('.spinner-overlay').style.display = 'none';
+                    console.error('Error:', error);
+                    alert('신청 중 오류가 발생했습니다.');
+                });
+            } catch (error) {
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                console.error('폼 제출 중 오류 발생:', error);
+                alert('제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                setupDateOptions();
+                
+                // select 태그들에 change 이벤트 리스너 추가
+                const selects = ['option1', 'option2', 'option3'];
+                selects.forEach(id => {
+                    document.getElementById(id).addEventListener('change', function() {
+                        handleSelectionChange();
+                        updatePrice();  // 가격 업데이트 추가
+                    });
+                });
+                
+                // 모달 창 외부 클릭 시 닫기
+                window.onclick = function(event) {
+                    if (event.target.className === 'modal') {
+                        event.target.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('초기화 중 오류 발생:', error);
+            }
+        });
+
+        const storeInfo = {
+            "MT-MP-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
+            "MT-GN-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
+            "MT-EP-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
+            "MT-YD-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
+            "MT-GB-01": { holiday: "매주 월요일", hours: "12:30 ~ 20:00" },
+            "MT-IS-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" },
+            "MT-IS-02": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
+            "MT-GP-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
+            "MT-GR-01": { holiday: "매주 화요일", hours: "13:00 ~ 20:00" },
+            "MT-SN-01": { holiday: "매주 월요일", hours: "12:00 ~ 21:00" },
+            "MT-BC-01": { holiday: "매주 월요일", hours: "13:00 ~ 21:00" },
+            "MT-SH-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
+            "MT-AS-01": { holiday: "휴무일 없음", hours: "12:00 ~ 20:00" },
+            "MT-YI-01": { holiday: "매주 화,수요일", hours: "13:00 ~ 20:00" },
+            "MT-SW-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
+            "MT-HS-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
+            "MT-GY-01": { holiday: "매주 월요일", hours: "13:00 ~ 19:00" },
+            "MT-ND-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
+            "GW-CC-01": { holiday: "매주 월요일", hours: "13:00 ~ 22:00" },
+            "DJ-SG-01": { holiday: "매주 화요일", hours: "12:00 ~ 21:00" },
+            "DJ-YS-01": { holiday: "휴무일 없음", hours: "15:00 ~ 19:30" },
+            "GJ-BG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
+            "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
+            "YE-YS-01": { holiday: "휴무일 없음", hours: "13:00 ~ 19:00" },
+            "DG-SS-01": { holiday: "휴무일 없음", hours: "11:00 ~ 20:00" },
+            "DG-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
+            "UL-BG-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:00" },
+            "BS-BG-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
+            "BS-HU-01": { holiday: "매주 수요일", hours: "12:00 ~ 22:00" },
+            "BS-YS-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
+            "CB-CJ-01": { holiday: "매주 수요일", hours: "월화목일 13:00 ~ 20:00, 금토 12:00 ~ 21:00" },
+            "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
+            "MT-PT-01": { holiday: "휴무일 없음", hours: "13:00 ~ 21:00" },
+            "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" }
+        };
+
+        function updateStoreInfo() {
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const info1 = document.getElementById('store1Info');
+            const info2 = document.getElementById('store2Info');
+            
+            if (option1.value && storeInfo[option1.value]) {
+                info1.textContent = `휴무일: ${storeInfo[option1.value].holiday} / 운영시간: ${storeInfo[option1.value].hours}`;
+            } else {
+                info1.textContent = '';
+            }
+            
+            if (option2.value && storeInfo[option2.value]) {
+                info2.textContent = `휴무일: ${storeInfo[option2.value].holiday} / 운영시간: ${storeInfo[option2.value].hours}`;
+            } else {
+                info2.textContent = '';
+            }
+        }
+
+        function updateArrivalNotice() {
+            const dateSelect = document.getElementById('sendDate');
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const arrivalNotice = document.getElementById('arrivalNotice');
+            
+            if (dateSelect.value) {
+                const selectedDate = new Date(dateSelect.value);
+                const arrivalDate = new Date(selectedDate);
+                
+                if (option1.value.startsWith('WD-') && option2.value.startsWith('JJ-')) {  // 완도→제주
+                    // 다음 주 금요일로 설정
+                    while (arrivalDate.getDay() !== 5) {  // 금요일까지 이동
+                        arrivalDate.setDate(arrivalDate.getDate() + 1);
+                    }
+                    // 추가로 7일(1주일) 더 이동
+                    arrivalDate.setDate(arrivalDate.getDate() + 7);
+                    
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(금)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                } else if (option1.value.startsWith('WD-')) {  // 완도 출발인 경우
+                    // 첫 번째 도착 예정일 (일요일)
+                    while (arrivalDate.getDay() !== 0) {
+                        arrivalDate.setDate(arrivalDate.getDate() + 1);
+                    }
+                    const firstArrivalMonth = arrivalDate.getMonth() + 1;
+                    const firstArrivalDate = arrivalDate.getDate();
+                    
+                    // 두 번째 도착 예정일 (수요일)
+                    const secondArrivalDate = new Date(arrivalDate);
+                    while (secondArrivalDate.getDay() !== 3) {
+                        secondArrivalDate.setDate(secondArrivalDate.getDate() + 1);
+                    }
+                    const secondArrivalMonth = secondArrivalDate.getMonth() + 1;
+                    const secondArrivalDay = secondArrivalDate.getDate();
+                    
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${firstArrivalMonth}월 ${firstArrivalDate}일(일) 또는 ${secondArrivalMonth}월 ${secondArrivalDay}일(수)<br><span style="font-size: 0.8em;"> 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                } else if (option1.value.startsWith('JJ-')) {
+                    // 제주 출발 로직...
+                    while (arrivalDate.getDay() !== 0) {
+                        arrivalDate.setDate(arrivalDate.getDate() + 1);
+                    }
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                } else if (option2.value.startsWith('JJ-')) {
+                    // 제주 도착 로직...
+                    while (arrivalDate.getDay() !== 5) {
+                        arrivalDate.setDate(arrivalDate.getDate() + 1);
+                    }
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(금)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                } else {
+                    // 일반 지역 로직...
+                    const selectedDay = selectedDate.getDay();
+                    
+                    if (selectedDay <= 3) { // 일~수요일에 맡기면 그 주 수요일
+                        while (arrivalDate.getDay() !== 3) {
+                            arrivalDate.setDate(arrivalDate.getDate() + 1);
+                        }
+                    } else { // 목~토요일에 맡기면 그 주 일요일
+                        while (arrivalDate.getDay() !== 0) {
+                            arrivalDate.setDate(arrivalDate.getDate() + 1);
+                        }
+                    }
+                    
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    const dayName = arrivalDate.getDay() === 0 ? '일' : '수';
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(${dayName})<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                }
+            } else {
+                arrivalNotice.textContent = '';
+            }
+        }
+
+        // sendDate의 change 이벤트에 updateArrivalNotice 추가
+        document.getElementById('sendDate').addEventListener('change', updateArrivalNotice);
+
+        function getHolidayNumber(holiday) {
+            const dayMap = {
+                '매주 월요일': 1,
+                '매주 화요일': 2,
+                '매주 수요일': 3,
+                '매주 목요일': 4,
+                '매주 금요일': 5,
+                '매주 토요일': 6,
+                '매주 일요일': 0,
+                '매주 화,수요일': [2, 3],  // 용인점 특수 케이스
+                '휴무일 없음': null
+            };
+            
+            return dayMap[holiday];
+        }
+
+        function isSecondOrFourthWeek(date) {
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+            return weekNumber === 2 || weekNumber === 4;
+        }
+
+        function isFirstOrThirdWeek(date) {
+            // 해당 날짜의 주차 계산
+            const weekNumber = Math.floor((date.getDate() - 1) / 7) + 1;
+            
+            // 1주차 또는 3주차인 경우에만 true 반환
+            return weekNumber === 1 || weekNumber === 3;
+        }
+
+        // 계좌 모달 관련 함수 추가
+        function openAccountModal() {
+            document.getElementById('accountModal').style.display = 'block';
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').style.display = 'none';
+            location.reload();  // 모달을 닫으면 페이지 새로고침
+        }
+
+        // priceMatrix는 전역 변수로 한 번 정의
+
+        // sendDate의 change 이벤트에 updatePrice 추가
+        document.getElementById('sendDate').addEventListener('change', function() {
+            updateArrivalNotice();
+            updatePrice();  // 날짜 변경 시 가격 업데이트 추가
+        });
+
+        // 맨 위에 priceMatrix 전역 변수로 정의
+        const priceMatrix = {
+            "MT": {
+                "MT": 20000,    // 수도권 내부
+                "GW": 28000,    // 수도권 ↔ 강원
+                "CB": 24000,    // 수도권 ↔ 충북
+                "DJ": 20000,    // 수도권 ↔ 대전
+                "GJ": 28000,    // 수도권 ↔ 광주/전주
+                "DG": 28000,    // 수도권 ↔ 대구/경북
+                "BS": 40000,    // 수도권 ↔ 부산/경남
+                "UL": 48000     // 수도권 ↔ 울산
+            },
+            "CB": {
+                "GW": 20000,    // 충북 ↔ 강원
+                "DJ": 16000,    // 충북 ↔ 대전
+                "GJ": 28000,    // 충북 ↔ 광주/전주
+                "DG": 28000,    // 충북 ↔ 대구/경북
+                "BS": 40000,    // 충북 ↔ 부산/경남
+                "UL": 40000     // 충북 ↔ 울산
+            },
+            "GW": {
+                "DJ": 32000,    // 강원 ↔ 대전
+                "GJ": {         // 강원 ↔ 광주/전주 차등 요금 설정
+                    "GJ-BG-01": 48000,  // 강원 ↔ 광주
+                    "GJ-JJ-01": 32000   // 강원 ↔ 전주
+                },
+                "DG": 40000,    // 강원 ↔ 대구/경북
+                "BS": 48000,    // 강원 ↔ 부산/경남
+                "UL": 48000     // 강원 ↔ 울산
+            },
+            "DJ": {
+                "GJ": 20000,    // 대전 ↔ 광주/전주
+                "DG": 20000,    // 대전 ↔ 대구/경북
+                "BS": 32000,    // 대전 ↔ 부산/경남
+                "UL": 40000     // 대전 ↔ 울산
+            },
+            "GJ": {
+                "GJ": 16000,    // 광주/전주 내부
+                "DG": 28000,    // 광주/전주 ↔ 대구/경북
+                "BS": 28000,    // 광주/전주 ↔ 부산/경남
+                "UL": 40000     // 광주/전주 ↔ 울산
+            },
+            "DG": {
+                "DG": 16000,    // 대구/경북 내부
+                "BS": 16000,    // 대구/경북 ↔ 부산/경남
+                "UL": 24000     // 대구/경북 ↔ 울산
+            },
+            "BS": {
+                "BS": 16000,    // 부산/경남 내부
+                "UL": 16000     // 부산/경남 ↔ 울산
+            },
+            "UL": {
+                "UL": 20000     // 울산 내부
+            }
+        };
+
+        // 개체 정보 모 관련 함수들
+        function openSpeciesModal() {
+            document.getElementById('speciesModal').style.display = 'block';
+        }
+
+        function closeSpeciesModal() {
+            document.getElementById('speciesModal').style.display = 'none';
+        }
+
+        function handleSpeciesChange() {
+            const speciesSelect = document.getElementById('species');
+            const otherSpeciesInput = document.getElementById('otherSpeciesInput');
+            
+            if (speciesSelect.value === '기타') {
+                otherSpeciesInput.style.display = 'block';
+            } else {
+                otherSpeciesInput.style.display = 'none';
+            }
+        }
+
+        function confirmSpecies() {
+            // 모든 개체 정보가 선택되었는지 확인
+            const container = document.getElementById('speciesInputContainer');
+            const inputs = container.getElementsByTagName('select');
+            
+            for (let i = 0; i < inputs.length; i++) {
+                if (!inputs[i].value) {
+                    alert(`${i + 1}번 개체의 종류를 선택해주세요.`);
+                    return;
+                }
+                if (inputs[i].value === '기타') {
+                    const otherInput = document.getElementById(`otherSpecies${i + 1}`);
+                    if (!otherInput.value.trim()) {
+                        alert(`${i + 1}번 개체의 종류를 입력해주세요.`);
+                        return;
+                    }
+                }
+            }
+            
+            closeSpeciesModal();
+            showConfirmationModal();  // 신청 내용 확인 모달로 이동
+        }
+
+        // 신청하기 버튼 클릭 시 개체 정보 모달 먼저 표시
+        function showSpeciesModal() {
+            // 필수 입력 항목 체크
+            const requiredFields = [
+                'option1', 'option2', 'option3', 'sendDate',
+                'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
+            ];
+
+            for (const fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field?.value) {
+                    alert('모든 항목을 입력해주세요.');
+                    field?.focus();
+                    return;
+                }
+            }
+
+            if (!document.getElementById('privacyCheck')?.checked || 
+                !document.getElementById('termsCheck')?.checked) {
+                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                return;
+            }
+
+            openSpeciesModal();  // 개체 정보 모달 표시
+        }
+
+        // 개체 선택창 생성 함수
+        function createSpeciesInputs() {
+            const option3 = document.getElementById('option3').value;
+            const container = document.getElementById('speciesInputContainer');
+            const addButton = document.getElementById('addSpeciesButton');
+            container.innerHTML = ''; // 기존 입력창 초기화
+            
+            let count = 0;
+            
+            if (option3 === '5-20') {
+                // 5~20마리 선택 시 기본 5개 생성
+                count = 5;
+                addButton.style.display = 'block';  // 추가 버튼 표시
+            } else if (option3) {
+                count = parseInt(option3);
+                addButton.style.display = 'none';  // 추가 버튼 숨김
+            }
+
+            for (let i = 1; i <= count; i++) {
+                addSpeciesSelect(i);
+            }
+        }
+
+        // 개체 선택창 추가 함수
+        function addSpeciesSelect(number) {
+            const container = document.getElementById('speciesInputContainer');
+            const div = document.createElement('div');
+            div.style.marginBottom = '20px';
+            
+            div.innerHTML = `
+                <label for="species${number}">${number}번 개체</label>
+                <select id="species${number}" onchange="handleSpeciesChange(${number})" style="width: 100%; margin-top: 5px;">
+                    <option value="">선택해주세요</option>
+                    <option value="크레스티드 게코">크레스티드 게코</option>
+                    <option value="리키에너스">리키에너스</option>
+                    <option value="차화 게코">차화 게코</option>
+                    <option value="가고일 게코">가고일 게코</option>
+                    <option value="펫테일 게코">펫테일 게코</option>
+                    <option value="레오파드 게코">레오파드 게코</option>
+                    <option value="비어디 드래곤">비어디 드래곤</option>
+                    <option value="기타">기타</option>
+                </select>
+                <div id="otherSpeciesInput${number}" style="display: none; margin-top: 10px;">
+                    <input type="text" id="otherSpecies${number}" placeholder="개체 종 입력" style="width: 100%;">
+                    <p class="notice" style="color: #ff0000; font-size: 0.9em; margin-top: 5px;">
+                        ※ 기타 개체의 경우 추가요금이 발생할 수 있습니다.
+                    </p>
+                </div>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        // 개체 추가 버튼 클릭 시
+        function addSpeciesInput() {
+            const container = document.getElementById('speciesInputContainer');
+            const currentCount = container.children.length;
+            if (currentCount < 20) {
+                addSpeciesSelect(currentCount + 1);
+            }
+            if (currentCount + 1 >= 20) {
+                document.getElementById('addSpeciesButton').style.display = 'none';
+            }
+        }
+
+        // 기존 handleSpeciesChange 함수 수정
+        function handleSpeciesChange(number) {
+            const speciesSelect = document.getElementById(`species${number}`);
+            const otherSpeciesInput = document.getElementById(`otherSpeciesInput${number}`);
+            
+            if (speciesSelect.value === '기타') {
+                otherSpeciesInput.style.display = 'block';
+            } else {
+                otherSpeciesInput.style.display = 'none';
+            }
+        }
+
+        // 개체 정보 모달 열 때 입력창 생성
+        function openSpeciesModal() {
+            document.getElementById('speciesModal').style.display = 'block';
+            createSpeciesInputs();
+        }
+    </script>
+</body>
+</html>
