@@ -1224,6 +1224,31 @@
             document.getElementById('confirmationModal').style.display = 'none';
         }
 
+        // 전역 변수 추가
+        let savedSpeciesInfo = [];
+
+        // confirmSpecies 함수 수정
+        function confirmSpecies() {
+            const container = document.getElementById('speciesInputContainer');
+            const selects = container.getElementsByTagName('select');
+            savedSpeciesInfo = [];  // 초기화
+            
+            for (let i = 0; i < selects.length; i++) {
+                let species = selects[i].value;
+                if (species === '기타') {
+                    const otherInput = document.getElementById(`otherSpecies${i + 1}`);
+                    if (otherInput) {
+                        species = otherInput.value;
+                    }
+                }
+                savedSpeciesInfo.push(`${i + 1}번: ${species}`);
+            }
+            
+            closeSpeciesModal();
+            showConfirmationModal();
+        }
+
+        // finalSubmit 함수 수정
         function finalSubmit() {
             if (!document.getElementById('confirmCheck').checked) {
                 alert('필수 확인사항에 동의해주세요.');
@@ -1237,19 +1262,20 @@
             const option2 = document.getElementById('option2');
             const option3 = document.getElementById('option3');
             
-            // 개체 정보 수집
-            const container = document.getElementById('speciesInputContainer');
-            const selects = container.getElementsByTagName('select');
-            const speciesInfo = [];
-            
-            for (let i = 0; i < selects.length; i++) {
-                let species = selects[i].value;
-                if (species === '기타') {
-                    species = document.getElementById(`otherSpecies${i + 1}`).value;
-                }
-                speciesInfo.push(`${i + 1}번: ${species}`);
+            const priceText = document.getElementById('priceDisplay').innerText;
+            let finalPrice;
+
+            if (priceText.includes('=')) {
+                // 마릿수 추가가 있는 경우 (최종 합계 사용)
+                finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
+            } else if (priceText.includes('→')) {
+                // 할인만 있는 경우 (할인가 사용)
+                finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
+            } else {
+                // 기본 가격
+                finalPrice = priceText.match(/동행요금: (\d+,*\d*)원/)[1];
             }
-            
+
             const data = {
                 timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
                 departure: option1.options[option1.selectedIndex].text,
@@ -1261,17 +1287,28 @@
                 senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
                 receiverName: document.getElementById('receiverName').value,
                 receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                price: document.getElementById('priceDisplay').innerText.match(/(\d+,*\d*)원$/)[1].replace(/,/g, ''),  // 최종 금액만 추출
-                species: speciesInfo.join(', ')
+                price: finalPrice.replace(/,/g, ''),
+                species: savedSpeciesInfo.join(', ')  // 저장된 개체 정보 사용
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
+            console.log('전송할 데이터:', data); // 로그 추가
+
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Request timeout')), 30000);  // 30초 타임아웃
+            });
+
+            Promise.race([
+                fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }),
+                timeoutPromise
+            ])
             .then(response => {
+                // 스피너 즉시 제거
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                
                 if(response.ok) {
-                    document.querySelector('.spinner-overlay').style.display = 'none';
                     localStorage.removeItem('donghaengFormData');
                     openAccountModal();
                 } else {
@@ -1279,9 +1316,13 @@
                 }
             })
             .catch(error => {
-                document.querySelector('.spinner-overlay').style.display = 'none';
                 console.error('Error:', error);
-                alert('신청 중 오류가 발생했습니다.');
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                if (error.message === 'Request timeout') {
+                    alert('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+                } else {
+                    alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                }
             });
         }
 
@@ -1507,7 +1548,7 @@
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
                     const dayName = arrivalDate.getDay() === 0 ? '일' : '수';
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(${dayName})<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(${dayName})<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령 해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
             } else {
                 arrivalNotice.textContent = '';
@@ -1622,72 +1663,8 @@
         };
 
         // 개체 정보 모 관련 함수들
-        function openSpeciesModal() {
-            document.getElementById('speciesModal').style.display = 'block';
-        }
-
         function closeSpeciesModal() {
             document.getElementById('speciesModal').style.display = 'none';
-        }
-
-        function handleSpeciesChange() {
-            const speciesSelect = document.getElementById('species');
-            const otherSpeciesInput = document.getElementById('otherSpeciesInput');
-            
-            if (speciesSelect.value === '기타') {
-                otherSpeciesInput.style.display = 'block';
-            } else {
-                otherSpeciesInput.style.display = 'none';
-            }
-        }
-
-        function confirmSpecies() {
-            // 모든 개체 정보가 선택되었는지 확인
-            const container = document.getElementById('speciesInputContainer');
-            const inputs = container.getElementsByTagName('select');
-            
-            for (let i = 0; i < inputs.length; i++) {
-                if (!inputs[i].value) {
-                    alert(`${i + 1}번 개체의 종류를 선택해주세요.`);
-                    return;
-                }
-                if (inputs[i].value === '기타') {
-                    const otherInput = document.getElementById(`otherSpecies${i + 1}`);
-                    if (!otherInput.value.trim()) {
-                        alert(`${i + 1}번 개체의 종류를 입력해주세요.`);
-                        return;
-                    }
-                }
-            }
-            
-            closeSpeciesModal();
-            showConfirmationModal();  // 신청 내용 확인 모달로 이동
-        }
-
-        // 신청하기 버튼 클릭 시 개체 정보 모달 먼저 표시
-        function showSpeciesModal() {
-            // 필수 입력 항목 체크
-            const requiredFields = [
-                'option1', 'option2', 'option3', 'sendDate',
-                'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
-            ];
-
-            for (const fieldId of requiredFields) {
-                const field = document.getElementById(fieldId);
-                if (!field?.value) {
-                    alert('모든 항목을 입력해주세요.');
-                    field?.focus();
-                    return;
-                }
-            }
-
-            if (!document.getElementById('privacyCheck')?.checked || 
-                !document.getElementById('termsCheck')?.checked) {
-                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
-                return;
-            }
-
-            openSpeciesModal();  // 개체 정보 모달 표시
         }
 
         // 개체 선택창 생성 함수
@@ -1700,16 +1677,18 @@
             let count = 0;
             
             if (option3 === '5-20') {
-                // 5~20마리 선택 시 기본 5개 생성
                 count = 5;
-                addButton.style.display = 'block';  // 추가 버튼 표시
+                addButton.style.display = 'block';
             } else if (option3) {
                 count = parseInt(option3);
-                addButton.style.display = 'none';  // 추가 버튼 숨김
+                addButton.style.display = 'none';
             }
 
-            for (let i = 1; i <= count; i++) {
-                addSpeciesSelect(i);
+            // 최소 1개 이상의 입력창 생성
+            if (count > 0) {
+                for (let i = 1; i <= count; i++) {
+                    addSpeciesSelect(i);
+                }
             }
         }
 
@@ -1767,8 +1746,29 @@
             }
         }
 
-        // 개체 정보 모달 열 때 입력창 생성
-        function openSpeciesModal() {
+        // 이 함수만 남기고 showSpeciesModal로 이름 변경
+        function showSpeciesModal() {
+            // 필수 입력 항목 체크
+            const requiredFields = [
+                'option1', 'option2', 'option3', 'sendDate',
+                'salePrice', 'senderName', 'senderPhone', 'receiverName', 'receiverPhone'
+            ];
+
+            for (const fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field?.value) {
+                    alert('모든 항목을 입력해주세요.');
+                    field?.focus();
+                    return;
+                }
+            }
+
+            if (!document.getElementById('privacyCheck')?.checked || 
+                !document.getElementById('termsCheck')?.checked) {
+                alert('개인정보 수집 동의와 이용약관에 모두 동의해주셔야 합니다.');
+                return;
+            }
+
             document.getElementById('speciesModal').style.display = 'block';
             createSpeciesInputs();
         }
