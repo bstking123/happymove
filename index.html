@@ -941,7 +941,18 @@
                 blockedStart.setHours(0, 0, 0, 0);
                 blockedEnd.setHours(0, 0, 0, 0);
                 
-                return date >= blockedStart && date <= blockedEnd;
+                // 렙토날드 임시 휴무 기간 추가
+                const reptornaldStart = new Date('2024-11-17');
+                const reptornaldEnd = new Date('2024-11-21');
+                reptornaldStart.setHours(0, 0, 0, 0);
+                reptornaldEnd.setHours(0, 0, 0, 0);
+                
+                // 일반 차단 기간 또는 렙토날드 휴무 기간인 경우
+                if ((date >= blockedStart && date <= blockedEnd) || 
+                    (isReptornaldInvolved() && date >= reptornaldStart && date <= reptornaldEnd)) {
+                    return true;
+                }
+                return false;
             }
 
             const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
@@ -1791,6 +1802,13 @@
 
             document.getElementById('speciesModal').style.display = 'block';
             createSpeciesInputs();
+        }
+
+        // 렙토날드가 출발지나 도착지로 선택되었는지 확인하는 함수 추가
+        function isReptornaldInvolved() {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            return option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
         }
     </script>
 </body>
