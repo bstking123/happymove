@@ -1099,7 +1099,19 @@
                 blockedStart.setHours(0, 0, 0, 0);
                 blockedEnd.setHours(0, 0, 0, 0);
                 
-                return date >= blockedStart && date <= blockedEnd;
+                // 부산렙토날드 임시휴무 기간 (11월 17일 ~ 21일)
+                const leptonaldStart = new Date('2024-11-17');
+                const leptonaldEnd = new Date('2024-11-21');
+                leptonaldStart.setHours(0, 0, 0, 0);
+                leptonaldEnd.setHours(0, 0, 0, 0);
+                
+                // 부산렙토날드가 출발지나 도착지로 선택된 경우에만 해당 기간 차단
+                const option1 = document.getElementById('option1').value;
+                const option2 = document.getElementById('option2').value;
+                const isLeptonaldInvolved = option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
+                
+                return date >= blockedStart && date <= blockedEnd || 
+                       (isLeptonaldInvolved && date >= leptonaldStart && date <= leptonaldEnd);
             }
 
             const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
@@ -1606,7 +1618,7 @@
             "MT-MP-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "MT-GN-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "MT-EP-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
-            "MT-YC-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00"},
+            "MT-YC-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
             "MT-YD-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
             "MT-GB-01": { holiday: "매주 월요일", hours: "12:30 ~ 20:00" },
             "MT-IS-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" },
