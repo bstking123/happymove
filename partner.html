@@ -711,7 +711,6 @@
             <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
-            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
             <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
             <option value="MT-GR-01">경기[구리]-제이콥슨</option>
             <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
@@ -755,7 +754,6 @@
             <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
-            <option value="MT-IS-02">경기[일산]-게코스리퍼블릭</option>
             <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
             <option value="MT-GR-01">경기[구리]-제이콥슨</option>
             <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
@@ -1321,7 +1319,7 @@
                 }
                 // 일반 권역 간 동행
                 else {
-                    // 강원-광주/전주 특별 요금 리
+                    // 강원-광주/전주 특별 요금 처리
                     if ((region1 === "GW" && region2 === "GJ") || (region2 === "GW" && region1 === "GJ")) {
                         const gjLocation = region1 === "GJ" ? option1 : option2;
                         if (gjLocation === "GJ-BG-01") {  // 광주
@@ -1480,32 +1478,65 @@
                 // 확인 모달 닫기
                 document.getElementById('confirmationModal').style.display = 'none';
 
-                // 단일 주문 처리
-                const option1 = document.getElementById('option1');
-                const option2 = document.getElementById('option2');
-                const option3 = document.getElementById('option3');
+                // 장바구니에서 주문하는 경우
+                if (cartItems.length > 0) {
+                    for (const item of cartItems) {
+                        const data = {
+                            timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                            departure: item.departure,
+                            arrival: item.arrival,
+                            quantity: item.quantity,
+                            sendDate: item.sendDate,
+                            salePrice: item.salePrice.replace(/,/g, ''),
+                            senderName: item.senderName,
+                            senderPhone: item.senderPhone.replace(/-/g, ''),
+                            receiverName: item.receiverName,
+                            receiverPhone: item.receiverPhone.replace(/-/g, ''),
+                            price: item.price.replace(/[^0-9]/g, '')
+                        };
 
-                const data = {
-                    timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
-                    departure: option1.options[option1.selectedIndex].text,
-                    arrival: option2.options[option2.selectedIndex].text,
-                    quantity: option3.options[option3.selectedIndex].text,
-                    sendDate: document.getElementById('sendDate').value,
-                    salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
-                    senderName: document.getElementById('senderName').value,
-                    senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
-                    receiverName: document.getElementById('receiverName').value,
-                    receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                    price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
-                };
+                        const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
+                            method: 'POST',
+                            body: JSON.stringify(data)
+                        });
 
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
+                        if (!response.ok) {
+                            throw new Error('주문 처리 중 오류가 발생했습니다.');
+                        }
+                    }
+                    
+                    // 모든 주문이 성공적으로 처리되면
+                    cartItems = []; // 장바구니 비우기
+                    updateCartBadge(); // 장바구니 뱃지 업데이트
+                    
+                } else {
+                    // 단일 주문 처리
+                    const option1 = document.getElementById('option1');
+                    const option2 = document.getElementById('option2');
+                    const option3 = document.getElementById('option3');
 
-                if (!response.ok) {
-                    throw new Error('주문 처리 중 오류가 발생했습니다.');
+                    const data = {
+                        timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                        departure: option1.options[option1.selectedIndex].text,
+                        arrival: option2.options[option2.selectedIndex].text,
+                        quantity: option3.options[option3.selectedIndex].text,
+                        sendDate: document.getElementById('sendDate').value,
+                        salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                        senderName: document.getElementById('senderName').value,
+                        senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                        receiverName: document.getElementById('receiverName').value,
+                        receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                        price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                    };
+
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('주문 처리 중 오류가 발생했습니다.');
+                    }
                 }
 
                 // 스피너 숨기기
@@ -1620,9 +1651,8 @@
             "MT-EP-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-YC-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
             "MT-YD-01": { holiday: "매주 화요일", hours: "12:00 ~ 20:00" },
-            "MT-GB-01": { holiday: "매주 월요일", hours: "12:30 ~ 20:00" },
+            "MT-GB-01": { holiday: "매주 화요일", hours: "12:30 ~ 20:00" },
             "MT-IS-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" },
-            "MT-IS-02": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "MT-GP-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
             "MT-GR-01": { holiday: "매주 화요일", hours: "13:00 ~ 20:00" },
             "MT-SN-01": { holiday: "매주 월요일", hours: "12:00 ~ 21:00" },
