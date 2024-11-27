@@ -795,7 +795,7 @@
                 </div>
             </div>
             <div class="modal-buttons">
-                <button type="button" class="modal-close-btn" onclick="finalSubmit()">��인 및 신청</button>
+                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 신청</button>
                 <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
             </div>
         </div>
@@ -1119,17 +1119,17 @@
                     const day = selectedDate.getDate();
                     
                     // 광주-제주 구간 체크
+                    const region1 = document.getElementById('option1').value.split('-')[0];
+                    const region2 = document.getElementById('option2').value.split('-')[0];
                     const isGwangjuJeju = (
-                        (option1.value.startsWith('GJ-') && option2.value.startsWith('JJ-')) ||
-                        (option1.value.startsWith('JJ-') && option2.value.startsWith('GJ-'))
+                        (region1 === 'GJ' && region2 === 'JJ') ||
+                        (region1 === 'JJ' && region2 === 'GJ')
                     );
                     
                     if ((month === 11 && day >= 9) || (month === 12 && day <= 17)) {
-                        if (!isGwangjuJeju) {  // 광주-제주 구간이 아닌 경우에만 할인 적용
+                        if (!isGwangjuJeju) {
                             displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice * 0.8).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (20% 할인)`;
                             basePrice = basePrice * 0.8;
-                        } else {
-                            displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
                         }
                     } else if (month === 12 && day >= 18) {
                         displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
@@ -1386,7 +1386,7 @@
                     return;
                 }
 
-                // 스피너 표시
+                // 스피너 표���
                 document.querySelector('.spinner-overlay').style.display = 'flex';
 
                 const option1 = document.getElementById('option1');
@@ -1668,7 +1668,7 @@
                 "DJ": 32000,    // 강원 ↔ 대전
                 "GJ": {         // 강원 ↔ 광주/전주 차등 요금 설정
                     "GJ-BG-01": 48000,  // 강원 ↔ 광주
-                    "GJ-JJ-01": 32000   // 강원 ↔ 전주 (기존 GJ-JU-01에서 변경)
+                    "GJ-JJ-01": 32000   // 강��� ↔ 전주 (기존 GJ-JU-01에서 변경)
                 },
                 "DG": 40000,    // 강원 ↔ 대구/경북
                 "BS": 48000,    // 강원 ↔ 부산/경남
