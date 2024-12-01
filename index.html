@@ -1002,11 +1002,17 @@
                 else {
                     const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
-
-                    if (holidayNumber === 1) {
-                        shouldAdd = (day === 0 || day === 5);
+                    
+                    // 강원 지역인 경우 (출발지나 도착지 중 하나라도 강원인 경우)
+                    if (option1.value?.startsWith('GW-') || option2.value?.startsWith('GW-')) {
+                        // 금요일(5)을 제외한 월요일(1)만 선택 가능
+                        shouldAdd = (day === 1);
                     } else {
-                        shouldAdd = (day === 1 || day === 5);
+                        if (holidayNumber === 1) {
+                            shouldAdd = (day === 0 || day === 5);
+                        } else {
+                            shouldAdd = (day === 1 || day === 5);
+                        }
                     }
                 }
 
