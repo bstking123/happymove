@@ -727,11 +727,13 @@
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
+            <option value="CN-CA-01">충남[천안]-링크쥬</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
             <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -739,8 +741,10 @@
             <option value="UL-CW-01">경남[창원]-크레노바</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
+            <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
             <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
+            
             
             
         </select>
@@ -772,11 +776,13 @@
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
+            <option value="CN-CA-01">충남[천안]-링크쥬</option>
             <option value="DJ-SG-01">대전[서구]-히스</option>
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
             <option value="WD-WD-01">전남[완도]-쭌이네</option>
+            <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
@@ -784,7 +790,8 @@
             <option value="UL-CW-01">경남[창원]-크레노바</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                    
+            <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
+            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
             
             
@@ -1122,6 +1129,10 @@
                 return option1.value.startsWith('WD-') && option2.value.startsWith('JJ-');
             }
 
+            function isGangwonInvolved() {
+                return option1.value.startsWith('GW-') || option2.value.startsWith('GW-');
+            }
+
             for(let i = 0; i < daysToShow; i++) {
                 const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
                 
@@ -1156,7 +1167,9 @@
                     const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
 
-                    if (holidayNumber === 1) {
+                    if (isGangwonInvolved()) {
+                        shouldAdd = (day === 1); // 강원 지역은 월요일만 선택 가능
+                    } else if (holidayNumber === 1) {
                         shouldAdd = (day === 0 || day === 5);
                     } else {
                         shouldAdd = (day === 1 || day === 5);
@@ -1218,6 +1231,7 @@
                     "MT": 10000,    // 수도권 내부
                     "GW": 14000,    // 수도권 ↔ 강원
                     "CB": 12000,    // 수도권 ↔ 충북
+                    "CN": 10000,
                     "DJ": 10000,    // 수도권 ↔ 대전
                     "GJ": 14000,    // 수도권 ↔ 광주/전주
                     "DG": 14000,    // 수도권 ↔ 대구/경북
@@ -1226,13 +1240,23 @@
                 },
                 // 충북 연결 추가
                 "CB": {
-                    "GW": 10000,    // 충북 ↔ 강원
+                    "GW": 14000, 
+                    "CN": 10000,  // 충북 ↔ 강원
                     "DJ": 10000,    // 충북 ↔ 대전
                     "GJ": 14000,    // 충북 ↔ 광주/전주
                     "DG": 14000,    // 충북 ↔ 대구/경북
                     "BS": 20000,    // 충북 ↔ 부산/경남
                     "UL": 20000     // 충북 ↔ 울산
                 },
+                "CN": {
+                    "GW": 14000,
+                    "CN": 10000,    // 충북 ↔ 강원
+                    "DJ": 10000,    // 충북 ↔ 대전
+                    "GJ": 14000,
+                    "DG": 14000,    // 충북 ↔ 대구/경북
+                    "BS": 20000,    // 충북 ↔ 부산/경남
+                    "UL": 20000     // 충북 ↔ 울산
+            },
                 // 강원 연결
                 "GW": {
                     "DJ": 16000,    // 강원 ↔ 대전
@@ -1679,14 +1703,18 @@
             "DG-SS-01": { holiday: "휴무일 없음", hours: "11:00 ~ 20:00" },
             "DG-GM-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
             "UL-BG-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:00" },
-            "UL-CW-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" }, // 여기에 쉼표 추가
+            "UL-CW-01": { holiday: "매주 월요일", hours: "14:00 ~ 20:00" },
             "BS-BG-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
             "BS-HU-01": { holiday: "매주 수요일", hours: "12:00 ~ 22:00" },
             "BS-YS-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
             "CB-CJ-01": { holiday: "매주 수요일", hours: "월화목일 13:00 ~ 20:00, 금토 12:00 ~ 21:00" },
             "JJ-JJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-PT-01": { holiday: "휴무일 없음", hours: "13:00 ~ 21:00" },
-            "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" }
+            "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" },
+            "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
+            "BS-BSJG-01": { holiday: "매주 월요일", hours: "평일 14:00 ~ 20:00, 주말 13:00 ~ 20:00"},
+            "YE-SC-01": { holiday: "매주 월요일", hours: "11:00 ~ 19:00" },
+            "CN-CA-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
         };
 
         function updateStoreInfo() {
