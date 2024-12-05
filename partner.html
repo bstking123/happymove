@@ -703,7 +703,6 @@
         
         <label for="option1">출발지</label>
         <select id="option1" onchange="handleSelectionChange()">
-            <option value="">출발지 선택</option>
             <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
             <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
             <option value="MT-EP-01">서울[은평]-더부쉬</option>
@@ -732,6 +731,7 @@
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="JB-IKSAN-01">전북[익산]-방구석도마뱀</option>
             <option value="WD-WD-01">전남[완도]-쭌이네</option>
             <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
@@ -781,6 +781,7 @@
             <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
             <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
             <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
+            <option value="JB-IKSAN-01">전북[익산]-방구석도마뱀</option>
             <option value="WD-WD-01">전남[완도]-쭌이네</option>
             <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
@@ -1296,6 +1297,19 @@
                 // 울산 내부
                 "UL": {
                     "UL": 10000     // 울산 내부
+                },
+                // JB 권역 추가 (전주와 동일한 가격)
+                "JB": {
+                    "MT": 14000,    // 수도권 ↔ 전북
+                    "GW": 16000,    // 강원 ↔ 전북
+                    "CB": 14000,    // 충북 ↔ 전북
+                    "CN": 14000,    // 충남 ↔ 전북
+                    "DJ": 10000,    // 대전 ↔ 전북
+                    "GJ": 10000,    // 광주 ↔ 전북
+                    "DG": 14000,    // 대구/경북 ↔ 전북
+                    "BS": 14000,    // 부산/경남 ↔ 전북
+                    "UL": 20000,    // 울산 ↔ 전북
+                    "JB": 10000     // 전북 내부
                 }
             };
 
@@ -1715,6 +1729,7 @@
             "BS-BSJG-01": { holiday: "매주 월요일", hours: "평일 14:00 ~ 20:00, 주말 13:00 ~ 20:00"},
             "YE-SC-01": { holiday: "매주 월요일", hours: "11:00 ~ 19:00" },
             "CN-CA-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
+            "JB-IKSAN-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
         };
 
         function updateStoreInfo() {
