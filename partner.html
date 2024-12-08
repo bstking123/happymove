@@ -1103,19 +1103,16 @@
             }
 
             function isBlockedDate(date) {
-                // 2024년 11월 10일부터 15일까지 날짜 차단
                 const blockedStart = new Date('2024-11-10');
                 const blockedEnd = new Date('2024-11-15');
                 blockedStart.setHours(0, 0, 0, 0);
                 blockedEnd.setHours(0, 0, 0, 0);
                 
-                // 부산렙토날드 임시휴무 기간 (11월 17일 ~ 21일)
                 const leptonaldStart = new Date('2024-11-17');
                 const leptonaldEnd = new Date('2024-11-21');
                 leptonaldStart.setHours(0, 0, 0, 0);
                 leptonaldEnd.setHours(0, 0, 0, 0);
                 
-                // 부산렙토날드가 출발지나 도착지로 선택된 경우에만 해당 기간 차단
                 const option1 = document.getElementById('option1').value;
                 const option2 = document.getElementById('option2').value;
                 const isLeptonaldInvolved = option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
@@ -1144,32 +1141,43 @@
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 완도→제주 특별 케이스를 가장 먼저 체크
                 if (isWandoToJeju()) {
-                    // 완도→제주: 향후 2주 이내의 첫째주, 셋째주 목요일만 선택 가능
                     const twoWeeksLater = new Date(today);
                     twoWeeksLater.setDate(today.getDate() + 14);
-                    
                     if (date <= twoWeeksLater && day === 4 && isFirstOrThirdWeek(date)) {
                         shouldAdd = true;
                     }
                 }
-                // 그 외의 모든 경우는 기존 로직 유지
+                else if (isJejuArrival()) {
+                    // 제주 도착 시 출발지의 휴무일 확인
+                    const departureStore = option1.value;
+                    const storeHoliday = storeInfo[departureStore]?.holiday;
+                    
+                    if (storeHoliday === "매주 월요일") {
+                        // 휴무일이 월요일인 경우 일요일 선택
+                        shouldAdd = (day === 0);
+                    } else {
+                        // 그 외의 경우 월요일 선택
+                        shouldAdd = (day === 1);
+                    }
+                    
+                    // 둘째주, 넷째주 조건 추가
+                    if (shouldAdd) {
+                        shouldAdd = isSecondOrFourthWeek(date);
+                    }
+                }
                 else if (isJejuDeparture()) {
                     shouldAdd = (day === 2 && isSecondOrFourthWeek(date));
                 }
-                else if (isJejuArrival()) {
-                    shouldAdd = (day === 1 && isSecondOrFourthWeek(date));
-                }
                 else if (isWandoYeosuInvolved()) {
-                    shouldAdd = (day === 5);  // 금요일
+                    shouldAdd = (day === 5);
                 }
                 else {
                     const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
 
                     if (isGangwonInvolved()) {
-                        shouldAdd = (day === 1); // 강원 지역은 월요일만 선택 가능
+                        shouldAdd = (day === 1);
                     } else if (holidayNumber === 1) {
                         shouldAdd = (day === 0 || day === 5);
                     } else {
@@ -2002,4 +2010,5 @@
         }
     </script>
 </body>
+</html>
 </html>
