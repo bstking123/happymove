@@ -971,6 +971,12 @@
                 return option1.value.startsWith('WD-') && option2.value.startsWith('JJ-');
             }
 
+            // 제주 도착 시 출발지의 휴무일을 확인하는 함수
+            function getDepartureHoliday() {
+                const option1Value = option1.value;
+                return storeInfo[option1Value]?.holiday;
+            }
+
             for(let i = 0; i < daysToShow; i++) {
                 const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
                 
@@ -996,7 +1002,14 @@
                     shouldAdd = (day === 2 && isSecondOrFourthWeek(date));
                 }
                 else if (isJejuArrival()) {
-                    shouldAdd = (day === 1 && isSecondOrFourthWeek(date));
+                    const departureHoliday = getDepartureHoliday();
+                    
+                    // 출발지가 월요일 휴무인 경우 일요일(0)을 선택 가능하게
+                    if (departureHoliday === "매주 월요일") {
+                        shouldAdd = (day === 0 && isSecondOrFourthWeek(date));
+                    } else {
+                        shouldAdd = (day === 1 && isSecondOrFourthWeek(date)); // 기존 로직 유지
+                    }
                 }
                 else if (isWandoYeosuInvolved()) {
                     shouldAdd = (day === 5);  // 금요일
