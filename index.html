@@ -534,7 +534,9 @@
             <option value="MT-EP-01">서울[은평]-더부쉬</option>
             <option value="MT-YC-01">서울[양천]-렙타일가든</option>
             <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
+            <option value="MT-GCG-01">서울[금천]-크레인</option>
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
+            <option value="MT-SBG-01">서울[성북]-렙타일인컬러</option>
             <option value="MT-JLG-01">서울[중랑]-실키렙타일</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
             <option value="MT-DYG-01">경기[덕양]-노랑너랑도마뱀</option>
@@ -551,6 +553,7 @@
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-SGRU-01">인천[서구]-도마뱀라이프</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="CN-CA-01">충남[천안]-링크쥬</option>
@@ -566,6 +569,7 @@
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-CW-01">경남[창원]-크레노바</option>
+            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
             <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
@@ -584,7 +588,9 @@
             <option value="MT-EP-01">서울[은평]-더부쉬</option>
             <option value="MT-YC-01">서울[양천]-렙타일가든</option>
             <option value="MT-YD-01">서울[영등포]-게코에 반한여자</option>
+            <option value="MT-GCG-01">서울[금천]-크레인</option>
             <option value="MT-GB-01">서울[강북]-렉사리움</option>
+            <option value="MT-SBG-01">서울[성북]-렙타일인컬러</option>
             <option value="MT-JLG-01">서울[중랑]-실키렙타일</option>
             <option value="MT-IS-01">경기[일산]-모프조</option>
             <option value="MT-DYG-01">경기[덕양]-노랑너랑도마뱀</option>
@@ -601,6 +607,7 @@
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-SGRU-01">인천[서구]-도마뱀라이프</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
             <option value="CN-CA-01">충남[천안]-링크쥬</option>
@@ -616,6 +623,7 @@
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-CW-01">경남[창원]-크레노바</option>
+            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
             <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
@@ -986,43 +994,51 @@
                     continue;
                 }
 
+                // 제주-진주 특별 로직 체크
+                if (isJejuJinjuRoute()) {
+                    if (checkJejuJinjuDate(date)) {
+                        addDateOption(date);
+                    }
+                    continue;  // 제주-진주 노선이면 다른 조건 체크하지 않음
+                }
+
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 완도→제주 특별 케이스를 가장 먼저 체크
-                if (isWandoToJeju()) {
-                    // 완도→제주: 향후 2주 이내의 첫째주, 셋째주 목요일만 선택 가능
-                    const twoWeeksLater = new Date(today);
-                    twoWeeksLater.setDate(today.getDate() + 14);
-                    
+                // 진주 출발/도착 케이스
+                if (option1.value === 'UL-JJMD-01') {
+                    shouldAdd = (day === 4);  // 출발지가 진주면 목요일만
+                }
+                else if (option2.value === 'UL-JJMD-01') {
+                    shouldAdd = (day === 5);  // 도착지가 진주면 금요일만
+                }
+                // 완도→제주 특별 케이스
+                else if (isWandoToJeju()) {
                     if (date <= twoWeeksLater && day === 4 && isFirstOrThirdWeek(date)) {
                         shouldAdd = true;
                     }
                 }
-                // 그 외의 모든 경우는 기존 로직 유지
+                // 나머지 기존 로직 유지
                 else if (isJejuDeparture()) {
                     shouldAdd = (day === 2 && isSecondOrFourthWeek(date));
                 }
                 else if (isJejuArrival()) {
                     const departureHoliday = getDepartureHoliday();
                     
-                    // 출발지가 월요일 휴무인 경우 일요일(0)을 선택 가능하게
                     if (departureHoliday === "매주 월요일") {
                         shouldAdd = (day === 0 && isSecondOrFourthWeek(date));
                     } else {
-                        shouldAdd = (day === 1 && isSecondOrFourthWeek(date)); // 기존 로직 유지
+                        shouldAdd = (day === 1 && isSecondOrFourthWeek(date));
                     }
                 }
                 else if (isWandoYeosuInvolved()) {
-                    shouldAdd = (day === 5);  // 금요일
+                    shouldAdd = (day === 5);
                 }
                 else {
                     const storeHoliday = option1.value ? storeInfo[option1.value]?.holiday : null;
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
                     
-                    // 강원 지역인 경우 (출발지나 도착지 중 하나라도 강원인 경우)
                     if (option1.value?.startsWith('GW-') || option2.value?.startsWith('GW-')) {
-                        // 금요일(5)을 제외한 월요일(1)만 선택 가능
                         shouldAdd = (day === 1);
                     } else {
                         if (holidayNumber === 1) {
@@ -1534,6 +1550,11 @@
             "CN-CA-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
             "JB-IKSAN-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
             "MT-NYJ-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
+            "MT-SBG-01": { holiday: "휴무일 없음", hours: "평일 12:00 ~ 20:00, 주말 14:00 ~ 22:00" },
+            "MT-GCG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
+            "MT-SGRU-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
+            "UL-JJMD-01": { holiday: "휴무일 없음", hours: "평일 16:00 ~ 21:00, 주말 16:00 ~ 20:00" },
+
         };
 
         function updateStoreInfo() {
@@ -1563,9 +1584,31 @@
             
             if (dateSelect.value) {
                 const selectedDate = new Date(dateSelect.value);
-                const arrivalDate = new Date(selectedDate);
                 
-                if (option1.value.startsWith('WD-') && option2.value.startsWith('JJ-')) {  // 완도→제주
+                // 제주-진주 특별 로직 체크
+                if (isJejuJinjuRoute()) {
+                    const arrivalDate = getJejuJinjuArrivalDate(selectedDate);
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    const dayName = arrivalDate.getDay() === 1 ? '월' : '금';
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(${dayName})<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    return;  // 제주-진주 노선이면 여기서 종료
+                }
+
+                // 기존 로직 그대로 유지
+                const arrivalDate = new Date(selectedDate);
+
+                if (option2.value === 'UL-JJMD-01') {  // 도착지가 진주인 경우
+                    // 다음 돌아오는 월요일로 설정
+                    while (arrivalDate.getDay() !== 1) {  // 월요일까지 이동
+                        arrivalDate.setDate(arrivalDate.getDate() + 1);
+                    }
+                    
+                    const month = arrivalDate.getMonth() + 1;
+                    const date = arrivalDate.getDate();
+                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(월)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                }
+                else if (option1.value.startsWith('WD-') && option2.value.startsWith('JJ-')) {  // 완도→제주
                     // 다음 주 금요일로 설정
                     while (arrivalDate.getDay() !== 5) {  // 금요일까지 이동
                         arrivalDate.setDate(arrivalDate.getDate() + 1);
@@ -1879,6 +1922,51 @@
             const option1 = document.getElementById('option1').value;
             const option2 = document.getElementById('option2').value;
             return option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
+        }
+
+        // 새로운 함수 추가
+        function isJejuJinjuRoute() {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            return (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') || 
+                   (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-'));
+        }
+
+        function checkJejuJinjuDate(date) {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const day = date.getDay();
+
+            if (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') {
+                // 제주→진주: 2,4주 화요일만
+                return (day === 2 && isSecondOrFourthWeek(date));
+            }
+            else if (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-')) {
+                // 진주→제주: 1,3주 목요일만
+                return (day === 4 && isFirstOrThirdWeek(date));
+            }
+            return false;
+        }
+
+        function getJejuJinjuArrivalDate(selectedDate) {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const arrivalDate = new Date(selectedDate);
+
+            if (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') {
+                // 제주→진주: 다음 월요일
+                while (arrivalDate.getDay() !== 1) {
+                    arrivalDate.setDate(arrivalDate.getDate() + 1);
+                }
+            }
+            else if (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-')) {
+                // 진주→제주: 다음주 금요일
+                while (arrivalDate.getDay() !== 5) {
+                    arrivalDate.setDate(arrivalDate.getDate() + 1);
+                }
+                arrivalDate.setDate(arrivalDate.getDate() + 7);
+            }
+            return arrivalDate;
         }
     </script>
 </body>
