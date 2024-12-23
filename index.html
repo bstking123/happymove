@@ -1039,7 +1039,7 @@
                     const holidayNumber = storeHoliday ? getHolidayNumber(storeHoliday) : null;
                     
                     if (option1.value?.startsWith('GW-') || option2.value?.startsWith('GW-')) {
-                        shouldAdd = (day === 1);
+                        shouldAdd = (day === 0);
                     } else {
                         if (holidayNumber === 1) {
                             shouldAdd = (day === 0 || day === 5);
