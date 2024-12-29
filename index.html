@@ -1163,27 +1163,9 @@
                 let displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
 
                 if (sendDate) {
-                    const selectedDate = new Date(sendDate);
-                    const month = selectedDate.getMonth() + 1;
-                    const day = selectedDate.getDate();
-                    
-                    // 광주-제주 구간 체크
-                    const region1 = document.getElementById('option1').value.split('-')[0];
-                    const region2 = document.getElementById('option2').value.split('-')[0];
-                    const isGwangjuJeju = (
-                        (region1 === 'GJ' && region2 === 'JJ') ||
-                        (region1 === 'JJ' && region2 === 'GJ')
-                    );
-                    
-                    if ((month === 11 && day >= 9) || (month === 12 && day <= 17)) {
-                        if (!isGwangjuJeju) {  // 제주-광주 구간이 아닌 경우에만 20% 할인 적용
-                            displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice * 0.8).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (20% 할인)`;
-                            basePrice = basePrice * 0.8;
-                        }
-                    } else if (month === 12 && day >= 18) {
-                        displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
-                        basePrice = basePrice - 3000;
-                    }
+                    // 3000원 할인을 항상 적용
+                    displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
+                    basePrice = basePrice - 3000;
                 }
 
                 // 3. 마릿수 추가 요금 계산 (할인 제외)
