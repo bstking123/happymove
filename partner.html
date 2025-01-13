@@ -739,6 +739,7 @@
             <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="DG-DSG-01">대구[달성]-크레패밀리하우스</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
             <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
@@ -795,6 +796,7 @@
             <option value="YE-SC-01">전남[순천]-정글박스</option>
             <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
             <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
+            <option value="DG-DSG-01">대구[달성]-크레패밀리하우스</option>
             <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
             <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
@@ -1556,6 +1558,9 @@
                 // 확인 모달 닫기
                 document.getElementById('confirmationModal').style.display = 'none';
 
+                // 현재 가격 정보 저장
+                const currentPrice = document.getElementById('confirm-fee').textContent;
+
                 // 장바구니에서 주문하는 경우
                 if (cartItems.length > 0) {
                     for (const item of cartItems) {
@@ -1619,8 +1624,9 @@
 
                 // 스피너 숨기기
                 spinnerOverlay.style.display = 'none';
-                // 계좌 입금 안내 모달 표시
-                openAccountModal();
+                
+                // 계좌 입금 안내 모달 표시 (저장된 가격 정보 사용)
+                openAccountModal(currentPrice);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -1772,6 +1778,7 @@
             "UL-JJMD-01": { holiday: "휴무일 없음", hours: "평일 16:00 ~ 21:00, 주말 16:00 ~ 20:00" },
             "BS-GJZ-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
             "DG-GSS-01": { holiday: "휴무일 없음", hours: "10:00 ~ 20:00" },
+            "DG-DSG-01": { holiday: "매주 월요일", hours: "11:30 ~ 19:30" },
         };
 
         function updateStoreInfo() {
@@ -1927,13 +1934,12 @@
         }
 
         // 계좌 모달 관련 함수 추가
-        function openAccountModal() {
+        function openAccountModal(price) {
             const modal = document.getElementById('accountModal');
-            const priceText = document.getElementById('confirm-fee').textContent;
             
             // 금액 안내 문구 업데이트
             const accountInfoText = document.querySelector('#accountModal .account-info p:first-child');
-            accountInfoText.innerHTML = `아래 계좌로 동행요금 <span style="color: #ff0000;">${priceText}</span>을 입금해주세요.`;
+            accountInfoText.innerHTML = `아래 계좌로 동행요금 <span style="color: #ff0000;">${price}</span>을 입금해주세요.`;
             
             modal.style.display = 'block';
         }
