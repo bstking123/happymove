@@ -803,8 +803,8 @@
             <option value="UL-CW-01">경남[창원]-크레노바</option>
             <option value="UL-JJMD-01">경남[진주]-크레가치</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
-            <option value="BS-BG-01">부산[북구]-파충류샵</option>
             <option value="BS-GJZ-01">부산[정관]-와우펫앤쥬 기장점</option>
+            <option value="BS-BG-01">부산[북구]-파충류샵</option>            
             <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
             <option value="BS-HU-01">부산[해운대]-렙토날드</option>                        
             <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
@@ -1117,22 +1117,13 @@
             }
 
             function isBlockedDate(date) {
-                const blockedStart = new Date('2024-11-10');
-                const blockedEnd = new Date('2024-11-15');
-                blockedStart.setHours(0, 0, 0, 0);
-                blockedEnd.setHours(0, 0, 0, 0);
+                // 설연휴 기간
+                const lunarStart = new Date('2025-01-26');
+                const lunarEnd = new Date('2025-01-30');
+                lunarStart.setHours(0, 0, 0, 0);
+                lunarEnd.setHours(0, 0, 0, 0);
                 
-                const leptonaldStart = new Date('2024-11-17');
-                const leptonaldEnd = new Date('2024-11-21');
-                leptonaldStart.setHours(0, 0, 0, 0);
-                leptonaldEnd.setHours(0, 0, 0, 0);
-                
-                const option1 = document.getElementById('option1').value;
-                const option2 = document.getElementById('option2').value;
-                const isLeptonaldInvolved = option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
-                
-                return date >= blockedStart && date <= blockedEnd || 
-                       (isLeptonaldInvolved && date >= leptonaldStart && date <= leptonaldEnd);
+                return (date >= lunarStart && date <= lunarEnd); // 설연휴 기간만 체크
             }
 
             const daysToShow = (isJejuDeparture() || isJejuArrival()) ? 30 : 14;
