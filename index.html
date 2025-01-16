@@ -959,21 +959,14 @@
             }
 
             function isBlockedDate(date) {
-                // 2024년 11월 10일부터 15일까지 날짜 차트
-                const blockedStart = new Date('2024-11-10');
-                const blockedEnd = new Date('2024-11-15');
-                blockedStart.setHours(0, 0, 0, 0);
-                blockedEnd.setHours(0, 0, 0, 0);
+                // 설연휴 기간
+                const lunarStart = new Date('2025-01-26');
+                const lunarEnd = new Date('2025-01-30');
+                lunarStart.setHours(0, 0, 0, 0);
+                lunarEnd.setHours(0, 0, 0, 0);
                 
-                // 렙토날드 임시 휴무 기간 추가
-                const reptornaldStart = new Date('2024-11-17');
-                const reptornaldEnd = new Date('2024-11-21');
-                reptornaldStart.setHours(0, 0, 0, 0);
-                reptornaldEnd.setHours(0, 0, 0, 0);
-                
-                // 일반 차단 기간 또는 렙토날드 휴무 기간인 경우
-                if ((date >= blockedStart && date <= blockedEnd) || 
-                    (isReptornaldInvolved() && date >= reptornaldStart && date <= reptornaldEnd)) {
+                // 설연휴 기간인 경우
+                if (date >= lunarStart && date <= lunarEnd) {
                     return true;
                 }
                 return false;
