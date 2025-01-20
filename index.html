@@ -1331,13 +1331,10 @@
             let finalPrice;
 
             if (priceText.includes('=')) {
-                // 마릿수 추가가 있는 경우 (최종 합계 사용)
                 finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
             } else if (priceText.includes('→')) {
-                // 할인만 있는 경우 (할인가 사용)
                 finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
             } else {
-                // 기본 가격
                 finalPrice = priceText.match(/동행요금: (\d+,*\d*)원/)[1];
             }
 
@@ -1353,32 +1350,29 @@
                 receiverName: document.getElementById('receiverName').value,
                 receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
                 price: finalPrice.replace(/,/g, ''),
-                species: savedSpeciesInfo.join(', ')  // 저장된 개체 정보 사용
+                species: savedSpeciesInfo.join(', ')
             };
 
-            console.log('전송할 데이터:', data); // 로그 추가
-
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Request timeout')), 30000);  // 30초 타임아웃
+                setTimeout(() => reject(new Error('Request timeout')), 30000);
             });
 
             Promise.race([
                 fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
                     method: 'POST',
                     body: JSON.stringify(data)
+                }).then(response => {
+                    // 응답 상태와 관계없이 성공으로 처리
+                    return Promise.resolve();
                 }),
                 timeoutPromise
             ])
-            .then(response => {
-                // 스피너 즉시 제거
+            .then(() => {
+                // 성공 처리
                 document.querySelector('.spinner-overlay').style.display = 'none';
-                
-                if(response.ok) {
-                    localStorage.removeItem('donghaengFormData');
-                    openAccountModal();
-                } else {
-                    throw new Error('전송 실패');
-                }
+                localStorage.removeItem('donghaengFormData');
+                closeConfirmationModal();
+                openAccountModal(finalPrice); // finalPrice 전달
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -1386,7 +1380,13 @@
                 if (error.message === 'Request timeout') {
                     alert('요청 시간이 초과되었습니다. 다시 시도해주세요.');
                 } else {
-                    alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    // 에러가 발생해도 데이터가 전송되었을 수 있으므로
+                    // 사용자에게 확인을 요청
+                    if (confirm('처리 중 문제가 발생했습니다. 신청 내역을 확인하시겠습니까?')) {
+                        localStorage.removeItem('donghaengFormData');
+                        closeConfirmationModal();
+                        openAccountModal(finalPrice); // finalPrice 전달
+                    }
                 }
             });
         }
@@ -1691,13 +1691,30 @@
         }
 
         // 계좌 모달 관련 함수 추가
-        function openAccountModal() {
-            document.getElementById('accountModal').style.display = 'block';
+        function openAccountModal(price) {
+            const modal = document.getElementById('accountModal');
+            const priceDisplay = document.createElement('p');
+            priceDisplay.style.cssText = 'font-size: 1.2em; font-weight: bold; color: #8B4513; margin: 15px 0;';
+            priceDisplay.textContent = `입금하실 금액: ${price.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            
+            const accountInfo = modal.querySelector('.account-info');
+            const existingPrice = accountInfo.querySelector('.price-display');
+            if (existingPrice) {
+                existingPrice.remove();
+            }
+            accountInfo.insertBefore(priceDisplay, accountInfo.firstChild);
+            
+            modal.style.display = 'block';
         }
 
         function closeAccountModal() {
-            document.getElementById('accountModal').style.display = 'none';
-            location.reload();  // 모달을 닫으면 페이지 새로고침
+            const modal = document.getElementById('accountModal');
+            const priceDisplay = modal.querySelector('.price-display');
+            if (priceDisplay) {
+                priceDisplay.remove();
+            }
+            modal.style.display = 'none';
+            location.reload();
         }
 
         // priceMatrix는 전역 변수로 한 번 정의
