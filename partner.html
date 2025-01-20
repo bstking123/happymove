@@ -1571,10 +1571,14 @@
 
                         const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
                             method: 'POST',
+                            mode: 'no-cors', // CORS 에러 방지를 위해 추가
+                            headers: {
+                                'Content-Type': 'text/plain;charset=utf-8',
+                            },
                             body: JSON.stringify(data)
                         });
 
-                        if (!response.ok) {
+                        if (!response.ok && response.status !== 0) { // no-cors로 인해 status가 0으로 반환될 수 있음
                             throw new Error('주문 처리 중 오류가 발생했습니다.');
                         }
                     }
@@ -1600,15 +1604,19 @@
                         senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
                         receiverName: document.getElementById('receiverName').value,
                         receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                        price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                        price: document.getElementById('priceDisplay').innerText.replace(/[^0-9]/g, '')
                     };
 
                     const response = await fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
                         method: 'POST',
+                        mode: 'no-cors', // CORS 에러 방지를 위해 추가
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
                         body: JSON.stringify(data)
                     });
 
-                    if (!response.ok) {
+                    if (!response.ok && response.status !== 0) { // no-cors로 인해 status가 0으로 반환될 수 있음
                         throw new Error('주문 처리 중 오류가 발생했습니다.');
                     }
                 }
@@ -1616,7 +1624,7 @@
                 // 스피너 숨기기
                 spinnerOverlay.style.display = 'none';
                 
-                // 계좌 입금 안내 모달 표시 (저장된 가격 정보 사용)
+                // 계좌 입금 안내 모달 표시
                 openAccountModal(currentPrice);
 
             } catch (error) {
