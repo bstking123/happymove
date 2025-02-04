@@ -1138,7 +1138,7 @@
                         shouldAdd = (day === 5);  // 금요일만 선택 가능
                     }
                     // MT 지역이 출발지나 도착지인 경우
-                    else if (option1.value?.startsWith('MT-') || option2.value?.startsWith('MT-')) {
+                    else if (option1.value?.startsWith('MT-')) {
                         shouldAdd = (day === 0 || day === 5);  // 일요일 또는 금요일
                     } 
                     // 그 외 지역
