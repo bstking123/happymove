@@ -1227,6 +1227,8 @@
                         // 강원의 경우 광주까지의 요금을 특별히 처리
                         if (otherCode === "GW") {
                             gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-BG-01"];  // 강원-광주 요금: 48,000원
+                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-GSG-01"];  // 강원-광주 요금: 48,000원
+                            
                         } else {
                             gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
                         }
@@ -1253,6 +1255,8 @@
                     if ((region1 === "GW" && region2 === "GJ") || (region2 === "GW" && region1 === "GJ")) {
                         const gjLocation = region1 === "GJ" ? option1 : option2;
                         if (gjLocation === "GJ-BG-01") {
+                            basePrice = 48000;
+                        } else if (gjLocation === "GJ-GSG-01") {
                             basePrice = 48000;
                         } else if (gjLocation === "GJ-JJ-01") {
                             basePrice = 32000;
@@ -1913,6 +1917,7 @@
                 "DJ": 32000,    // 강원 ↔ 대전
                 "GJ": {         // 강원 ↔ 광주/전주 차등 요금 설정
                     "GJ-BG-01": 48000,  // 강원 ↔ 광주
+                    "GJ-GSG-01": 48000, // 강원 ↔ 광주
                     "GJ-JJ-01": 32000   // 강원 ↔ 전주
                 },
                 "JB": 32000,    // 강원 ↔ 익산 (추가)
