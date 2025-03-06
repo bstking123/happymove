@@ -983,6 +983,14 @@
                     return true;
                 }
                 
+                // 2025년 3월 9일 차단 - 제주도 출발인 경우에만
+                if (date.getFullYear() === 2025 && 
+                    date.getMonth() === 2 && // JavaScript에서 월은 0부터 시작 (3월은 2)
+                    date.getDate() === 9 && 
+                    isJejuDeparture()) {
+                    return true;
+                }
+                
                 return false;
             }
 
@@ -1059,7 +1067,21 @@
 
                 // 제주도 출발인 경우
                 if (isJejuDeparture()) {
-                    shouldAdd = (day === 0 && isSecondOrFourthWeek(date)); // 둘째, 넷째 주 일요일로 변경
+                    // 가장 최근 2,4주차 목/금요일 이후의 첫 일요일만 허용
+                    // 날짜가 일요일이면서 둘째, 넷째 주인지 확인
+                    if (day === 0) {
+                        // 이 일요일 날짜의 직전 목요일과 금요일 날짜 생성
+                        const prevThursday = new Date(date);
+                        prevThursday.setDate(date.getDate() - 3); // 일요일(0)에서 3일 전은 목요일(4)
+                        
+                        const prevFriday = new Date(date);
+                        prevFriday.setDate(date.getDate() - 2); // 일요일(0)에서 2일 전은 금요일(5)
+                        
+                        // 직전 목요일이 2,4주차이거나 직전 금요일이 2,4주차인 경우만 허용
+                        shouldAdd = (isSecondOrFourthWeek(prevThursday) || isSecondOrFourthWeek(prevFriday));
+                    } else {
+                        shouldAdd = false;
+                    }
                 }
                 // 제주도 도착인 경우
                 else if (isJejuArrival()) {
@@ -2036,6 +2058,12 @@
             }
             
             return false;
+        }
+
+        function isHutopoRoute() {
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            return option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
         }
     </script>
 </body>
