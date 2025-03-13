@@ -1193,23 +1193,11 @@
             function checkJejuArrivalDate(date) {
                 const day = date.getDay();
                 
-                // 이번 주 마지막 날짜 계산 (현재 기준 이번 주 토요일까지)
-                const today = new Date();
-                const dayOfWeek = today.getDay(); // 0: 일요일, 6: 토요일
-                const daysUntilEndOfWeek = 6 - dayOfWeek; // 이번 주 토요일까지 남은 일수
-                const endOfThisWeek = new Date(today);
-                endOfThisWeek.setDate(today.getDate() + daysUntilEndOfWeek);
-                
-                // 이번 주까지는 모든 상점이 금요일에만 맡길 수 있음
-                if (date <= endOfThisWeek) {
-                    return (day === 5 && isSecondOrFourthWeek(date)); // 금요일만 허용
+                // 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
+                if (isGroup1Shop()) {
+                    return (day === 4 && isSecondOrFourthWeek(date)); // 목요일(1그룹)
                 } else {
-                    // 다음 주부터는 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
-                    if (isGroup1Shop()) {
-                        return (day === 4 && isSecondOrFourthWeek(date)); // 목요일(1그룹)
-                    } else {
-                        return (day === 5 && isSecondOrFourthWeek(date)); // 금요일(2그룹)
-                    }
+                    return (day === 5 && isSecondOrFourthWeek(date)); // 금요일(2그룹)
                 }
             }
 
@@ -1247,28 +1235,11 @@
                 }
                 // 기타 모든 지역의 경우
                 else {
-                    // 이번 주 마지막 날짜 계산 (현재 기준 이번 주 토요일까지)
-                    const today = new Date();
-                    const dayOfWeek = today.getDay(); // 0: 일요일, 6: 토요일
-                    const daysUntilEndOfWeek = 6 - dayOfWeek; // 이번 주 토요일까지 남은 일수
-                    const endOfThisWeek = new Date(today);
-                    endOfThisWeek.setDate(today.getDate() + daysUntilEndOfWeek);
-                    
-                    // 이번 주까지는 모든 상점이 금요일에만 맡길 수 있음 (진주는 예외)
-                    if (date <= endOfThisWeek) {
-                        // 진주 출발일 경우 이번 주 금요일은 제외
-                        if (option1.value === "UL-JJMD-01") {
-                            shouldAdd = false; // 진주 출발은 이번 주 금요일 선택 불가
-                        } else {
-                            shouldAdd = (day === 5); // 금요일만 허용
-                        }
+                    // 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
+                    if (isGroup1Shop()) {
+                        shouldAdd = (day === 4); // 목요일(1그룹)
                     } else {
-                        // 다음 주부터는 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
-                        if (isGroup1Shop()) {
-                            shouldAdd = (day === 4); // 목요일(1그룹)
-                        } else {
-                            shouldAdd = (day === 5); // 금요일(2그룹)
-                        }
+                        shouldAdd = (day === 5); // 금요일(2그룹)
                     }
                 }
 
