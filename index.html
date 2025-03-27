@@ -953,7 +953,6 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
-            // twoWeeksLater 변수를 함수 시작 부분에서 정의
             const twoWeeksLater = new Date(today);
             twoWeeksLater.setDate(today.getDate() + 14);
             
@@ -973,19 +972,15 @@
             }
 
             function isBlockedDate(date) {
-                // 설연휴는 이미 지났으므로 제거
-                
-                // 2025년 3월 7일 차단 (이미 1회 운송 완료) - 제주도 출발이나 도착인 경우에만
                 if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 2 && // JavaScript에서 월은 0부터 시작 (3월은 2)
+                    date.getMonth() === 2 && 
                     date.getDate() === 7 && 
                     (isJejuDeparture() || isJejuArrival())) {
                     return true;
                 }
                 
-                // 2025년 3월 9일 차단 - 제주도 출발인 경우에만
                 if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 2 && // JavaScript에서 월은 0부터 시작 (3월은 2)
+                    date.getMonth() === 2 && 
                     date.getDate() === 9 && 
                     isJejuDeparture()) {
                     return true;
@@ -994,13 +989,12 @@
                 return false;
             }
 
-            const daysToShow = 30; // 모든 지역 한 달(30일)로 통일
+            const daysToShow = 30;
 
             function isWandoToJeju() {
                 return option1.value.startsWith('WD-') && option2.value.startsWith('JJ-');
             }
 
-            // 제주 도착 시 출발지의 휴무일을 확인하는 함수
             function getDepartureHoliday() {
                 const option1Value = option1.value;
                 return storeInfo[option1Value]?.holiday;
@@ -1010,14 +1004,11 @@
                 const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
                 let firstFriday = new Date(firstDayOfMonth);
                 
-                // 첫 번째 금요일 찾기
                 while (firstFriday.getDay() !== 5) {
                     firstFriday.setDate(firstFriday.getDate() + 1);
                 }
                 
-                // 이번 달의 첫 금요일이 둘째 주에 있는 경우
                 if (Math.ceil((firstFriday.getDate() + firstDayOfMonth.getDay()) / 7) > 1) {
-                    // 지난 달의 마지막 금요일 찾기
                     const lastDayOfPrevMonth = new Date(date.getFullYear(), date.getMonth(), 0);
                     let lastFridayOfPrevMonth = new Date(lastDayOfPrevMonth);
                     while (lastFridayOfPrevMonth.getDay() !== 5) {
@@ -1031,17 +1022,18 @@
                        date.getFullYear() === firstFriday.getFullYear();
             }
 
-            // 제주도 도착 시 출발지에 따른 날짜 체크
             function checkJejuArrivalDate(date) {
                 const day = date.getDay();
                 
-                // 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
                 if (isGroup1Shop()) {
                     return (day === 4 && isSecondOrFourthWeek(date)); // 목요일(1그룹)
                 } else {
                     return (day === 5 && isSecondOrFourthWeek(date)); // 금요일(2그룹)
                 }
             }
+
+            // isGroup1Shop 결과를 한 번만 계산
+            const isGroup1 = isGroup1Shop();
 
             for(let i = 0; i < daysToShow; i++) {
                 const date = new Date(today.getTime() + (i * 24 * 60 * 60 * 1000));
@@ -1053,32 +1045,24 @@
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 제주도 출발인 경우
                 if (isJejuDeparture()) {
-                    // 가장 최근 2,4주차 목/금요일 이후의 첫 일요일만 허용
-                    // 날짜가 일요일이면서 둘째, 넷째 주인지 확인
                     if (day === 0) {
-                        // 이 일요일 날짜의 직전 목요일과 금요일 날짜 생성
                         const prevThursday = new Date(date);
-                        prevThursday.setDate(date.getDate() - 3); // 일요일(0)에서 3일 전은 목요일(4)
+                        prevThursday.setDate(date.getDate() - 3);
                         
                         const prevFriday = new Date(date);
-                        prevFriday.setDate(date.getDate() - 2); // 일요일(0)에서 2일 전은 금요일(5)
+                        prevFriday.setDate(date.getDate() - 2);
                         
-                        // 직전 목요일이 2,4주차이거나 직전 금요일이 2,4주차인 경우만 허용
                         shouldAdd = (isSecondOrFourthWeek(prevThursday) || isSecondOrFourthWeek(prevFriday));
                     } else {
                         shouldAdd = false;
                     }
                 }
-                // 제주도 도착인 경우
                 else if (isJejuArrival()) {
                     shouldAdd = checkJejuArrivalDate(date);
                 }
-                // 기타 모든 지역의 경우
                 else {
-                    // 그룹에 따라 목요일 또는 금요일에 맡길 수 있음
-                    if (isGroup1Shop()) {
+                    if (isGroup1) {
                         shouldAdd = (day === 4); // 목요일(1그룹)
                     } else {
                         shouldAdd = (day === 5); // 금요일(2그룹)
@@ -1548,7 +1532,7 @@
             "MT-GY-01": { holiday: "매주 월요일", hours: "13:00 ~ 19:00" },
             "MT-ND-01": { holiday: "매주 월요일", hours: "11:00 ~ 20:00" },
             "GW-CC-01": { holiday: "매주 월요일", hours: "13:00 ~ 22:00" },
-            "DJ-SG-01": { holiday: "매주 화요일", hours: "12:00 ~ 21:00" },
+            "DJ-SG-01": { holiday: "휴무일 없음", hours: "12:00 ~ 21:00" },
             "DJ-YS-01": { holiday: "휴무일 없음", hours: "15:00 ~ 19:30" },
             "GJ-BG-01": { holiday: "휴무일 없음", hours: "00:00 ~ 24:00" },
             "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
