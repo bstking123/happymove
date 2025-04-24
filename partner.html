@@ -1216,7 +1216,7 @@
                 if (date.getFullYear() === 2025 && 
                     date.getMonth() === 3 && 
                     isFourthWeek(date) &&
-                    isGyeongsangRegion()) {
+                    option1.value.startsWith('DG-')) {  // 출발지가 대구경상인 경우만
                     // 24일로 강제 변경
                     const april24 = new Date(2025, 3, 24);
                     if (date.getTime() === april24.getTime()) {
