@@ -1223,7 +1223,7 @@
                         shouldAdd = true;
                     }
                 }
-                else if (isJejuDeparture()) {
+                else if (isJejuDeparture()) {  // 출발지가 제주인 경우
                     if (day === 0) {
                         const prevThursday = new Date(date);
                         prevThursday.setDate(date.getDate() - 3);
@@ -1239,11 +1239,18 @@
                 else if (isJejuArrival()) {
                     shouldAdd = checkJejuArrivalDate(date);
                 }
-                else {
-                    if (isGroup1) {
-                        shouldAdd = (day === 4); // 목요일(1그룹)
+                else {  // 출발지가 제주가 아닌 모든 경우
+                    const isMay2025 = date.getFullYear() === 2025 && date.getMonth() === 4; // 5월
+                    if (isMay2025) {
+                        const firstDay = new Date(2025, 4, 1);
+                        const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+                        if (weekNumber === 2) { // 둘째주
+                            shouldAdd = (day === 4); // 목요일(5월 8일)
+                        } else {
+                            shouldAdd = (day === 5); // 금요일
+                        }
                     } else {
-                        shouldAdd = (day === 5); // 금요일(2그룹)
+                        shouldAdd = (day === 5); // 다른 달은 모두 금요일
                     }
                 }
 
@@ -2103,13 +2110,11 @@
         
         // 1그룹(목요일 맡김) 상점 코드 목록 추가
         function isGroup1Shop() {
-            // 출발지 select 요소와 값 가져오기
             const option1Select = document.getElementById('option1');
             if (!option1Select) return false;
             
             const option1Value = option1Select.value;
             
-            // 목요일 픽업 대상 상점 코드 (정확한 값)
             const thursdayShopCodes = [
                 "UL-BG-01", // 젤리팜
                 "BS-GJZ-01", // 와우펫앤쥬 기장
@@ -2134,17 +2139,32 @@
                 "BS-YS-01", // 경남-양산
             ];
             
-            // 디버깅용 로그
-            console.log("출발지 코드:", option1Value);
-            
-            // 출발지가 목요일 픽업 대상 코드인지 확인 (정확히 일치)
-            if (thursdayShopCodes.includes(option1Value)) {
-                console.log("목요일 픽업 대상 코드:", option1Value);
-                return true;
-            }
-            
-            return false;
+            return thursdayShopCodes.includes(option1Value);
         }
+
+        document.getElementById('sendDate').addEventListener('change', function() {
+            const selectedDate = this.value;
+            const option1Value = document.getElementById('option1').value;
+            
+            if (selectedDate === '2025-05-08' && !isGroup1Shop()) {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                        <div class="modal-text" style="margin-bottom: 15px;">
+                            5월 둘째주만 맡기는요일이 목요일로 변경됩니다.
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="button" class="modal-close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">확인</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.style.display = 'block';
+            }
+            updateArrivalNotice();
+        });
     </script>
 </body>
 </html>
