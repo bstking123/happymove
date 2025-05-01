@@ -906,6 +906,20 @@
         </div>
     </div>
 
+    <!-- 5월 8일 선택 시 팝업창 추가 -->
+    <div id="may8thModal" class="modal">
+        <div class="modal-content" style="width: 300px; max-width: 90%; padding: 20px 15px 15px;">
+            <span class="close" onclick="closeMay8thModal()" style="position: absolute; right: 15px; top: 10px;">&times;</span>
+            <h2 style="font-size: 16px; margin: 0 0 15px 0;">안내</h2>
+            <div class="modal-text" style="text-align: center; white-space: nowrap; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 14px;">5월 둘째주만 맡기는요일이 목요일로 변경됩니다</p>
+            </div>
+            <div class="modal-buttons" style="text-align: center;">
+                <button type="button" class="modal-close-btn" onclick="closeMay8thModal()" style="width: 80px; height: 35px; font-size: 14px; padding: 0; display: inline-block;">확인</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 폼 데이터 자동 저장
         let saveTimeout;
@@ -981,6 +995,14 @@
             }
 
             function isBlockedDate(date) {
+                // 2025년 5월 9일을 5월 8일로 변경 (제주가 출발지일 때만)
+                if (date.getFullYear() === 2025 && 
+                    date.getMonth() === 4 && 
+                    date.getDate() === 9 && 
+                    !isJejuDeparture()) {
+                    return true;
+                }
+                
                 if (date.getFullYear() === 2025 && 
                     date.getMonth() === 2 && 
                     date.getDate() === 7 && 
@@ -1054,12 +1076,18 @@
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 2025년 4월 넷째주 경상도 지역 특별 처리
+                // 2025년 5월 8일 특별 처리 (제주 제외)
                 if (date.getFullYear() === 2025 && 
+                    date.getMonth() === 4 && 
+                    date.getDate() === 8 && 
+                    !isJejuDeparture()) {
+                    shouldAdd = true;
+                }
+                // 2025년 4월 넷째주 경상도 지역 특별 처리
+                else if (date.getFullYear() === 2025 && 
                     date.getMonth() === 3 && 
                     isFourthWeek(date) &&
-                    option1.value.startsWith('DG-')) {  // 출발지가 대구경상인 경우만
-                    // 24일로 강제 변경
+                    option1.value.startsWith('DG-')) {
                     const april24 = new Date(2025, 3, 24);
                     if (date.getTime() === april24.getTime()) {
                         shouldAdd = true;
@@ -2062,6 +2090,45 @@
             const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
             return weekNumber === 4;
         }
+
+        // 5월 8일 선택 시 모달 표시 함수 추가
+        function openMay8thModal() {
+            document.getElementById('may8thModal').style.display = 'block';
+        }
+
+        function closeMay8thModal() {
+            document.getElementById('may8thModal').style.display = 'none';
+        }
+
+        // sendDate의 change 이벤트 리스너 수정
+        document.getElementById('sendDate').addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const option1 = document.getElementById('option1').value;
+            
+            // 2025년 5월 8일 선택 시 모달 표시 (목요일 상점코드 제외)
+            if (selectedDate.getFullYear() === 2025 && 
+                selectedDate.getMonth() === 4 && 
+                selectedDate.getDate() === 8) {
+                
+                // 목요일 상점코드 목록
+                const thursdayShopCodes = [
+                    "UL-BG-01", "BS-GJZ-01", "MT-YDP-01", "BS-HU-01", 
+                    "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
+                    "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
+                    "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
+                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", "UL-JJMD-01", 
+                    "BS-YS-01"
+                ];
+                
+                // 출발지가 목요일 상점코드가 아닌 경우에만 모달 표시
+                if (!thursdayShopCodes.includes(option1)) {
+                    openMay8thModal();
+                }
+            }
+            
+            updateArrivalNotice();
+            updatePrice();
+        });
     </script>
 </body>
 </html>
