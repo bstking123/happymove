@@ -1239,18 +1239,22 @@
                 else if (isJejuArrival()) {
                     shouldAdd = checkJejuArrivalDate(date);
                 }
-                else {  // 출발지가 제주가 아닌 모든 경우
+                else {
                     const isMay2025 = date.getFullYear() === 2025 && date.getMonth() === 4; // 5월
-                    if (isMay2025) {
-                        const firstDay = new Date(2025, 4, 1);
-                        const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
-                        if (weekNumber === 2) { // 둘째주
-                            shouldAdd = (day === 4); // 목요일(5월 8일)
+                    if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
+                        shouldAdd = (day === 4); // 계속 목요일
+                    } else {  // 2그룹(금요일 맡기는 업체)
+                        if (isMay2025) {
+                            const firstDay = new Date(2025, 4, 1);
+                            const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+                            if (weekNumber === 2) { // 둘째주
+                                shouldAdd = (day === 4); // 목요일(5월 8일)
+                            } else {
+                                shouldAdd = (day === 5); // 금요일
+                            }
                         } else {
-                            shouldAdd = (day === 5); // 금요일
+                            shouldAdd = (day === 5); // 다른 달은 모두 금요일
                         }
-                    } else {
-                        shouldAdd = (day === 5); // 다른 달은 모두 금요일
                     }
                 }
 
