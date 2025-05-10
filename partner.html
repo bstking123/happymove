@@ -732,7 +732,6 @@
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="MT-MCHG-01">인천[미추홀]-욱크렐레</option>
-            <option value="MT-SGRU-01">인천[서구]-도마뱀라이프 루원시티점</option>
             <option value="MT-CULA-01">인천[청라]-크레그램</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
@@ -799,7 +798,6 @@
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="MT-MCHG-01">인천[미추홀]-욱크렐레</option>
-            <option value="MT-SGRU-01">인천[서구]-도마뱀라이프 루원시티점</option>
             <option value="MT-CULA-01">인천[청라]-크레그램</option>
             <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
             <option value="CB-CJ-01">충북[청주]-킹크레</option>
@@ -1246,17 +1244,7 @@
                     if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
                         shouldAdd = (day === 4); // 계속 목요일
                     } else {  // 2그룹(금요일 맡기는 업체)
-                        if (isMay2025) {
-                            const firstDay = new Date(2025, 4, 1);
-                            const weekNumber = Math.ceil((date.getDate() + firstDay.getDay()) / 7);
-                            if (weekNumber === 2) { // 둘째주
-                                shouldAdd = (day === 4); // 목요일(5월 8일)
-                            } else {
-                                shouldAdd = (day === 5); // 금요일
-                            }
-                        } else {
-                            shouldAdd = (day === 5); // 다른 달은 모두 금요일
-                        }
+                        shouldAdd = (day === 5); // 금요일
                     }
                 }
 
@@ -1846,7 +1834,6 @@
             "MT-NYJ-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "MT-SBG-01": { holiday: "휴무일 없음", hours: "평일 12:00 ~ 20:00, 주말 14:00 ~ 22:00" },
             "MT-GCG-01": { holiday: "휴무일 없음", hours: "15:00 ~ 24:00" },
-            "MT-SGRU-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "UL-JJMD-01": { holiday: "휴무일 없음", hours: "평일 16:00 ~ 21:00, 주말 16:00 ~ 20:00" },
             "BS-GJZ-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
             "DG-GSS-01": { holiday: "휴무일 없음", hours: "10:00 ~ 20:00" },
@@ -2151,25 +2138,6 @@
 
         document.getElementById('sendDate').addEventListener('change', function() {
             const selectedDate = this.value;
-            const option1Value = document.getElementById('option1').value;
-            
-            if (selectedDate === '2025-05-08' && !isGroup1Shop()) {
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
-                        <div class="modal-text" style="margin-bottom: 15px;">
-                            5월 둘째주만 맡기는요일이 목요일로 변경됩니다.
-                        </div>
-                        <div class="modal-buttons">
-                            <button type="button" class="modal-close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">확인</button>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                modal.style.display = 'block';
-            }
             updateArrivalNotice();
         });
     </script>
