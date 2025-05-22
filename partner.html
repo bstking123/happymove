@@ -1189,6 +1189,24 @@
                     return true;
                 }
                 
+                // 대구/경상/울산/부산 지역 5월 넷째주 차단 추가
+                if (date.getFullYear() === 2025 && 
+                    date.getMonth() === 4 && // 5월
+                    isFourthWeek(date)) {
+                    const region = option1.value.split('-')[0];
+                    if (['DG', 'BS', 'UL'].includes(region)) {
+                        return true;
+                    }
+                }
+                
+                // 더부쉬(MT-EP-01) 5월 넷째주 차단 추가
+                if (date.getFullYear() === 2025 && 
+                    date.getMonth() === 4 && // 5월
+                    isFourthWeek(date) && 
+                    option1.value === 'MT-EP-01') {
+                    return true;
+                }
+                
                 return false;
             }
 
