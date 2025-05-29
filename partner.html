@@ -731,6 +731,7 @@
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
             <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
             <option value="MT-CULA-01">인천[청라]-크레그램</option>
@@ -798,6 +799,7 @@
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
             <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
             <option value="MT-CULA-01">인천[청라]-크레그램</option>
@@ -1901,6 +1903,7 @@
             "MT-YI-01": { holiday: "매주 목요일", hours: "13:00 ~ 20:00" },
             "MT-MCHG-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-MCHG2-01": { holiday: "휴무일 없음", hours: "12:00 ~ 20:00" },
+            "MT-NHD-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
         };
 
         function updateStoreInfo() {
@@ -2240,8 +2243,8 @@
             
             // 여수점 5월 15일~18일 체크 추가
             if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
+                selectedDate.getMonth() === 5 && 
+                (selectedDate.getDate() >= 29 && selectedDate.getDate() <= 30) && 
                 isYeosuInvolved()) {
                 openYeosuModal();
             }
