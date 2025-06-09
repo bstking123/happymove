@@ -92,7 +92,7 @@
         /* 히어로 섹션 */
         .hero {
             height: 100vh;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -100,6 +100,16 @@
             color: white;
             position: relative;
             overflow: hidden;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 30%, #7c3aed 60%, #6366f1 100%);
+            }
         }
 
         /* 히어로 배경 이미지 */
@@ -121,8 +131,8 @@
             position: absolute;
             width: 200%;
             height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><circle cx="20" cy="20" r="8"><animate attributeName="r" values="8;12;8" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="6"><animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="10"><animate attributeName="r" values="10;14;10" dur="4s" repeatCount="indefinite"/></circle></svg>');
-            animation: float 20s infinite linear;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.05)"><circle cx="20" cy="20" r="6" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="6;8;6" dur="8s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="4" fill="rgba(255,255,255,0.08)"><animate attributeName="r" values="4;6;4" dur="10s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="5" fill="rgba(255,255,255,0.12)"><animate attributeName="r" values="5;7;5" dur="12s" repeatCount="indefinite"/></circle></svg>');
+            animation: float 40s infinite linear;
             z-index: 1;
         }
 
@@ -238,6 +248,129 @@
             position: absolute;
             left: 20px;
             animation: sparkDelay 2s infinite 1s;
+        }
+
+        /* 떠다니는 이모지들 */
+        .floating-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+                .floating-emoji {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: floatEmoji 15s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        .floating-emoji:nth-child(1) {
+            content: '🦎';
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .floating-emoji:nth-child(2) {
+            content: '⚡';
+            top: 20%;
+            right: 15%;
+            animation-delay: 5s;
+            animation-duration: 18s;
+        }
+
+        .floating-emoji:nth-child(3) {
+            content: '🚀';
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 10s;
+            animation-duration: 22s;
+        }
+
+        .floating-emoji:nth-child(4) {
+            content: '✨';
+            top: 70%;
+            right: 25%;
+            animation-delay: 15s;
+            animation-duration: 16s;
+        }
+
+        .floating-emoji:nth-child(5) {
+            content: '💎';
+            top: 50%;
+            left: 5%;
+            animation-delay: 3s;
+            animation-duration: 24s;
+        }
+
+        .floating-emoji:nth-child(6) {
+            content: '🌟';
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 8s;
+            animation-duration: 19s;
+        }
+
+        @keyframes floatEmoji {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translateY(-10px) translateX(5px) rotate(10deg) scale(1.05);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-15px) translateX(-3px) rotate(-5deg) scale(0.95);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translateY(-8px) translateX(7px) rotate(8deg) scale(1.02);
+                opacity: 0.6;
+            }
+        }
+
+                 /* 파티클 효과 */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleFloat 12s infinite ease-in-out;
+        }
+
+        .particle:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.2);
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(255, 255, 255, 0.25);
+            animation-duration: 18s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.3;
+                transform: scale(1);
+           }
+            80% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(30px) scale(0);
+                opacity: 0;
+            }
         }
 
         /* 순간이동 애니메이션들 */
@@ -536,7 +669,7 @@
         }
 
         .service-card:hover .service-icon {
-            animation: dance 0.5s ease-in-out, iconGlow 3s ease-in-out infinite;
+            animation: dance 0.5s ease-in-out;
             transform: scale(1.1);
         }
 
@@ -896,7 +1029,28 @@
         /* 반응형 */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 3rem;
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+                line-height: 1.3;
+            }
+            
+            .cta-section h2 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .cta-section p {
+                font-size: 1.1rem;
+                line-height: 1.4;
             }
             
             .nav-links {
@@ -906,11 +1060,28 @@
             .service-grid,
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .service-card {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+            
+            .service-card p {
+                font-size: 0.95rem;
+                line-height: 1.6;
             }
             
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 1rem;
             }
 
             .hero-logo img {
@@ -919,7 +1090,7 @@
             }
             
             .logo {
-                height: 60px;
+                font-size: 1.6rem;
             }
             
             .logo i {
@@ -954,6 +1125,281 @@
                 max-width: 250px;
                 max-height: 150px;
             }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .feature-item {
+                padding: 2rem 1.5rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* 더 작은 모바일 화면 (480px 이하) */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+                line-height: 1.1;
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                line-height: 1.4;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                line-height: 1.2;
+                margin-bottom: 2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+                line-height: 1.1;
+            }
+            
+            .cta-section p {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .logo i {
+                font-size: 1.6rem;
+            }
+            
+            .service-card {
+                padding: 1.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.3rem;
+                line-height: 1.2;
+            }
+            
+            .service-card p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .service-icon {
+                font-size: 4rem;
+            }
+            
+            .feature-item {
+                padding: 1.5rem 1rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.2rem;
+                line-height: 1.2;
+            }
+            
+            .feature-item p {
+                font-size: 0.9rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .cta-button {
+                font-size: 1.1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .hero-logo img {
+                max-width: 300px;
+                width: 90%;
+            }
+            
+            .partners-info {
+                margin: 0 0.5rem;
+                padding: 1rem;
+            }
+            
+            .partners-count {
+                font-size: 1.1rem;
+            }
+            
+            .partners-note {
+                font-size: 0.9rem;
+            }
+            
+            .footer-section h4 {
+                font-size: 1.1rem;
+            }
+            
+            .footer-section p,
+            .footer-section a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 매우 작은 화면 (360px 이하) */
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: 1.7rem;
+                line-height: 1.1;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+                line-height: 1.3;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 1.8rem;
+                line-height: 1.1;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .logo i {
+                font-size: 1.4rem;
+            }
+            
+            .service-card {
+                padding: 1.2rem;
+                margin: 0 0.2rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.2rem;
+                line-height: 1.2;
+            }
+            
+            .service-card p {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            
+            .service-icon {
+                font-size: 3.5rem;
+            }
+            
+            .feature-item {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.1rem;
+                line-height: 1.2;
+            }
+            
+            .feature-item p {
+                font-size: 0.85rem;
+            }
+            
+            .cta-button {
+                font-size: 1rem;
+                padding: 0.9rem 1.8rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                font-size: 0.95rem;
+                padding: 0.9rem 1.5rem;
+            }
+            
+            .hero-logo img {
+                max-width: 280px;
+                width: 85%;
+            }
+            
+            .container {
+                padding: 0 0.8rem;
+            }
+            
+            .nav-container {
+                padding: 0 0.8rem;
+            }
+            
+            .hero-content {
+                padding: 0 0.8rem;
+            }
+            
+            .partner-logo {
+                min-height: 100px;
+                min-width: 150px;
+            }
+
+            .partner-logo img {
+                max-width: 200px;
+                max-height: 120px;
+            }
+        }
+
+        /* 텍스트 줄바꿈 방지 및 최적화 */
+        .service-card h3,
+        .feature-item h4,
+        .section-title {
+            word-break: keep-all;
+            word-wrap: break-word;
+        }
+        
+        .service-card p,
+        .feature-item p {
+            word-break: keep-all;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* 모바일 전용 줄바꿈 */
+        .mobile-br {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .mobile-br {
+                display: inline;
+            }
+        }
+        
+        /* 모바일에서 터치 최적화 */
+        @media (max-width: 768px) {
+            .cta-button,
+            .btn-primary,
+            .btn-secondary {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
         }
 
         /* 스크롤 애니메이션 */
@@ -971,6 +1417,7 @@
         /* 추가 카툰 효과 */
         .service-card:hover .service-icon {
             animation: dance 0.5s ease-in-out;
+            transform: scale(1.1);
         }
 
         @keyframes dance {
@@ -1001,6 +1448,15 @@
     <!-- 히어로 섹션 -->
     <section class="hero" id="home">
         <div class="hero-bg"></div>
+        <!-- 떠다니는 이모지들 -->
+        <div class="floating-emojis">
+            <div class="floating-emoji">🦎</div>
+            <div class="floating-emoji">⚡</div>
+            <div class="floating-emoji">🚀</div>
+            <div class="floating-emoji">✨</div>
+            <div class="floating-emoji">💎</div>
+            <div class="floating-emoji">🌟</div>
+        </div>
         <div class="hero-content">
             <div class="hero-logo">
                 <img src="images/hero-logo.png" alt="DOMAWARP Hero Logo">
@@ -1402,7 +1858,7 @@
     <!-- CTA 섹션 -->
     <section class="cta-section">
         <div class="container">
-            <h2 class="fade-in">🎉 지금 DOMAWARP와 함께해요!</h2>
+            <h2 class="fade-in">🎉 지금 DOMAWARP와<br class="mobile-br"> 함께해요!</h2>
             <p class="fade-in">소중한 파충류의 빠르고 안전한 배송을 체험해보세요</p>
             <div class="cta-buttons fade-in">
                 <a href="https://bstking123.github.io/happymove/" class="btn-primary">
@@ -1512,6 +1968,37 @@
                 }, 100);
             });
         });
+
+        // 파티클 생성 함수
+        function createParticles() {
+            const hero = document.querySelector('.hero');
+            const particleCount = 8;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 랜덤 위치 설정
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 6 + 12) + 's';
+                
+                hero.appendChild(particle);
+
+                // 애니메이션이 끝나면 파티클 제거
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 20000);
+            }
+        }
+
+        // 파티클을 주기적으로 생성
+        setInterval(createParticles, 8000);
+        
+        // 페이지 로드 시 초기 파티클 생성
+        createParticles();
     </script>
 </body>
 </html>
