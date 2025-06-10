@@ -97,6 +97,53 @@
             transform: translateY(-2px);
         }
 
+        /* 모바일 메뉴 */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1e40af;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -377,33 +424,181 @@
                     0 0 25px rgba(139, 92, 246, 0.8);
             }
         }
+        
+        /* 모바일 터치 애니메이션 */
+        @keyframes touchWave {
+            0% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                border-left-color: #3b82f6;
+            }
+            25% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 25%, rgba(59, 130, 246, 0.1) 100%);
+                border-left-color: #1d4ed8;
+            }
+            50% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.4) 50%, rgba(139, 92, 246, 0.2) 100%);
+                border-left-color: #8b5cf6;
+            }
+            75% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.2) 75%, rgba(139, 92, 246, 0.3) 100%);
+                border-left-color: #7c3aed;
+            }
+            100% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                border-left-color: #3b82f6;
+            }
+        }
+        
+        @keyframes slideGradient {
+            0% {
+                background-position: -200% 0;
+                border-left-color: #3b82f6;
+            }
+            50% {
+                background-position: 0% 0;
+                border-left-color: #8b5cf6;
+                box-shadow: 
+                    0 2px 8px rgba(139, 92, 246, 0.3),
+                    -2px 0 10px rgba(59, 130, 246, 0.2);
+            }
+            100% {
+                background-position: 200% 0;
+                border-left-color: #3b82f6;
+            }
+        }
+        
+        @keyframes colorPulse {
+            0% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                border-left-width: 3px;
+            }
+            50% {
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(34, 197, 94, 0.2) 100%);
+                border-left-color: #10b981;
+                border-left-width: 4px;
+            }
+            100% {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                border-left-width: 3px;
+            }
+        }
 
         /* 반응형 디자인 */
-        @media screen and (max-width: 1200px) {
+        
+        /* 대형 태블릿 (1024px 이하) */
+        @media screen and (max-width: 1024px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
             .warpzone-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
 
             .warpzone-grid .warpzone-card:nth-child(7),
             .warpzone-grid .warpzone-card:nth-child(8) {
-                margin-left: 0;
-                margin-right: 0;
+                grid-column: span 1;
+                transform: none;
+                margin: 0;
+            }
+            
+            .warpzone-card {
+                height: 600px;
+            }
+            
+            .shops-list {
+                height: 480px;
             }
         }
 
+        /* 터치 디바이스에서 호버 효과 비활성화 */
+        @media (hover: none) and (pointer: coarse) {
+            .warpzone-card:hover {
+                transform: none;
+                box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+                border-color: #3b82f6;
+                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            }
+            
+            .warpzone-card:hover::before {
+                background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+                animation: none;
+            }
+            
+            .warpzone-card:hover .warp-icon {
+                transform: none;
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+                animation: portalPulse 2s ease-in-out infinite, portalSpin 4s linear infinite;
+            }
+            
+            .warpzone-card:hover .region-name {
+                color: #1e40af;
+                text-shadow: none;
+            }
+            
+            .warpzone-card:hover .shop-count {
+                background: rgba(59, 130, 246, 0.1);
+                border-color: rgba(59, 130, 246, 0.2);
+                box-shadow: none;
+            }
+            
+            .shop-item:hover {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                transform: none;
+                border-left-color: #3b82f6;
+                border-left-width: 3px;
+                box-shadow: none;
+                z-index: auto;
+                border-color: rgba(59, 130, 246, 0.2);
+            }
+            
+            .warpzone-card:hover .shop-item:hover {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+                transform: none;
+                box-shadow: none;
+                z-index: auto;
+                border-color: rgba(59, 130, 246, 0.2);
+            }
+            
+            .action-btn:hover {
+                transform: none;
+                box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            }
+            
+            .action-btn.secondary:hover {
+                background: linear-gradient(135deg, #64748b, #475569);
+            }
+        }
+
+        /* 태블릿 (768px 이하) */
         @media screen and (max-width: 768px) {
             body {
                 padding: 1rem 0.5rem;
-                padding-top: 6rem;
+                padding-top: 7rem;
+            }
+
+            .navbar {
+                padding: 1rem 0.5rem;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
             .page-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
                 margin-bottom: 2rem;
+                text-align: center;
             }
 
             .warpzone-grid {
@@ -413,38 +608,273 @@
 
             .warpzone-card {
                 padding: 1.5rem;
-                height: 500px;
+                height: auto;
+                min-height: 400px;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .warpzone-header {
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+                flex-wrap: wrap;
+            }
+
+            .warp-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
             }
 
             .region-name {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
+            }
+
+            .shop-count {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+                margin-left: auto;
+                order: 3;
+                flex-basis: 100%;
+                text-align: center;
+                margin-top: 0.5rem;
             }
 
             .shops-list {
                 grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                height: auto;
+                gap: 0.8rem;
+            }
+
+            .shop-item {
+                height: auto;
+                min-height: 50px;
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                -webkit-tap-highlight-color: transparent;
+                position: relative;
+                overflow: hidden;
+                
+                /* 모바일 전용 - 볼록한 3D 음영 효과 */
+                box-shadow: 
+                    0 2px 4px rgba(0, 0, 0, 0.1),
+                    0 4px 8px rgba(0, 0, 0, 0.05),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+                border-radius: 12px;
+                background: linear-gradient(145deg, 
+                    rgba(59, 130, 246, 0.12) 0%, 
+                    rgba(139, 92, 246, 0.08) 50%,
+                    rgba(59, 130, 246, 0.15) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transform: translateZ(0);
+                transition: all 0.2s ease;
+            }
+
+            .shop-name {
+                font-size: 0.95rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .shop-location {
+                font-size: 0.8rem;
             }
 
             .warpzone-grid .warpzone-card:nth-child(7),
             .warpzone-grid .warpzone-card:nth-child(8) {
-                margin-left: 0;
-                margin-right: 0;
+                transform: none;
+                margin: 0;
+                grid-column: 1;
             }
 
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 1rem;
+                margin-top: 2rem;
             }
 
             .action-btn {
                 width: 100%;
-                max-width: 300px;
+                max-width: 280px;
                 justify-content: center;
+                padding: 0.9rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            /* 호버 효과 비활성화 */
+            .warpzone-card:hover {
+                transform: none !important;
+                box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15) !important;
+            }
+            
+            .shop-item:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            
+            .action-btn:hover {
+                transform: none !important;
+            }
+            
+            /* 터치 피드백을 위한 active 상태 */
+            .shop-item:active {
+                background: linear-gradient(145deg, 
+                    rgba(59, 130, 246, 0.25) 0%, 
+                    rgba(139, 92, 246, 0.15) 50%,
+                    rgba(59, 130, 246, 0.3) 100%);
+                box-shadow: 
+                    0 1px 2px rgba(0, 0, 0, 0.15),
+                    0 2px 4px rgba(0, 0, 0, 0.1),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+                transform: translateY(1px) scale(0.98);
+                border-left-width: 4px;
+                border-left-color: #1d4ed8;
+            }
+            
+            /* 터치 애니메이션 클래스들 */
+            .shop-item.touch-wave {
+                animation: touchWave 0.6s ease-in-out;
+            }
+            
+            .shop-item.slide-gradient {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.4) 50%, rgba(59, 130, 246, 0.2) 100%);
+                background-size: 200% 100%;
+                animation: slideGradient 0.8s ease-in-out;
+            }
+            
+            .shop-item.color-pulse {
+                animation: colorPulse 0.7s ease-in-out;
+            }
+            
+            /* 클릭 시 리플 효과 */
+            .shop-item::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                pointer-events: none;
+                transition: all 0.5s ease;
+            }
+            
+            .shop-item.ripple-effect::after {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
             }
         }
 
+        /* 모바일 (480px 이하) */
         @media screen and (max-width: 480px) {
+            body {
+                padding: 0.5rem 0.3rem;
+                padding-top: 6.5rem;
+            }
+
+            .navbar {
+                padding: 0.8rem 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
             .page-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .warpzone-grid {
+                gap: 1.2rem;
+            }
+
+            .warpzone-card {
+                padding: 1.2rem;
+                border-radius: 12px;
+            }
+
+            .warpzone-header {
+                gap: 0.6rem;
+                margin-bottom: 1rem;
+            }
+
+            .warp-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1rem;
+            }
+
+            .region-name {
+                font-size: 1.2rem;
+            }
+
+            .shop-count {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 12px;
+            }
+
+            .shops-list {
+                gap: 0.6rem;
+            }
+
+            .shop-item {
+                padding: 0.7rem 0.9rem;
+                border-radius: 8px;
+                min-height: 45px;
+            }
+
+            .shop-item:hover {
+                transform: translateX(1px);
+            }
+
+            .shop-name {
+                font-size: 0.9rem;
+            }
+
+            .shop-location {
+                font-size: 0.75rem;
+            }
+
+            .action-btn {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+                border-radius: 25px;
+            }
+        }
+
+        /* 초소형 모바일 (360px 이하) */
+        @media screen and (max-width: 360px) {
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .warpzone-card {
+                padding: 1rem;
+            }
+
+            .region-name {
+                font-size: 1.1rem;
+            }
+
+            .shop-item {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .shop-name {
+                font-size: 0.85rem;
+            }
+
+            .shop-location {
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -463,6 +893,15 @@
                 <li><a href="customer_20250305.html">신청하기</a></li>
                 <li><a href="#price">요금표</a></li>
             </ul>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+        <div class="mobile-menu">
+            <a href="index.html">홈</a>
+            <a href="warpzone.html">워프존</a>
+            <a href="customer_20250305.html">신청하기</a>
+            <a href="#price">요금표</a>
         </div>
     </nav>
 
@@ -854,6 +1293,140 @@
                 navbar.style.background = 'rgba(255, 255, 255, 0.98)';
             } else {
                 navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // 모바일 메뉴 토글
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.classList.toggle('active');
+                    
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (mobileMenu.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                }
+            });
+        }
+
+        // 모바일 메뉴 링크 클릭 시 메뉴 닫기
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
+        if (mobileMenuLinks.length > 0) {
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const mobileMenu = document.querySelector('.mobile-menu');
+                    const toggle = document.querySelector('.mobile-menu-toggle');
+                    
+                    if (mobileMenu && toggle) {
+                        const icon = toggle.querySelector('i');
+                        mobileMenu.classList.remove('active');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            });
+        }
+
+        // 모바일 메뉴 외부 클릭 시 메뉴 닫기
+        document.addEventListener('click', function(e) {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (mobileMenu && toggle && !toggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                const icon = toggle.querySelector('i');
+                mobileMenu.classList.remove('active');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+
+        // 모바일 터치 애니메이션 효과
+        function addTouchAnimation(element) {
+            if (!element || !element.classList) return;
+            
+            try {
+                // 이미 애니메이션이 진행 중이면 제거
+                element.classList.remove('touch-wave', 'slide-gradient', 'color-pulse', 'ripple-effect');
+                
+                // 랜덤하게 애니메이션 선택
+                const animations = ['touch-wave', 'slide-gradient', 'color-pulse'];
+                const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+                
+                // 애니메이션 클래스 추가
+                element.classList.add(randomAnimation);
+                
+                // 리플 효과도 추가
+                setTimeout(() => {
+                    if (element && element.classList) {
+                        element.classList.add('ripple-effect');
+                    }
+                }, 100);
+                
+                // 애니메이션 완료 후 클래스 제거
+                setTimeout(() => {
+                    if (element && element.classList) {
+                        element.classList.remove('touch-wave', 'slide-gradient', 'color-pulse');
+                    }
+                }, 800);
+                
+                setTimeout(() => {
+                    if (element && element.classList) {
+                        element.classList.remove('ripple-effect');
+                    }
+                }, 600);
+            } catch (e) {
+                console.warn('Animation error:', e);
+            }
+        }
+
+        // 모바일에서 shop-item 터치 이벤트
+        function isMobile() {
+            try {
+                return window.innerWidth <= 768 || 'ontouchstart' in window;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 모든 shop-item에 터치 이벤트 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const shopItems = document.querySelectorAll('.shop-item');
+                
+                if (shopItems.length > 0) {
+                    shopItems.forEach(item => {
+                        if (item) {
+                            // 터치 시작
+                            item.addEventListener('touchstart', function(e) {
+                                if (isMobile()) {
+                                    addTouchAnimation(this);
+                                }
+                            }, { passive: true });
+                            
+                            // 클릭 시 (데스크탑에서도 작동)
+                            item.addEventListener('click', function(e) {
+                                if (isMobile()) {
+                                    addTouchAnimation(this);
+                                }
+                            });
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Touch animation setup error:', e);
             }
         });
     </script>
