@@ -126,13 +126,7 @@
             z-index: -1;
         }
 
-        .container:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 
-                0 50px 100px rgba(0, 0, 0, 0.2),
-                0 0 100px rgba(59, 130, 246, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 1);
-        }
+
 
         h1 {
             font-size: 3rem;
@@ -365,18 +359,54 @@
 
         .view-terms {
             margin-left: 10px;
-            padding: 2px 8px;
-            background: var(--button-gradient);
+            padding: 6px 12px;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             width: auto;
-            height: 24px;
-            line-height: 20px;
+            height: auto;
+            line-height: 1;
             margin-top: 0;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        /* 데스크톱에서만 view-terms hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .view-terms:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
+        }
+
+        /* 모바일에서 view-terms 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .view-terms {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            
+            .view-terms:active {
+                transform: scale(0.95);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
         }
 
         .account-info {
@@ -488,17 +518,74 @@
             bottom: 0;
             width: 100%;
             padding: 15px;
-            background: var(--button-gradient);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             margin-top: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, 
+                #60a5fa 0%, 
+                #06b6d4 30%, 
+                #a855f7 60%, 
+                #6366f1 100%);
         }
 
         .modal-text {
             margin-bottom: 20px;
             padding-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .modal-text p {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .modal-text h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            margin-top: 20px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-text ul {
+            margin-bottom: 12px;
+            padding-left: 18px;
+        }
+
+        .modal-text li {
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         @media screen and (max-width: 768px) {
@@ -544,6 +631,42 @@
                 border-radius: 16px;
             }
 
+            .modal-text {
+                font-size: 13px;
+            }
+
+            .modal-text p {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .modal-text h2 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .modal-text h3 {
+                font-size: 15px;
+                margin-bottom: 10px;
+                margin-top: 16px;
+            }
+
+            .modal-text h4 {
+                font-size: 13px;
+                margin-bottom: 6px;
+                margin-top: 12px;
+            }
+
+            .modal-text li {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .modal-close-btn {
+                font-size: 13px;
+                padding: 12px;
+            }
+
             .account-info {
                 padding: 12px;
                 margin: 12px 0 20px;
@@ -569,10 +692,17 @@
             }
 
             .view-terms {
-                padding: 6px 12px;
+                padding: 8px 14px;
                 height: auto;
                 border-radius: 8px;
-                font-size: 12px;
+                font-size: 13px;
+                font-weight: 700;
+                margin-left: 8px;
+                box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+                min-height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
 
             label {
@@ -712,6 +842,9 @@
             transition: all 0.3s ease;
             border: none;
             animation: rotateHome 4s linear infinite;
+            z-index: 1000;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
         }
 
         @keyframes rotateHome {
@@ -739,13 +872,21 @@
         /* 모바일에서 홈버튼 터치 최적화 */
         @media (hover: none) and (pointer: coarse) {
             .home-button {
-                -webkit-tap-highlight-color: transparent;
+                -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
                 touch-action: manipulation;
+                cursor: pointer;
+                pointer-events: auto;
+                z-index: 1001;
             }
             
             .home-button:active {
                 transform: scale(0.95);
                 animation-play-state: paused;
+                background: linear-gradient(135deg, 
+                    #dbeafe 0%, 
+                    #bfdbfe 30%, 
+                    #93c5fd 70%, 
+                    #60a5fa 100%);
             }
         }
 
@@ -1506,9 +1647,8 @@
                         
                         // 강원의 경우 광주까지의 요금을 특별히 처리
                         if (otherCode === "GW") {
-                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-BG-01"];  // 강원-광주 요금: 48,000원
-                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-GSG-01"];  // 강원-광주 요금: 48,000원
-                            
+                            // 강원-광주는 기본 48,000원 (객체 접근 대신 직접 값 설정)
+                            gwangjuToDestination = 48000;
                         } else {
                             gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
                         }
@@ -1542,11 +1682,19 @@
                             basePrice = 32000;
                         }
                     } else {
-                        const matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                        // priceMatrix에서 요금 찾기
+                        let matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                        
+                        // 객체 타입인 경우 (강원-광주 같은 특별 케이스) 기본값 사용
                         if (typeof matrixPrice === 'object') {
-                            basePrice = 0;
+                            // 강원-광주 특별 처리
+                            if ((region1 === "GW" && region2 === "GJ") || (region1 === "GJ" && region2 === "GW")) {
+                                basePrice = 48000;  // 강원-광주 기본 요금
+                            } else {
+                                basePrice = 35000;  // 기본 요금으로 설정
+                            }
                         } else {
-                            basePrice = matrixPrice || 0;
+                            basePrice = matrixPrice || 35000;  // 값이 없으면 기본 요금 35000원
                         }
                     }
                 }
