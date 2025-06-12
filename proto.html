@@ -89,6 +89,53 @@
             transform: translateY(-2px);
         }
 
+        /* 모바일 메뉴 */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1e40af;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
         /* 히어로 섹션 */
         .hero {
             height: 100vh;
@@ -1057,6 +1104,10 @@
                 display: none;
             }
             
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
             .service-grid,
             .features-grid {
                 grid-template-columns: 1fr;
@@ -1438,10 +1489,22 @@
             <ul class="nav-links">
                 <li><a href="#home">홈</a></li>
                 <li><a href="#services">서비스</a></li>
-                <li><a href="#features">특징</a></li>
+                <li><a href="customer_20250305.html">워프신청</a></li>
+                <li><a href="warpzone.html">워프존찾기</a></li>
                 <li><a href="#partners">파트너</a></li>
-                <li><a href="customer.html">고객센터</a></li>
+                <li><a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a></li>
             </ul>
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="mobile-menu">
+                <a href="#home">홈</a>
+                <a href="#services">서비스</a>
+                <a href="customer_20250305.html">워프신청</a>
+                <a href="warpzone.html">워프존찾기</a>
+                <a href="#partners">파트너</a>
+                <a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a>
+            </div>
         </div>
     </nav>
 
@@ -1463,7 +1526,7 @@
                 <div class="warp-portal"></div>
                 <div class="lightning-spark"></div>
             </div>
-            <a href="https://bstking123.github.io/happymove/" class="cta-button">
+            <a href="customer_20250305.html" class="cta-button">
                 <i class="fas fa-rocket"></i>
                 워프 신청!
             </a>
@@ -1552,9 +1615,6 @@
                     </div>
                     <div class="partner-logo fade-in">
                         <img src="images/partners/3.png" alt="Partner 3">
-                    </div>
-                    <div class="partner-logo fade-in">
-                        <img src="images/partners/4.png" alt="Partner 4">
                     </div>
                     <div class="partner-logo fade-in">
                         <img src="images/partners/5.png" alt="Partner 5">
@@ -1706,9 +1766,6 @@
                         <img src="images/partners/3.png" alt="Partner 3">
                     </div>
                     <div class="partner-logo fade-in">
-                        <img src="images/partners/4.png" alt="Partner 4">
-                    </div>
-                    <div class="partner-logo fade-in">
                         <img src="images/partners/5.png" alt="Partner 5">
                     </div>
                     <div class="partner-logo fade-in">
@@ -1858,10 +1915,10 @@
     <!-- CTA 섹션 -->
     <section class="cta-section">
         <div class="container">
-            <h2 class="fade-in">🎉 지금 DOMAWARP와<br class="mobile-br"> 함께해요!</h2>
+            <h2 class="fade-in">🎉 지금 도마워프와<br class="mobile-br"> 함께해요!</h2>
             <p class="fade-in">소중한 파충류의 빠르고 안전한 배송을 체험해보세요</p>
             <div class="cta-buttons fade-in">
-                <a href="https://bstking123.github.io/happymove/" class="btn-primary">
+                <a href="http://pf.kakao.com/_mPNxhn" target="_blank" class="btn-primary">
                     <i class="fas fa-headset"></i>
                     고객센터 연결하기
                 </a>
@@ -1886,8 +1943,8 @@
                 </div>
                 <div class="footer-section">
                     <h4>고객지원</h4>
-                    <p><a href="customer.html">고객센터</a></p>
-                    <p><a href="customer.html">배송 FAQ</a></p>
+                    <p><a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a></p>
+                    <p><a href="http://pf.kakao.com/_mPNxhn" target="_blank">배송 FAQ</a></p>
                 </div>
                 <div class="footer-section">
                     <h4>연락처</h4>
@@ -1896,7 +1953,117 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 DOMAWARP. (주) 와이즈앤골드
+                <div class="business-info">
+                    <div class="business-row">
+                        <span><strong>상호명 : </strong> 주식회사 와이즈앤골드 <strong>/ 대표자명 : </strong> 송요한</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>사업자</strong> 주소: 04522 서울 중구 남대문로9길 24 패스트파이브타워 1023-1175</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>대표 전화</strong> 010-3130-0180 <strong>사업자 등록번호</strong> 727-86-03538 <strong>통신판매업 신고번호 </strong> 2025-서울중구-816호</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>개인정보보호책임자</strong> 송요한</span>
+                    </div>
+                    <div class="copyright">
+                        <p>&copy; 도마워프. All Rights Reserved.</p>
+                    </div>
+                </div>
+                
+                <style>
+                .business-info {
+                    font-size: 12px;
+                    line-height: 1.4;
+                    color: #a0aec0;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 2rem;
+                }
+                
+                .business-row {
+                    margin-bottom: 8px;
+                    text-align: left;
+                }
+                
+                .business-row:last-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    flex-wrap: wrap;
+                    gap: 2rem;
+                    margin-top: 15px;
+                    border-top: 1px solid #4a5568;
+                    padding-top: 15px;
+                }
+                
+                .business-info-section {
+                    flex: 1;
+                    min-width: 200px;
+                }
+                
+                .section-title {
+                    color: #3b82f6;
+                    margin-bottom: 8px;
+                    font-weight: bold;
+                }
+                
+                .info-details {
+                    line-height: 1.5;
+                }
+                
+                .info-details a {
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                
+                .info-details a:hover {
+                    color: #60a5fa;
+                }
+                
+                .copyright {
+                    text-align: center;
+                    margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #4a5568;
+                }
+                
+                @media (max-width: 768px) {
+                    .business-info {
+                        font-size: 11px;
+                        padding: 0 1rem;
+                    }
+                    
+                    .business-row:last-child {
+                        flex-direction: column;
+                        gap: 1rem;
+                    }
+                    
+                    .business-info-section {
+                        min-width: auto;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .business-info {
+                        font-size: 10px;
+                        padding: 0 0.5rem;
+                    }
+                    
+                    .business-row {
+                        margin-bottom: 6px;
+                    }
+                    
+                    .business-row:last-child {
+                        margin-top: 10px;
+                        padding-top: 10px;
+                    }
+                    
+                    .section-title {
+                        margin-bottom: 5px;
+                    }
+                }
+                </style>
             </div>
         </div>
     </footer>
@@ -1999,6 +2166,44 @@
         
         // 페이지 로드 시 초기 파티클 생성
         createParticles();
+
+        // 모바일 메뉴 토글
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            
+            // 햄버거 아이콘 변경
+            const icon = mobileMenuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 모바일 메뉴 링크 클릭 시 메뉴 닫기
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // 모바일 메뉴 외부 클릭 시 닫기
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
     </script>
 </body>
 </html>
