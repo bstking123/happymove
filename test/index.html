@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOMAWARP - 크레스티드게코 초고속 배송 서비스</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            color: #4a5568;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        }
+
+        /* 네비게이션 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid #3b82f6;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 2px 2px 0px #bfdbfe;
+            transform: rotate(-2deg);
+        }
+
+        .logo i {
+            animation: bounce 2s infinite;
+            color: #60a5fa;
+            font-size: 2.2rem;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #2d3748;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #1e40af;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        /* 모바일 메뉴 */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1e40af;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        /* 히어로 섹션 */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 30%, #7c3aed 60%, #6366f1 100%);
+            }
+        }
+
+        /* 히어로 배경 이미지 */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(''); /* 여기에 크레스티드게코 이미지 URL 추가 */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.05)"><circle cx="20" cy="20" r="6" fill="rgba(255,255,255,0.1)"><animate attributeName="r" values="6;8;6" dur="8s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="4" fill="rgba(255,255,255,0.08)"><animate attributeName="r" values="4;6;4" dur="10s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="5" fill="rgba(255,255,255,0.12)"><animate attributeName="r" values="5;7;5" dur="12s" repeatCount="indefinite"/></circle></svg>');
+            animation: float 40s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .hero-logo img {
+            max-width: 700px;
+            width: 90%;
+            height: auto;
+            animation: wiggle 2s ease-in-out infinite;
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.3));
+            transform: rotate(-1deg);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 순간이동 워프 효과들 */
+        .hero-logo::before {
+            content: '🦎';
+            position: absolute;
+            font-size: 2rem;
+            left: 10%;
+            top: 20%;
+            animation: teleport1 3s infinite;
+            z-index: 1;
+        }
+
+        .hero-logo::after {
+            content: '⚡';
+            position: absolute;
+            font-size: 2.5rem;
+            right: 15%;
+            top: 30%;
+            animation: teleport2 2.5s infinite;
+            z-index: 1;
+        }
+
+        /* 워프 포털 효과 */
+        .warp-portal {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #1d4ed8;
+            border-radius: 50%;
+            right: 20%;
+            bottom: 10%;
+            animation: portalSpin 4s linear infinite;
+            z-index: 1;
+        }
+
+        .warp-portal::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: portalPulse 2s ease-in-out infinite;
+        }
+
+        .warp-portal::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #60a5fa, transparent);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: portalCore 1.5s ease-in-out infinite;
+        }
+
+        /* 번개 스파크 효과 */
+        .lightning-spark {
+            position: absolute;
+            left: 15%;
+            bottom: 20%;
+            font-size: 1.5rem;
+            animation: sparkle 2s infinite;
+            z-index: 1;
+        }
+
+        .lightning-spark::before {
+            content: '✨';
+            position: absolute;
+            animation: sparkDelay 2s infinite 0.5s;
+        }
+
+        .lightning-spark::after {
+            content: '💫';
+            position: absolute;
+            left: 20px;
+            animation: sparkDelay 2s infinite 1s;
+        }
+
+        /* 떠다니는 이모지들 */
+        .floating-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+                .floating-emoji {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: floatEmoji 15s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        .floating-emoji:nth-child(1) {
+            content: '🦎';
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .floating-emoji:nth-child(2) {
+            content: '⚡';
+            top: 20%;
+            right: 15%;
+            animation-delay: 5s;
+            animation-duration: 18s;
+        }
+
+        .floating-emoji:nth-child(3) {
+            content: '🚀';
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 10s;
+            animation-duration: 22s;
+        }
+
+        .floating-emoji:nth-child(4) {
+            content: '✨';
+            top: 70%;
+            right: 25%;
+            animation-delay: 15s;
+            animation-duration: 16s;
+        }
+
+        .floating-emoji:nth-child(5) {
+            content: '💎';
+            top: 50%;
+            left: 5%;
+            animation-delay: 3s;
+            animation-duration: 24s;
+        }
+
+        .floating-emoji:nth-child(6) {
+            content: '🌟';
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 8s;
+            animation-duration: 19s;
+        }
+
+        @keyframes floatEmoji {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translateY(-10px) translateX(5px) rotate(10deg) scale(1.05);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-15px) translateX(-3px) rotate(-5deg) scale(0.95);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translateY(-8px) translateX(7px) rotate(8deg) scale(1.02);
+                opacity: 0.6;
+            }
+        }
+
+                 /* 파티클 효과 */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleFloat 12s infinite ease-in-out;
+        }
+
+        .particle:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.2);
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(255, 255, 255, 0.25);
+            animation-duration: 18s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.3;
+                transform: scale(1);
+           }
+            80% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(30px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 순간이동 애니메이션들 */
+        @keyframes teleport1 {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.5) translateX(-50px); 
+            }
+            20% { 
+                opacity: 1; 
+                transform: scale(1) translateX(0); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: scale(1) translateX(0); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(0.5) translateX(50px); 
+            }
+        }
+
+        @keyframes teleport2 {
+            0% { 
+                opacity: 0; 
+                transform: scale(0) rotate(0deg); 
+            }
+            30% { 
+                opacity: 1; 
+                transform: scale(1.2) rotate(180deg); 
+            }
+            70% { 
+                opacity: 1; 
+                transform: scale(1) rotate(360deg); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(0) rotate(540deg); 
+            }
+        }
+
+        @keyframes portalSpin {
+            0% { 
+                transform: rotate(0deg); 
+                border-color: #1d4ed8; 
+            }
+            50% { 
+                border-color: #3b82f6; 
+            }
+            100% { 
+                transform: rotate(360deg); 
+                border-color: #1d4ed8; 
+            }
+        }
+
+        @keyframes portalPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 0.7; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.5); 
+                opacity: 0.3; 
+            }
+        }
+
+        @keyframes portalCore {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(0.5); 
+                opacity: 0.5; 
+            }
+        }
+
+        @keyframes sparkle {
+            0% { 
+                opacity: 0; 
+                transform: translateY(0px) scale(0.5); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateY(-10px) scale(1.2); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-20px) scale(0.5); 
+            }
+        }
+
+        @keyframes sparkDelay {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.3) rotate(0deg); 
+            }
+            40% { 
+                opacity: 1; 
+                transform: scale(1) rotate(180deg); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(0.3) rotate(360deg); 
+            }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            animation: wiggle 2s ease-in-out infinite;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            transform: rotate(-1deg);
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease 0.3s both;
+            font-weight: 500;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(45deg, #60a5fa, #8b5cf6);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(96, 165, 250, 0.4);
+            transform: rotate(1deg);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) rotate(-1deg) scale(1.05);
+            box-shadow: 0 15px 40px rgba(96, 165, 250, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: rotate(1deg) scale(1); }
+            50% { transform: rotate(-1deg) scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 서비스 섹션 */
+        .services {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #2d3748;
+            position: relative;
+            font-weight: 800;
+            transform: rotate(-1deg);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            width: 120px;
+            height: 8px;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #e2e8f0;
+            transform: rotate(1deg);
+        }
+
+        .service-card:nth-child(2) {
+            transform: rotate(-1deg);
+        }
+
+        .service-card:nth-child(3) {
+            transform: rotate(0.5deg);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8, #60a5fa);
+            animation: colorWave 3s infinite;
+        }
+
+        @keyframes colorWave {
+            0%, 100% { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+            50% { background: linear-gradient(45deg, #1d4ed8, #60a5fa); }
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px) rotate(0deg) scale(1.02);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.25);
+            border-color: #3b82f6;
+        }
+
+        .service-icon {
+            font-size: 5rem;
+            color: #1d4ed8;
+            margin-bottom: 2rem;
+            animation: wobble 3s infinite;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .service-icon::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            animation: iconGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes iconGlow {
+            0%, 100% { 
+                transform: translateX(-50%) scale(1); 
+                opacity: 0.5; 
+            }
+            50% { 
+                transform: translateX(-50%) scale(1.3); 
+                opacity: 0.8; 
+            }
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(-5deg); }
+            30% { transform: rotate(3deg); }
+            45% { transform: rotate(-3deg); }
+            60% { transform: rotate(2deg); }
+            75% { transform: rotate(-1deg); }
+        }
+
+        .service-card:hover .service-icon {
+            animation: dance 0.5s ease-in-out;
+            transform: scale(1.1);
+        }
+
+        .service-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .service-card p {
+            color: #718096;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        /* 특징 섹션 */
+        .features {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            color: white;
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><polygon points="10,10 20,30 30,10" opacity="0.7"><animateTransform attributeName="transform" type="rotate" values="0 20 20;360 20 20" dur="10s" repeatCount="indefinite"/></polygon><polygon points="70,70 80,90 90,70" opacity="0.5"><animateTransform attributeName="transform" type="rotate" values="360 80 80;0 80 80" dur="15s" repeatCount="indefinite"/></polygon></svg>');
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            border: 3px solid rgba(255,255,255,0.2);
+            transform: rotate(-0.5deg);
+        }
+
+        .feature-item:nth-child(2) {
+            transform: rotate(1deg);
+        }
+
+        .feature-item:nth-child(3) {
+            transform: rotate(-1deg);
+        }
+
+        .feature-item:nth-child(4) {
+            transform: rotate(0.5deg);
+        }
+
+        .feature-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-10px) rotate(0deg);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #bfdbfe;
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feature-item h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-item p {
+            font-weight: 500;
+        }
+
+        /* 협력업체 섹션 */
+        .partners {
+            padding: 5rem 0;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .partners-carousel {
+            position: relative;
+            margin-top: 3rem;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .partners-track {
+            display: inline-flex;
+            animation: scroll 120s linear infinite;
+            gap: 2rem;
+        }
+
+        .partners-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .partner-logo {
+            background: transparent;
+            padding: 1rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            min-height: 140px;
+            min-width: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transform: rotate(1deg);
+            flex-shrink: 0;
+        }
+
+        .partner-logo:nth-child(2n) {
+            transform: rotate(-1deg);
+        }
+
+        .partner-logo:hover {
+            border-color: #3b82f6;
+            transform: translateY(-10px) rotate(0deg) scale(1.05);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .partner-logo img {
+            max-width: 300px;
+            max-height: 180px;
+            filter: grayscale(30%);
+            transition: all 0.3s ease;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .partner-logo:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        /* 플레이스홀더 로고 */
+        .partner-placeholder {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border: 2px dashed #cbd5e0;
+        }
+
+        .partners-info {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 20px;
+            border: 2px dashed #3b82f6;
+        }
+
+        .partners-count {
+            font-size: 1.3rem;
+            color: #1e40af;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .partners-note {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        /* 그라데이션 페이드 효과 */
+        .partners-carousel::before,
+        .partners-carousel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .partners-carousel::before {
+            left: 0;
+            background: linear-gradient(to right, #f7fafc, transparent);
+        }
+
+        .partners-carousel::after {
+            right: 0;
+            background: linear-gradient(to left, #f7fafc, transparent);
+        }
+
+        /* CTA 섹션 */
+        .cta-section {
+            padding: 5rem 0;
+            background: linear-gradient(45deg, #60a5fa, #8b5cf6, #6366f1);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><circle cx="20" cy="20" r="5" opacity="0.8"><animate attributeName="cy" values="20;80;20" dur="4s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="3" opacity="0.6"><animate attributeName="cx" values="80;20;80" dur="6s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="7" opacity="0.7"><animate attributeName="r" values="7;12;7" dur="3s" repeatCount="indefinite"/></circle></svg>');
+        }
+
+        .cta-section h2 {
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+            font-weight: 800;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            transform: rotate(-1deg);
+        }
+
+        .cta-section p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #2d3748;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transform: rotate(1deg);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 3px solid white;
+            transform: rotate(-1deg);
+        }
+
+        .btn-primary:hover {
+            background: #f7fafc;
+            transform: translateY(-3px) rotate(0deg);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2d3748;
+            transform: translateY(-3px) rotate(0deg);
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-section a:hover {
+            color: #3b82f6;
+        }
+
+        .footer-section p {
+            font-weight: 500;
+        }
+
+        .footer-bottom {
+            border-top: 2px solid #4a5568;
+            padding-top: 1rem;
+            text-align: center;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+                line-height: 1.3;
+            }
+            
+            .cta-section h2 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .cta-section p {
+                font-size: 1.1rem;
+                line-height: 1.4;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .service-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .service-card {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+            
+            .service-card p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .hero-logo img {
+                max-width: 400px;
+                width: 95%;
+            }
+            
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .logo i {
+                font-size: 1.8rem;
+            }
+
+            .warp-portal {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .warp-portal::before {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .hero-logo::before,
+            .hero-logo::after {
+                font-size: 1.5rem;
+            }
+            
+            .lightning-spark {
+                font-size: 1.2rem;
+            }
+
+            .partner-logo {
+                min-height: 120px;
+                min-width: 180px;
+            }
+
+            .partner-logo img {
+                max-width: 250px;
+                max-height: 150px;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .feature-item {
+                padding: 2rem 1.5rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* 더 작은 모바일 화면 (480px 이하) */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+                line-height: 1.1;
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                line-height: 1.4;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                line-height: 1.2;
+                margin-bottom: 2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+                line-height: 1.1;
+            }
+            
+            .cta-section p {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .logo i {
+                font-size: 1.6rem;
+            }
+            
+            .service-card {
+                padding: 1.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.3rem;
+                line-height: 1.2;
+            }
+            
+            .service-card p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .service-icon {
+                font-size: 4rem;
+            }
+            
+            .feature-item {
+                padding: 1.5rem 1rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.2rem;
+                line-height: 1.2;
+            }
+            
+            .feature-item p {
+                font-size: 0.9rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .cta-button {
+                font-size: 1.1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .hero-logo img {
+                max-width: 300px;
+                width: 90%;
+            }
+            
+            .partners-info {
+                margin: 0 0.5rem;
+                padding: 1rem;
+            }
+            
+            .partners-count {
+                font-size: 1.1rem;
+            }
+            
+            .partners-note {
+                font-size: 0.9rem;
+            }
+            
+            .footer-section h4 {
+                font-size: 1.1rem;
+            }
+            
+            .footer-section p,
+            .footer-section a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 매우 작은 화면 (360px 이하) */
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: 1.7rem;
+                line-height: 1.1;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+                line-height: 1.3;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 1.8rem;
+                line-height: 1.1;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .logo i {
+                font-size: 1.4rem;
+            }
+            
+            .service-card {
+                padding: 1.2rem;
+                margin: 0 0.2rem;
+            }
+            
+            .service-card h3 {
+                font-size: 1.2rem;
+                line-height: 1.2;
+            }
+            
+            .service-card p {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            
+            .service-icon {
+                font-size: 3.5rem;
+            }
+            
+            .feature-item {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .feature-item h4 {
+                font-size: 1.1rem;
+                line-height: 1.2;
+            }
+            
+            .feature-item p {
+                font-size: 0.85rem;
+            }
+            
+            .cta-button {
+                font-size: 1rem;
+                padding: 0.9rem 1.8rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                font-size: 0.95rem;
+                padding: 0.9rem 1.5rem;
+            }
+            
+            .hero-logo img {
+                max-width: 280px;
+                width: 85%;
+            }
+            
+            .container {
+                padding: 0 0.8rem;
+            }
+            
+            .nav-container {
+                padding: 0 0.8rem;
+            }
+            
+            .hero-content {
+                padding: 0 0.8rem;
+            }
+            
+            .partner-logo {
+                min-height: 100px;
+                min-width: 150px;
+            }
+
+            .partner-logo img {
+                max-width: 200px;
+                max-height: 120px;
+            }
+        }
+
+        /* 텍스트 줄바꿈 방지 및 최적화 */
+        .service-card h3,
+        .feature-item h4,
+        .section-title {
+            word-break: keep-all;
+            word-wrap: break-word;
+        }
+        
+        .service-card p,
+        .feature-item p {
+            word-break: keep-all;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* 모바일 전용 줄바꿈 */
+        .mobile-br {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .mobile-br {
+                display: inline;
+            }
+        }
+        
+        /* 모바일에서 터치 최적화 */
+        @media (max-width: 768px) {
+            .cta-button,
+            .btn-primary,
+            .btn-secondary {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        /* 스크롤 애니메이션 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px) rotate(2deg);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg);
+        }
+
+        /* 추가 카툰 효과 */
+        .service-card:hover .service-icon {
+            animation: dance 0.5s ease-in-out;
+            transform: scale(1.1);
+        }
+
+        @keyframes dance {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-5deg) scale(1.1); }
+            75% { transform: rotate(5deg) scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                DOMAWARP
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">홈</a></li>
+                <li><a href="#services">서비스</a></li>
+                <li><a href="customer_20250305.html">워프신청</a></li>
+                <li><a href="warpzone.html">워프존찾기</a></li>
+                <li><a href="#partners">파트너</a></li>
+                <li><a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="mobile-menu">
+                <a href="#home">홈</a>
+                <a href="#services">서비스</a>
+                <a href="customer_20250305.html">워프신청</a>
+                <a href="warpzone.html">워프존찾기</a>
+                <a href="#partners">파트너</a>
+                <a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <!-- 떠다니는 이모지들 -->
+        <div class="floating-emojis">
+            <div class="floating-emoji">🦎</div>
+            <div class="floating-emoji">⚡</div>
+            <div class="floating-emoji">🚀</div>
+            <div class="floating-emoji">✨</div>
+            <div class="floating-emoji">💎</div>
+            <div class="floating-emoji">🌟</div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="images/hero-logo.png" alt="DOMAWARP Hero Logo">
+                <div class="warp-portal"></div>
+                <div class="lightning-spark"></div>
+            </div>
+            <a href="customer_20250305.html" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                워프 신청!
+            </a>
+        </div>
+    </section>
+
+    <!-- 서비스 섹션 -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title fade-in">⚡ 우리의 특별한 서비스</h2>
+            <div class="service-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>빠른 배송 시스템</h3>
+                    <p>최적의 루트로 전국 어디든 빠른 배송을 제공합니다.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <h3>완벽 환경 제어</h3>
+                    <p>배송 중에도 완벽한 온습도 유지! 케어존 내에 AI기반 환경제어 시스템으로 파충류에게 최적의 환경을 제공합니다.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3>100% 안전 보장</h3>
+                    <p>배송 과정에서도 100% 안전! 파충류 전문가가 완벽한 안전 배송을 약속드려요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 특징 섹션 -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title fade-in">🚀 왜 DOMAWARP를 선택해야 할까요?</h2>
+            <div class="features-grid">
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-zap"></i>
+                    </div>
+                    <h4>초고속 배송</h4>
+                    <p>전국 어디든 빠른 배송</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4>개체 안전 1순위</h4>
+                    <p>파충류 전문가 직접 관리</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4>제주도 워프</h4>
+                    <p>제주도도 안전하게 개체를 받아보세요</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>빠른 CS</h4>
+                    <p>문의주시면 언제나 친절하게 답해드려요</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 협력업체 섹션 -->
+    <section class="partners" id="partners">
+        <div class="container">
+            <h2 class="section-title fade-in">🤝 함께하는 도마워프 파트너</h2>
+            <div class="partners-carousel">
+                <div class="partners-track">
+                    <!-- 첫 번째 세트 -->
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/1.png" alt="Partner 1">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/2.png" alt="Partner 2">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/3.png" alt="Partner 3">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/5.png" alt="Partner 5">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/6.png" alt="Partner 6">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/7.png" alt="Partner 7">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/8.png" alt="Partner 8">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/9.png" alt="Partner 9">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/10.png" alt="Partner 10">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/11.png" alt="Partner 11">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/12.png" alt="Partner 12">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/13.png" alt="Partner 13">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/14.png" alt="Partner 14">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/15.png" alt="Partner 15">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/16.png" alt="Partner 16">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/17.png" alt="Partner 17">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/18.png" alt="Partner 18">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/19.png" alt="Partner 19">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/20.png" alt="Partner 20">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/21.png" alt="Partner 21">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/22.png" alt="Partner 22">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/23.png" alt="Partner 23">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/24.png" alt="Partner 24">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/25.png" alt="Partner 25">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/26.png" alt="Partner 26">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/27.png" alt="Partner 27">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/28.png" alt="Partner 28">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/29.png" alt="Partner 29">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/30.png" alt="Partner 30">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/31.png" alt="Partner 31">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/32.png" alt="Partner 32">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/33.png" alt="Partner 33">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/34.png" alt="Partner 34">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/35.png" alt="Partner 35">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/36.png" alt="Partner 36">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/37.png" alt="Partner 37">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/38.png" alt="Partner 38">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/39.png" alt="Partner 39">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/40.png" alt="Partner 40">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/41.png" alt="Partner 41">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/42.png" alt="Partner 42">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/43.png" alt="Partner 43">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/44.png" alt="Partner 44">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/45.png" alt="Partner 45">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/46.png" alt="Partner 46">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/47.png" alt="Partner 47">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/48.png" alt="Partner 48">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/49.png" alt="Partner 49">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/50.png" alt="Partner 50">
+                    </div>
+
+                    <!-- 두 번째 세트 (무한 스크롤을 위한 복사본) -->
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/1.png" alt="Partner 1">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/2.png" alt="Partner 2">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/3.png" alt="Partner 3">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/5.png" alt="Partner 5">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/6.png" alt="Partner 6">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/7.png" alt="Partner 7">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/8.png" alt="Partner 8">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/9.png" alt="Partner 9">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/10.png" alt="Partner 10">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/11.png" alt="Partner 11">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/12.png" alt="Partner 12">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/13.png" alt="Partner 13">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/14.png" alt="Partner 14">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/15.png" alt="Partner 15">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/16.png" alt="Partner 16">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/17.png" alt="Partner 17">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/18.png" alt="Partner 18">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/19.png" alt="Partner 19">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/20.png" alt="Partner 20">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/21.png" alt="Partner 21">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/22.png" alt="Partner 22">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/23.png" alt="Partner 23">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/24.png" alt="Partner 24">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/25.png" alt="Partner 25">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/26.png" alt="Partner 26">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/27.png" alt="Partner 27">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/28.png" alt="Partner 28">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/29.png" alt="Partner 29">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/30.png" alt="Partner 30">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/31.png" alt="Partner 31">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/32.png" alt="Partner 32">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/33.png" alt="Partner 33">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/34.png" alt="Partner 34">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/35.png" alt="Partner 35">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/36.png" alt="Partner 36">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/37.png" alt="Partner 37">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/38.png" alt="Partner 38">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/39.png" alt="Partner 39">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/40.png" alt="Partner 40">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/41.png" alt="Partner 41">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/42.png" alt="Partner 42">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/43.png" alt="Partner 43">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/44.png" alt="Partner 44">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/45.png" alt="Partner 45">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/46.png" alt="Partner 46">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/47.png" alt="Partner 47">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/48.png" alt="Partner 48">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/49.png" alt="Partner 49">
+                    </div>
+                    <div class="partner-logo fade-in">
+                        <img src="images/partners/50.png" alt="Partner 50">
+                    </div>
+                </div>
+            </div>
+            <div class="partners-info">
+                <div class="partners-count">🎉 70+ 파트너사</div>
+                <div class="partners-note">전국 네트워크로 연결된 파충류 전문 WARP 파트너들! 🦎⚡</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA 섹션 -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="fade-in">🎉 지금 도마워프와<br class="mobile-br"> 함께해요!</h2>
+            <p class="fade-in">소중한 파충류의 빠르고 안전한 배송을 체험해보세요</p>
+            <div class="cta-buttons fade-in">
+                <a href="http://pf.kakao.com/_mPNxhn" target="_blank" class="btn-primary">
+                    <i class="fas fa-headset"></i>
+                    고객센터 연결하기
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>DOMAWARP</h4>
+                    <p>도마워프 - 파충류 전문 배송<br></p>
+                </div>
+                <div class="footer-section">
+                    <h4>배송 서비스</h4>
+                    <p><a href="#services">빠른 배송 시스템</a></p>
+                    <p><a href="#services">환경 제어</a></p>
+                    <p><a href="#services">안전 보장</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <p><a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a></p>
+                    <p><a href="http://pf.kakao.com/_mPNxhn" target="_blank">배송 FAQ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>연락처</h4>
+                    <p><i class="fas fa-phone"></i> 010-9909-2103</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 서울시 중구 남대문로9길 24</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="business-info">
+                    <div class="business-row">
+                        <span><strong>상호명 : </strong> 주식회사 와이즈앤골드 <strong>/ 대표자명 : </strong> 송요한</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>사업자</strong> 주소: 04522 서울 중구 남대문로9길 24 패스트파이브타워 1023-1175</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>대표 전화</strong> 010-3130-0180 <strong>사업자 등록번호</strong> 727-86-03538 <strong>통신판매업 신고번호 </strong> 2025-서울중구-816호</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>개인정보보호책임자</strong> 송요한</span>
+                    </div>
+                    <div class="copyright">
+                        <p>&copy; 도마워프. All Rights Reserved.</p>
+                    </div>
+                </div>
+                
+                <style>
+                .business-info {
+                    font-size: 12px;
+                    line-height: 1.4;
+                    color: #a0aec0;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 2rem;
+                }
+                
+                .business-row {
+                    margin-bottom: 8px;
+                    text-align: left;
+                }
+                
+                .business-row:last-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    flex-wrap: wrap;
+                    gap: 2rem;
+                    margin-top: 15px;
+                    border-top: 1px solid #4a5568;
+                    padding-top: 15px;
+                }
+                
+                .business-info-section {
+                    flex: 1;
+                    min-width: 200px;
+                }
+                
+                .section-title {
+                    color: #3b82f6;
+                    margin-bottom: 8px;
+                    font-weight: bold;
+                }
+                
+                .info-details {
+                    line-height: 1.5;
+                }
+                
+                .info-details a {
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                
+                .info-details a:hover {
+                    color: #60a5fa;
+                }
+                
+                .copyright {
+                    text-align: center;
+                    margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #4a5568;
+                }
+                
+                @media (max-width: 768px) {
+                    .business-info {
+                        font-size: 11px;
+                        padding: 0 1rem;
+                    }
+                    
+                    .business-row:last-child {
+                        flex-direction: column;
+                        gap: 1rem;
+                    }
+                    
+                    .business-info-section {
+                        min-width: auto;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .business-info {
+                        font-size: 10px;
+                        padding: 0 0.5rem;
+                    }
+                    
+                    .business-row {
+                        margin-bottom: 6px;
+                    }
+                    
+                    .business-row:last-child {
+                        margin-top: 10px;
+                        padding-top: 10px;
+                    }
+                    
+                    .section-title {
+                        margin-bottom: 5px;
+                    }
+                }
+                </style>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 네비게이션 스크롤 효과
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 25px rgba(59, 130, 246, 0.3)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px rgba(59, 130, 246, 0.2)';
+            }
+        });
+
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 로고 특수 효과
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mouseenter', () => {
+            logo.style.transform = 'scale(1.1) rotate(0deg)';
+            logo.style.textShadow = '3px 3px 0px #bfdbfe, 0 0 10px rgba(96, 165, 250, 0.5)';
+        });
+        
+        logo.addEventListener('mouseleave', () => {
+            logo.style.transform = 'scale(1) rotate(-2deg)';
+            logo.style.textShadow = '2px 2px 0px #bfdbfe';
+        });
+
+        // 재미있는 클릭 효과
+        document.querySelectorAll('.cta-button, .btn-primary, .btn-secondary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // 클릭 시 작은 애니메이션 효과
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+
+        // 파티클 생성 함수
+        function createParticles() {
+            const hero = document.querySelector('.hero');
+            const particleCount = 8;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 랜덤 위치 설정
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 6 + 12) + 's';
+                
+                hero.appendChild(particle);
+
+                // 애니메이션이 끝나면 파티클 제거
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 20000);
+            }
+        }
+
+        // 파티클을 주기적으로 생성
+        setInterval(createParticles, 8000);
+        
+        // 페이지 로드 시 초기 파티클 생성
+        createParticles();
+
+        // 모바일 메뉴 토글
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            
+            // 햄버거 아이콘 변경
+            const icon = mobileMenuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 모바일 메뉴 링크 클릭 시 메뉴 닫기
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // 모바일 메뉴 외부 클릭 시 닫기
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    </script>
+</body>
+</html>
