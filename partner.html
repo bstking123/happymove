@@ -3,108 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동행 신청(동행지전용)</title>
+    <title>도마워프 신청(사업자용)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --main-bg: #e5d3c3;
-            --form-bg: #ffffff;
-            --button-gradient: linear-gradient(145deg, #8B4513, #654321);
-            --text: #4a3728;
-            --button-hover: linear-gradient(145deg, #654321, #8B4513);
-            --accent: #ff8c42; /* 추가된 부분 */
+            --primary-blue: #3b82f6;
+            --primary-dark: #1e40af;
+            --primary-purple: #8b5cf6;
+            --primary-indigo: #4f46e5;
+            --accent-cyan: #06b6d4;
+            --accent-teal: #0d9488;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --surface: rgba(255, 255, 255, 0.95);
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-strong: 0 35px 80px rgba(0, 0, 0, 0.25);
         }
 
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--main-bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #667eea 50%, #f093fb 75%, #f5576c 100%);
+            background-size: 400% 400%;
             min-height: 100vh;
+            animation: gradientFlow 15s ease infinite;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 배경 애니메이션 파티클 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g"><stop offset="20%" stop-color="rgba(255,255,255,0.1)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="3" fill="url(%23g)"><animate attributeName="cy" values="20;80;20" dur="8s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="2" fill="url(%23g)"><animate attributeName="cx" values="80;20;80" dur="12s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="4" fill="url(%23g)"><animate attributeName="cy" values="80;20;80" dur="10s" repeatCount="indefinite"/></circle></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .container {
             position: relative;
-            background-color: var(--form-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 400px;
-            margin: 20px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 
+                var(--shadow-strong),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto 120px auto;
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 25%, 
+                var(--primary-purple) 50%, 
+                var(--accent-teal) 75%, 
+                var(--primary-indigo) 100%);
+            background-size: 300% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            border-radius: 24px;
+            z-index: -1;
         }
 
         h1 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
             text-align: center;
-            color: var(--text);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--primary-purple) 50%, 
+                var(--primary-indigo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                var(--primary-blue), 
+                var(--accent-cyan), 
+                var(--primary-purple));
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
         }
 
         label {
             display: block;
-            margin: 15px 0 8px;
-            color: var(--text);
-            font-weight: 500;
+            margin: 2rem 0 0.75rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            letter-spacing: -0.01em;
+        }
+
+        label::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(180deg, var(--primary-blue), var(--primary-purple));
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 데스크톱에서만 label hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            label:hover::before {
+                opacity: 1;
+            }
+        }
+
+        /* 모바일에서 label 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            label {
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                /* label 클릭은 가능하지만 시각적 피드백 제거 */
+            }
+            
+            label::before {
+                display: none; /* 모바일에서는 데코레이션 제거 */
+            }
         }
 
         select, input[type="text"], input[type="tel"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
             box-sizing: border-box;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
+            position: relative;
         }
 
         select:focus, input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary-blue);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(255,140,66,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 8px 25px rgba(59, 130, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* 데스크톱에서만 hover 효과 적용 */
+        @media (hover: hover) and (pointer: fine) {
+            select:hover, input:hover {
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            }
+        }
+
+        /* 모바일에서는 hover 효과 제거하고 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            select, input[type="text"], input[type="tel"] {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                -webkit-appearance: none; /* iOS 기본 스타일 제거 */
+                appearance: none;
+            }
+            
+            select {
+                cursor: pointer;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 1rem center;
+                background-size: 1em;
+                padding-right: 3rem;
+            }
+            
+            select:focus {
+                -webkit-tap-highlight-color: transparent;
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            }
+            
+            input:active {
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            }
         }
 
         button {
             width: 100%;
-            padding: 15px;
-            background: var(--button-gradient);
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
+            background-size: 300% 300%;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 18px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 2.5rem;
+            box-shadow: 
+                0 8px 25px rgba(59, 130, 246, 0.4),
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 3s ease infinite;
         }
 
-        button:hover {
-            background: var(--button-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        /* 데스크톱에서만 button hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            button:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 
+                    0 20px 40px rgba(59, 130, 246, 0.4),
+                    0 10px 25px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                animation-play-state: paused;
+            }
+
+            button:hover::before {
+                left: 100%;
+            }
+        }
+
+        /* 모바일에서는 간단한 active 효과만 */
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 
+                0 4px 15px rgba(59, 130, 246, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .view-terms {
             margin-left: 10px;
-            padding: 2px 8px;
-            background: var(--button-gradient);
+            padding: 6px 12px;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             width: auto;
-            height: 24px;
-            line-height: 20px;
+            height: auto;
+            line-height: 1;
             margin-top: 0;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        /* 데스크톱에서만 view-terms hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .view-terms:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
+        }
+
+        /* 모바일에서 view-terms 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .view-terms {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            
+            .view-terms:active {
+                transform: scale(0.95);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
         }
 
         .account-info {
@@ -122,19 +423,18 @@
 
         .copy-account {
             margin: 10px 0;
-            padding: 15px;
+            padding: 8px;
             background-color: white;
             border: 1px solid #ddd;
             border-radius: 6px;
         }
 
         .account-number {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            text-align: center;
+            margin-top: 12px;
+            margin-bottom: 12px;
             font-size: 1.1em;
+            line-height: 1.4;
         }
 
         .account-notice {
@@ -216,43 +516,126 @@
             bottom: 0;
             width: 100%;
             padding: 15px;
-            background: var(--button-gradient);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             margin-top: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, 
+                #60a5fa 0%, 
+                #06b6d4 30%, 
+                #a855f7 60%, 
+                #6366f1 100%);
         }
 
         .modal-text {
             margin-bottom: 20px;
             padding-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .modal-text p {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .modal-text h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            margin-top: 20px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-text ul {
+            margin-bottom: 12px;
+            padding-left: 18px;
+        }
+
+        .modal-text li {
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         @media screen and (max-width: 768px) {
+            .main-wrapper {
+                padding: 1rem 0.5rem;
+            }
+            
             .container {
                 width: 95%;
-                margin: 10px auto;
-                padding: 20px 15px;
+                max-width: 420px;
+                margin: 0 auto 60px auto;
+                padding: 1.5rem 1rem;
+                border-radius: 20px;
             }
 
             body {
-                padding: 10px 0;
+                padding: 5px 0;
             }
 
             h1 {
-                font-size: 1.6em;
-                margin-top: 25px;
+                font-size: 1.44rem;
+                margin-bottom: 1.5rem;
+                margin-top: 0;
+            }
+            
+            h1::after {
+                width: 80px;
+                height: 3px;
+                bottom: -0.5rem;
             }
 
             select, input[type="text"], input[type="tel"] {
-                padding: 10px;
-                font-size: 14px;
+                padding: 0.875rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 12px;
+            }
+            
+            label {
+                margin: 1.25rem 0 0.5rem;
+                font-size: 1rem;
+            }
+            
+            button {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                border-radius: 16px;
             }
 
             .home-button {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 top: 15px;
                 right: 15px;
             }
@@ -288,22 +671,123 @@
             }
 
             .view-terms {
-                padding: 1px 6px;
-                height: 22px;
+                padding: 8px 14px;
+                height: auto;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                margin-left: 8px;
+                box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+                min-height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .modal-text {
+                font-size: 13px;
+            }
+
+            .modal-text p {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .modal-text h2 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .modal-text h3 {
+                font-size: 15px;
+                margin-bottom: 10px;
+                margin-top: 16px;
+            }
+
+            .modal-text h4 {
+                font-size: 13px;
+                margin-bottom: 6px;
+                margin-top: 12px;
+            }
+
+            .modal-text li {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .modal-close-btn {
+                font-size: 13px;
+                padding: 12px;
+            }
+        }
+
+        /* 모바일 480px 이하 추가 최적화 */
+        @media screen and (max-width: 480px) {
+            .main-wrapper {
+                padding: 0.75rem 0.25rem;
+            }
+            
+            .container {
+                width: 98%;
+                max-width: 360px;
+                padding: 1.25rem 0.875rem;
+                margin-bottom: 40px;
+            }
+
+            h1 {
+                font-size: 1.28rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            h1::after {
+                width: 60px;
+                height: 2px;
+            }
+
+            select, input[type="text"], input[type="tel"] {
+                padding: 0.75rem 0.875rem;
+                font-size: 0.875rem;
+                border-radius: 10px;
+            }
+            
+            label {
+                margin: 1rem 0 0.375rem;
+                font-size: 0.95rem;
+            }
+            
+            button {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.95rem;
+                margin-top: 1.25rem;
+                border-radius: 14px;
             }
         }
 
         @media screen and (max-width: 320px) {
             .container {
-                padding: 15px 10px;
+                padding: 1rem 0.75rem;
+                margin-bottom: 30px;
+                max-width: 300px;
             }
 
             h1 {
-                font-size: 1.4em;
+                font-size: 1.12rem;
+                margin-bottom: 1rem;
             }
 
             select, input[type="text"], input[type="tel"] {
-                font-size: 13px;
+                font-size: 0.8rem;
+                padding: 0.625rem 0.75rem;
+            }
+            
+            label {
+                font-size: 0.9rem;
+                margin: 0.875rem 0 0.25rem;
+            }
+            
+            button {
+                font-size: 0.9rem;
+                padding: 0.75rem 1rem;
             }
         }
 
@@ -388,26 +872,82 @@
 
         .home-button {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--button-gradient);
+            top: 3rem;
+            right: 2.5rem;
+            background: linear-gradient(135deg, 
+                #bfdbfe 0%, 
+                #93c5fd 30%, 
+                #60a5fa 70%, 
+                #3b82f6 100%);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            min-height: 60px;
+            max-width: 60px;
+            max-height: 60px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 
+                0 12px 35px rgba(147, 197, 253, 0.5),
+                0 6px 20px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
             border: none;
+            animation: rotateHome 4s linear infinite;
+            z-index: 1000;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
         }
 
-        .home-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            background: var(--button-hover);
+        @keyframes rotateHome {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 데스크톱에서만 홈버튼 hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .home-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 
+                    0 20px 40px rgba(147, 197, 253, 0.6),
+                    0 10px 25px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+                background: linear-gradient(135deg, 
+                    #dbeafe 0%, 
+                    #bfdbfe 30%, 
+                    #93c5fd 70%, 
+                    #60a5fa 100%);
+                animation-play-state: paused;
+            }
+        }
+
+        /* 모바일에서 홈버튼 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .home-button {
+                -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
+                touch-action: manipulation;
+                cursor: pointer;
+                pointer-events: auto;
+                z-index: 1001;
+            }
+            
+            .home-button:active {
+                transform: scale(0.95);
+                animation-play-state: paused;
+                background: linear-gradient(135deg, 
+                    #dbeafe 0%, 
+                    #bfdbfe 30%, 
+                    #93c5fd 70%, 
+                    #60a5fa 100%);
+            }
         }
 
         .material-icons {
@@ -429,61 +969,56 @@
             height: 45px;
             padding: 0 20px;
             border-radius: 25px;
-            background: var(--button-gradient);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
             transition: all 0.3s ease;
             font-size: 14px;
-            font-weight: 500;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
         }
 
         .floating-button .material-icons {
             font-size: 18px;
-            margin-right: 2px;
+            margin-right: 5px;
         }
 
-        .floating-button.apply-btn {
-            width: auto;
-            padding: 0 20px;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        @media screen and (min-width: 769px) {
-            .floating-buttons {
-                display: none;  /* PC에서는 숨김 */
+        /* 데스크톱에서만 floating-button hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .floating-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
             }
         }
 
-        @media screen and (max-width: 768px) {
-            .home-button {
-                display: none;  /* 모바일에서는 기존 홈버튼 숨김 */
+        /* 모바일에서 floating-button 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .floating-button {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
             }
             
-            .floating-buttons {
-                bottom: 30px;
-                right: 20px;
-            }
-
-            .floating-button {
-                height: 40px;
-                padding: 0 15px;
-            }
-
-            .floating-button.apply-btn {
-                height: 45px;
-                padding: 0 15px;
-            }
-
-            .floating-button .material-icons {
-                font-size: 20px;
+            .floating-button:active {
+                transform: scale(0.95);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
             }
         }
 
@@ -516,9 +1051,183 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* 반응형 디자인 */
+        @media screen and (max-width: 768px) {
+            .main-wrapper {
+                padding: 1rem 0.5rem;
+            }
+            
+            .container {
+                padding: 2rem 1.5rem;
+                max-width: 100%;
+                margin: 0;
+                border-radius: 16px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 2rem;
+            }
+            
+            h1::after {
+                width: 80px;
+                height: 3px;
+            }
+            
+            .home-button {
+                top: 15px;
+                right: 15px;
+                width: 60px;
+                height: 60px;
+                min-width: 60px;
+                min-height: 60px;
+                max-width: 60px;
+                max-height: 60px;
+            }
+            
+            .home-button span {
+                font-size: 28px;
+            }
+            
+            label {
+                font-size: 1rem;
+                margin: 1.5rem 0 0.5rem;
+            }
+            
+            select, input[type="text"], input[type="tel"] {
+                padding: 1rem 1.25rem;
+                font-size: 16px; /* iOS 줌 방지 */
+            }
+            
+            button {
+                padding: 1.25rem 1.5rem;
+                font-size: 1.1rem;
+                margin-top: 2rem;
+            }
+            
+            .account-info {
+                padding: 12px;
+                margin: 12px 0 20px;
+            }
+            
+            .terms-container {
+                padding: 12px;
+                margin: 15px 0;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 85vh;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            select, input[type="text"], input[type="tel"] {
+                padding: 0.9rem 1rem;
+                font-size: 16px;
+            }
+            
+            button {
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+            }
+            
+            .home-button {
+                top: 12px;
+                right: 12px;
+                width: 60px;
+                height: 60px;
+                min-width: 60px;
+                min-height: 60px;
+                max-width: 60px;
+                max-height: 60px;
+            }
+            
+            .home-button span {
+                font-size: 28px;
+            }
+        }
+
         .cart-button {
-            background: var(--button-gradient);
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
+            background-size: 300% 300%;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             margin-right: 10px;
+            box-shadow: 
+                0 8px 25px rgba(59, 130, 246, 0.4),
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .cart-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        /* 데스크톱에서만 cart-button hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .cart-button:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 
+                    0 20px 40px rgba(59, 130, 246, 0.4),
+                    0 10px 25px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                animation-play-state: paused;
+            }
+
+            .cart-button:hover::before {
+                left: 100%;
+            }
+        }
+
+        /* 모바일에서는 간단한 active 효과만 */
+        .cart-button:active {
+            transform: scale(0.98);
+            box-shadow: 
+                0 4px 15px rgba(59, 130, 246, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .cart-button {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
         }
 
         .cart-panel {
@@ -552,17 +1261,28 @@
 
         .cart-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: red;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 50%, #ff2828 100%);
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 
+                0 4px 12px rgba(255, 71, 87, 0.4),
+                0 2px 6px rgba(0, 0, 0, 0.2);
+            border: 2px solid white;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .cart-toggle {
@@ -628,7 +1348,7 @@
         .floating-buttons {
             position: fixed;
             right: 20px;
-            bottom: 20px;
+            bottom: 170px; /* 더 위로 올림 */
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -637,25 +1357,59 @@
 
         .floating-button {
             width: auto;
-            height: 45px;
+            height: 50px;
             padding: 0 20px;
             border-radius: 25px;
-            background: var(--button-gradient);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 
+                0 8px 25px rgba(59, 130, 246, 0.4),
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             font-family: 'Noto Sans KR', sans-serif;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .floating-button.cart-btn {
             order: -1; /* 장바구니 버튼을 맨 위로 */
+            position: relative;
+        }
+
+        /* 데스크톱에서만 floating-button hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .floating-button:hover {
+                transform: translateY(-2px) scale(1.05);
+                box-shadow: 
+                    0 12px 30px rgba(59, 130, 246, 0.5),
+                    0 6px 20px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* 모바일에서 floating-button 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .floating-button {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            
+            .floating-button:active {
+                transform: scale(0.95);
+            }
         }
 
         @media screen and (max-width: 768px) {
@@ -664,18 +1418,39 @@
             }
             
             .floating-buttons {
-                bottom: 30px;
-                right: 20px;
+                bottom: 140px; /* 모바일에서도 더 위로 */
+                right: 15px;
             }
 
             .floating-button {
-                height: 40px;
+                height: 45px;
                 padding: 0 15px;
+                font-size: 13px;
+            }
+
+            .floating-button.cart-btn {
+                height: 48px;
+                padding: 0 18px;
+                font-size: 14px;
+            }
+        }
+
+                 @media screen and (max-width: 480px) {
+             .floating-buttons {
+                 bottom: 120px;
+                 right: 10px;
+             }
+
+            .floating-button {
+                height: 42px;
+                padding: 0 12px;
+                font-size: 12px;
             }
 
             .floating-button.cart-btn {
                 height: 45px;
                 padding: 0 15px;
+                font-size: 13px;
             }
         }
     </style>
@@ -695,11 +1470,12 @@
     <div class="spinner-overlay">
         <div class="spinner"></div>
     </div>
-    <div class="container">
-        <button onclick="location.href='https://happymove.co.kr'" class="home-button">
-            <span class="material-icons">home</span>
+    <div class="main-wrapper">
+        <div class="container">
+        <button onclick="location.href='index.html'" class="home-button">
+            <span style="font-size: 28px;">🌀</span>
         </button>
-        <h1>동행 신청(동행지전용)</h1>
+        <h1>워프 접수(워프존)</h1>
         
         <label for="option1">출발지</label>
         <select id="option1" onchange="handleSelectionChange()">
@@ -731,6 +1507,7 @@
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-BPG-01">인천[부평]-게코스도프</option>
             <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
             <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
@@ -755,7 +1532,6 @@
             <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-CW-01">경남[창원]-크레노바</option>
-            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-GJZ-01">부산[정관]-와우펫앤쥬 기장점</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
@@ -798,6 +1574,7 @@
             <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
             <option value="MT-PT-01">경기[평택]-5G크레</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
+            <option value="MT-BPG-01">인천[부평]-게코스도프</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
@@ -823,7 +1600,6 @@
             <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
             <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
             <option value="UL-CW-01">경남[창원]-크레노바</option>
-            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
             <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
             <option value="BS-GJZ-01">부산[정관]-와우펫앤쥬 기장점</option>
             <option value="BS-BG-01">부산[북구]-파충류샵</option>
@@ -869,17 +1645,15 @@
         <label for="receiverPhone">받는 분 연락처</label>
         <input type="tel" id="receiverPhone" oninput="autoHyphen(this)" required>
 
-        <h2 id="priceDisplay">동행요금: 0원</h2>
+        <h2 id="priceDisplay">도마워프 요금: 0원</h2>
         
         <div class="account-info">
             <p>무통장 입금 계좌</p>
             <div class="copy-account">
                 <div class="account-number">
-                    <span>케이뱅크</span>
-                    <span id="accountNumber">100-110-948558</span>
-                    <span>김보성</span>
+                    <span>국민은행 001501-04-201553</span><br>
+                    <span>예금주 (주)와이즈앤골드</span>
                 </div>
-                <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
                 <button onclick="copyAccount()" class="copy-btn">계좌번호 복사하기</button>
             </div>
         </div>
@@ -908,9 +1682,9 @@
             <span class="close" onclick="closePrivacyModal()">&times;</span>
             <h2>개인정보 수집과 이용에 대한 동의</h2>
             <div class="modal-text">
-                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
-                <p><strong>수집하는 자:</strong> 동행</p>
-                <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
+                <p>도마워프 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
+                <p><strong>수집하는 자:</strong> 도마워프</p>
+                <p><strong>개인정보 수집 및 이용 목적:</strong> 도마워프 서비스 이용</p>
                 <p><strong>수집하는 개인정보 항목:</strong> 보내는 분 이름, 보내는 분 연락처, 받는 분 이름, 받는 분 연락처</p>
                 <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
                 <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
@@ -929,10 +1703,10 @@
                     <h3>제1장 기본 약관</h3>
                     <div class="basic-terms">
                         <h4>제1조 (목적)</h4>
-                        <p>본 약관은 동행(이하 "회사")이 제공하는 동행 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+                        <p>본 약관은 도마워프(이하 "회사")이 제공하는 도마워프 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
                         
                         <h4>2조 (용어의 정의)</h4>
-                        <p>"동행 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
+                        <p>"도마워프 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
                         
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
@@ -950,7 +1724,7 @@
                         <h4>제5조 (서비스 이용)</h4>
                         <ul>
                             <li>서비스 신청은 온라인으로 진행됩니다.</li>
-                            <li>동행 정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
+                            <li>도마워프 정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
                             <li>천재지변, 기상 악화 등의 불가항력적인 사유로 서비스가 제한될 수 있습니다.</li>
                         </ul>
                     </div>
@@ -959,7 +1733,7 @@
                     <h3>제2장 서비스 이용 약관 - 책임 및 보상 관련 규정</h3>
                     <div class="compensation-terms">
                         <h4>1. 보상 기준</h4>
-                        <p>서비스 과정에서 동행의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
+                        <p>서비스 과정에서 도마워프의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
 
                         <h4>2. 보상 제외 항목</h4>
                         <p>다음과 같은 경우에는 보상이 이루어지지 않습니다:</p>
@@ -977,10 +1751,10 @@
                         <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대한 책임을 지며, 픽업 및 수령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
 
                         <h4>5. 건강 이상 개체 운송 제한</h4>
-                        <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 동행 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
+                        <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 도마워프 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
 
-                        <h4>6. 동행지 보관 요금 관련 안내</h4>
-                        <p>회사가 안내한 일정을 준수하지 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 당사의 책임이 아닙니다.</p>
+                        <h4>6. 도마워프지 보관 요금 관련 안내</h4>
+                        <p>회사가 안내한 일정을 준수하지 않아 도마워프지에 개체를 추가로 보관하게 될 경우, 해당 도마워프지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 당사의 책임이 아닙니다.</p>
                     </div>
                 </div>
             </div>
@@ -1003,7 +1777,7 @@
                 <p><strong>보내는 분 연락처:</strong> <span id="confirm-sender-phone"></span></p>
                 <p><strong>받는 분:</strong> <span id="confirm-receiver"></span></p>
                 <p><strong>받는 분 연락처:</strong> <span id="confirm-receiver-phone"></span></p>
-                <p><strong>동행요금:</strong> <span id="confirm-fee"></span></p>
+                <p><strong>도마워프 요금:</strong> <span id="confirm-fee"></span></p>
             </div>
             <div class="confirmation-notice">
                 <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
@@ -1011,8 +1785,8 @@
                     <div class="notice-item">✓ 입력하신 정보가 모두 정확한지 확인해주세요.</div>
                     <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 양해 부탁드립니다.</div>
                     <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
-                    <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전날까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
-                    <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 동행지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
+                    <div class="notice-item">✓ 개체 맡기는 날은 월요일, 금요일에만 맡겨주셔야 하며, 도마워프지가 휴무일 경우 그 전날까지도 가능합니다. 그 이외의 경우 도마워프지에 따른 호텔링비가 청구됩니다.</div>
+                    <div class="notice-item">✓ 개체를 맡기거나 찾으실 때는 도마워프지의 영업 시간을 미리 확인 후 방문하시는 것을 추천드립니다.</div>
                 </div>
                 <div class="confirm-checkbox">
                     <label class="checkbox-label">
@@ -1034,32 +1808,24 @@
             장바구니
             <span class="cart-badge" style="display: none;">0</span>
         </button>
-        <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
-            <span class="material-icons">home</span>홈
-        </button>
-        <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button">
-            요금표
-        </button>
     </div>
 
     <!-- 계좌 입금 안내 모달 추가 -->
     <div id="accountModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeAccountModal()">&times;</span>
-            <h2>동행 신청이 완료되었습니다.</h2>
+            <h2>도마워프 신청이 완료되었습니다.</h2>
             <div class="modal-text">
                 <div class="account-info" style="margin-top: 20px;">
-                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 동행요금 <span style="color: #ff0000;">0원</span>을 입금해주세요.</p>
+                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513;">아래 계좌로 도마워프 요금 <span style="color: #ff0000;">0원</span>을 입금해주세요.</p>
                     <div class="copy-account" style="margin: 20px 0;">
                         <div class="account-number">
-                            <span>케이뱅크</span>
-                            <span id="modalAccountNumber">100-110-948558</span>
-                            <span>김보성</span>
+                            <span>국민은행 001501-04-201553</span><br>
+                            <span>예금주 (주)와이즈앤골드</span>
                         </div>
-                        <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
                         <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
                     </div>
-                    <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
+                    <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 도마워프가 진행됩니다.</p>
                 </div>
             </div>
             <div class="modal-buttons">
@@ -1364,7 +2130,7 @@
             let price = 0;
 
             if (!option1 || !option2) {
-                document.getElementById("priceDisplay").innerText = "동행요금: 0원";
+                document.getElementById("priceDisplay").innerText = "도마워프 요금: 0원";
                 return;
             }
             
@@ -1518,11 +2284,15 @@
                         // 일반 매트릭스 가격 처리
                         const matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
                         if (typeof matrixPrice === 'object') {
-                            // 객체인 경우 (차등 요금) - 이 경우는 처리하지 않음
-                            price = 0;
+                            // 객체인 경우 (강원-광주 같은 특별 케이스) 기본값 사용
+                            if ((region1 === "GW" && region2 === "GJ") || (region1 === "GJ" && region2 === "GW")) {
+                                price = 24000;  // 강원-광주 기본 요금 (파트너용)
+                            } else {
+                                price = 17500;  // 기본 요금으로 설정 (파트너용)
+                            }
                         } else {
                             // 숫자인 경우 (일반 요금)
-                            price = matrixPrice || 0;
+                            price = matrixPrice || 17500;  // 값이 없으면 기본 요금 17500원 (파트너용)
                         }
                     }
                 }
@@ -1538,7 +2308,7 @@
                 }
             }
 
-            document.getElementById("priceDisplay").innerText = `동행요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            document.getElementById("priceDisplay").innerText = `도마워프 요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
         }
 
         function handleSelectionChange() {
@@ -1562,7 +2332,7 @@
 
         // 계좌번호 복사
         function copyAccount() {
-            const accountNumber = "100-110-948558";
+            const accountNumber = "001501-04-201553";
             
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(accountNumber).then(() => {
@@ -1642,7 +2412,7 @@
             document.getElementById('confirm-sender-phone').textContent = document.getElementById('senderPhone').value;
             document.getElementById('confirm-receiver').textContent = document.getElementById('receiverName').value;
             document.getElementById('confirm-receiver-phone').textContent = document.getElementById('receiverPhone').value;
-            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent.replace('동행요금: ', '');
+            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent.replace('도마워프 요금: ', '');
             
             modal.style.display = 'block';
         }
@@ -1791,7 +2561,7 @@
                     senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
                     receiverName: document.getElementById('receiverName').value,
                     receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                    price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                    price: document.getElementById('priceDisplay').innerText.replace('도마워프 요금: ', '').replace('원', '').replace(/,/g, '')
                 };
 
                 fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
@@ -1887,7 +2657,7 @@
             "MT-NYJ-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
             "MT-SBG-01": { holiday: "휴무일 없음", hours: "평일 12:00 ~ 20:00, 주말 14:00 ~ 22:00" },
             "MT-GCG-01": { holiday: "휴무일 없음", hours: "15:00 ~ 24:00" },
-            "UL-JJMD-01": { holiday: "휴무일 없음", hours: "평일 16:00 ~ 21:00, 주말 16:00 ~ 20:00" },
+
             "BS-GJZ-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
             "DG-GSS-01": { holiday: "휴무일 없음", hours: "10:00 ~ 20:00" },
             "DG-DSG-01": { holiday: "매주 월요일", hours: "11:30 ~ 19:30" },
@@ -1904,6 +2674,7 @@
             "MT-MCHG-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-MCHG2-01": { holiday: "휴무일 없음", hours: "12:00 ~ 20:00" },
             "MT-NHD-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
+            "MT-BPG-01": { holiday: "격주 토요일", hours: "11:00 ~ 23:00" },
         };
 
         function updateStoreInfo() {
@@ -1947,7 +2718,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(화)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(화)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
                 // 제주가 출발지인 경우
                 else if (option1.value.startsWith('JJ-')) {
@@ -1961,7 +2732,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
                 // 다른 모든 지역의 경우 - 일요일로 통일
                 else {
@@ -1971,7 +2742,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
             } else {
                 arrivalNotice.innerHTML = '';
@@ -2016,7 +2787,7 @@
             
             // 금액 안내 문구 업데이트
             const accountInfoText = document.querySelector('#accountModal .account-info p:first-child');
-            accountInfoText.innerHTML = `아래 계좌로 동행요금 <span style="color: #ff0000;">${price}</span>을 입금해주세요.`;
+            accountInfoText.innerHTML = `아래 계좌로 도마워프 요금 <span style="color: #ff0000;">${price}</span>을 입금해주세요.`;
             
             modal.style.display = 'block';
         }
@@ -2184,8 +2955,10 @@
                 "MT-BC-01", // 저스트팜
                 "MT-GCG-01", // 크레인
                 "GW-CC-01", // 춘천-핌프렙타일
-                "UL-JJMD-01", // 진주-크레가치
+
                 "BS-YS-01", // 경남-양산
+                "MT-BPG-01", // 인천-부평-게코스도프
+                "MT-EP-01", // 은평-더부쉬
             ];
             
             return thursdayShopCodes.includes(option1Value);
@@ -2268,7 +3041,7 @@
                     "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
                     "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
                     "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
-                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", "UL-JJMD-01", 
+                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", 
                     "BS-YS-01"
                 ];
                 
@@ -2311,5 +3084,7 @@
             handleSelectionChange();
         });
     </script>
+        </div> <!-- container 닫기 -->
+    </div> <!-- main-wrapper 닫기 -->
 </body>
 </html>
