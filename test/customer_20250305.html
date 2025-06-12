@@ -424,19 +424,18 @@
 
         .copy-account {
             margin: 10px 0;
-            padding: 15px;
+            padding: 8px;
             background-color: white;
             border: 1px solid #ddd;
             border-radius: 6px;
         }
 
         .account-number {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            text-align: center;
+            margin-top: 12px;
+            margin-bottom: 12px;
             font-size: 1.1em;
+            line-height: 1.4;
         }
 
         .account-notice {
@@ -1123,11 +1122,9 @@
             <p>무통장 입금 계좌</p>
             <div class="copy-account">
                 <div class="account-number">
-                    <span>케이뱅크</span>
-                    <span id="accountNumber">100-110-948558</span>
-                    <span>김보성</span>
+                    <span>국민은행 001501-04-201553</span><br>
+                    <span>예금주 (주)와이즈앤골드</span>
                 </div>
-                <p class="account-notice">(도마워프지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
                 <button onclick="copyAccount()" class="copy-btn">계좌번호 복사하기</button>
             </div>
         </div>
@@ -1287,11 +1284,9 @@
                     <p style="font-size: 1.1em; font-weight: bold; color: #8B4513; margin: 15px 0;">아래 계좌로 도마워프 요금을 입금해주세요.</p>
                     <div class="copy-account" style="margin: 20px 0;">
                         <div class="account-number" style="font-size: 1.2em;">
-                            <span>케이뱅크</span>
-                            <span id="modalAccountNumber">100-110-948558</span>
-                            <span>김보성</span>
+                            <span>국민은행 001501-04-201553</span><br>
+                            <span>예금주 (주)와이즈앤골드</span>
                         </div>
-                        <p class="account-notice" style="color: #666;">(도마워프지 대표님들은 업체명으로 입금해주세요.)</p>
                         <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
                     </div>
                     <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 도마워프가 진행됩니다.</p>
@@ -1763,7 +1758,7 @@
 
         // 계좌번호 복사
         function copyAccount() {
-            const accountNumber = "100-110-948558";
+            const accountNumber = "001501-04-201553";
             
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(accountNumber).then(() => {
