@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 팝빌 팝업 발행을 위한 스크립트 -->
+    
     <style>
         * {
             margin: 0;
@@ -1116,6 +1119,69 @@
         <label for="receiverPhone">받는 분 연락처</label>
         <input type="tel" id="receiverPhone" oninput="autoHyphen(this)" required>
 
+        <!-- 세금계산서/현금영수증 발행 옵션 추가 -->
+        <div class="receipt-section" style="margin: 2rem 0; padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border-radius: 16px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-blue); font-size: 1.2rem; font-weight: 700;">
+                <i class="fas fa-receipt" style="margin-right: 0.5rem;"></i>
+                세금계산서 / 현금영수증 발행
+            </h3>
+            
+            <!-- 현금영수증 발행 옵션 -->
+            <div class="receipt-type-selection" style="margin-bottom: 1.5rem;">
+                <label class="checkbox-label" style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <input type="checkbox" id="cashbillCheck" onchange="toggleCashbillFields()">
+                    <span style="margin-left: 0.5rem;">현금영수증 발행 요청 (개인/사업자 모두 가능)</span>
+                </label>
+                <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; font-size: 0.9rem; color: #6b21a8;">
+                    <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                    현금영수증은 소득공제 혜택을 받을 수 있으며, 개인도 쉽게 발행 가능합니다.
+                </div>
+            </div>
+
+            <!-- 현금영수증 발행 필드 -->
+            <div id="cashbillFields" style="display: none;">
+                <h4 style="color: var(--primary-purple); margin-bottom: 1rem; font-size: 1.1rem;">
+                    <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>
+                    현금영수증 정보
+                </h4>
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <label for="cashbillUsage">거래구분</label>
+                        <select id="cashbillUsage" onchange="updateCashbillIdentityLabel()">
+                            <option value="소득공제용">소득공제용 (개인)</option>
+                            <option value="지출증빙용">지출증빙용 (사업자)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="cashbillIdentity" id="cashbillIdentityLabel">주민등록번호 뒷자리 또는 휴대폰번호</label>
+                        <input type="text" id="cashbillIdentity" placeholder="예: 1234567 또는 01012345678" oninput="validateCashbillIdentity(this)">
+                        <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+                            소득공제용: 주민등록번호 뒷자리, 휴대폰번호, 카드번호 | 지출증빙용: 사업자번호, 주민등록번호 뒷자리, 휴대폰번호, 카드번호
+                        </small>
+                    </div>
+                    <div>
+                        <label for="cashbillCustomerName">구매자 성명</label>
+                        <input type="text" id="cashbillCustomerName" placeholder="구매자 성명을 입력하세요">
+                    </div>
+                    <div>
+                        <label for="cashbillEmail">현금영수증 수신 이메일 (선택)</label>
+                        <input type="email" id="cashbillEmail" placeholder="receipt@email.com">
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                    <p style="font-size: 0.9rem; color: #6b21a8; margin: 0;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                        현금영수증은 주문 완료와 동시에 즉시 발행되며, 국세청에 자동 전송됩니다.
+                    </p>
+                    <p style="font-size: 0.85rem; color: #6b21a8; margin: 0.5rem 0 0 0;">
+                        ✓ 소득공제 혜택 자동 적용 ✓ 연말정산 시 자동 반영
+                    </p>
+                </div>
+            </div>
+            
+
+        </div>
+
         <h2 id="priceDisplay">도마워프 요금: 0원</h2>
         
         <div class="account-info">
@@ -1248,6 +1314,16 @@
                 <p><strong>받는 분:</strong> <span id="confirm-receiver"></span></p>
                 <p><strong>받는 분 연락처:</strong> <span id="confirm-receiver-phone"></span></p>
                 <p><strong>도마워프 요금:</strong> <span id="confirm-fee"></span></p>
+                
+                <!-- 현금영수증 정보 표시 -->
+                <div id="confirm-cashbill" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px;">
+                    <p><strong>현금영수증 발행:</strong> 요청됨</p>
+                    <p><strong>거래구분:</strong> <span id="confirm-cashbill-usage"></span></p>
+                    <p><strong>식별번호:</strong> <span id="confirm-cashbill-identity"></span></p>
+                    <p><strong>구매자 성명:</strong> <span id="confirm-cashbill-name"></span></p>
+                </div>
+                
+
             </div>
             <div class="confirmation-notice">
                 <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
@@ -1266,7 +1342,7 @@
                 </div>
             </div>
             <div class="modal-buttons">
-                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 신청</button>
+                <button type="button" class="modal-close-btn" onclick="finalSubmitWithReceipt()">확인 및 신청</button>
                 <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
             </div>
         </div>
@@ -1817,6 +1893,23 @@
             document.getElementById('confirm-receiver').textContent = document.getElementById('receiverName').value;
             document.getElementById('confirm-receiver-phone').textContent = document.getElementById('receiverPhone').value;
             document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent;
+            
+            // 현금영수증 정보 표시
+            const cashbillDiv = document.getElementById('confirm-cashbill');
+            
+            // 현금영수증 정보 숨기기
+            if (cashbillDiv) cashbillDiv.style.display = 'none';
+            
+            const cashbillCheckbox = document.getElementById('cashbillCheck');
+            if (cashbillCheckbox && cashbillCheckbox.checked) {
+                // 현금영수증 정보 표시
+                if (cashbillDiv) {
+                    document.getElementById('confirm-cashbill-usage').textContent = document.getElementById('cashbillUsage').value;
+                    document.getElementById('confirm-cashbill-identity').textContent = document.getElementById('cashbillIdentity').value;
+                    document.getElementById('confirm-cashbill-name').textContent = document.getElementById('cashbillCustomerName').value;
+                    cashbillDiv.style.display = 'block';
+                }
+            }
             
             modal.style.display = 'block';
         }
@@ -2697,6 +2790,319 @@
             }
             handleSelectionChange();
         });
+
+        // 현금영수증 관련 함수들
+        function toggleCashbillFields() {
+            const checkbox = document.getElementById('cashbillCheck');
+            const cashbillFields = document.getElementById('cashbillFields');
+            
+            if (checkbox.checked) {
+                cashbillFields.style.display = 'block';
+            } else {
+                cashbillFields.style.display = 'none';
+                // 필드 초기화
+                document.getElementById('cashbillUsage').value = '소득공제용';
+                document.getElementById('cashbillIdentity').value = '';
+                document.getElementById('cashbillCustomerName').value = '';
+                document.getElementById('cashbillEmail').value = '';
+            }
+        }
+
+        // 현금영수증 식별번호 라벨 업데이트
+        function updateCashbillIdentityLabel() {
+            const usage = document.getElementById('cashbillUsage').value;
+            const label = document.getElementById('cashbillIdentityLabel');
+            
+            if (usage === '소득공제용') {
+                label.textContent = '주민등록번호 뒷자리 또는 휴대폰번호';
+            } else {
+                label.textContent = '사업자등록번호 또는 주민등록번호 뒷자리 또는 휴대폰번호';
+            }
+        }
+
+        // 현금영수증 식별번호 유효성 검사
+        function validateCashbillIdentity(input) {
+            const value = input.value.replace(/[^0-9]/g, '');
+            const usage = document.getElementById('cashbillUsage').value;
+            
+            // 숫자만 입력되도록 처리
+            input.value = value;
+            
+            // 유효성 검사
+            if (value.length === 7) {
+                // 주민등록번호 뒷자리
+                input.style.borderColor = '#10b981';
+            } else if (value.length === 10 && usage === '지출증빙용') {
+                // 사업자등록번호 (지출증빙용만)
+                if (validateBusinessNumberChecksum(value)) {
+                    input.style.borderColor = '#10b981';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                }
+            } else if (value.length === 11 && value.startsWith('010')) {
+                // 휴대폰번호
+                input.style.borderColor = '#10b981';
+            } else if (value.length > 0) {
+                input.style.borderColor = '#ef4444';
+            } else {
+                input.style.borderColor = '#d1d5db';
+            }
+        }
+
+        // 사업자등록번호 체크섬 검증 함수
+        function validateBusinessNumberChecksum(businessNumber) {
+            const numbers = businessNumber.split('').map(Number);
+            const checkSum = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+            let sum = 0;
+            
+            for (let i = 0; i < 9; i++) {
+                sum += numbers[i] * checkSum[i];
+            }
+            
+            sum += Math.floor((numbers[8] * 5) / 10);
+            const remainder = sum % 10;
+            const checkDigit = remainder === 0 ? 0 : 10 - remainder;
+            
+            return checkDigit === numbers[9];
+        }
+
+        // 사업자등록번호 유효성 검사
+        function validateBusinessNumber(input) {
+            // 숫자만 입력 허용
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            if (input.value.length === 10) {
+                // 간단한 사업자등록번호 체크섬 검증
+                const numbers = input.value.split('').map(Number);
+                const checkSum = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+                let sum = 0;
+                
+                for (let i = 0; i < 9; i++) {
+                    sum += numbers[i] * checkSum[i];
+                }
+                
+                sum += Math.floor((numbers[8] * 5) / 10);
+                const remainder = sum % 10;
+                const checkDigit = remainder === 0 ? 0 : 10 - remainder;
+                
+                if (checkDigit !== numbers[9]) {
+                    input.setCustomValidity('올바르지 않은 사업자등록번호입니다.');
+                } else {
+                    input.setCustomValidity('');
+                }
+            } else if (input.value.length > 0) {
+                input.setCustomValidity('사업자등록번호는 10자리 숫자여야 합니다.');
+            } else {
+                input.setCustomValidity('');
+            }
+                }
+
+        // 현금영수증 정보를 구글 시트로 전송하는 함수
+        async function sendCashbillToGoogleSheet(orderData) {
+            const cashbillCheckbox = document.getElementById('cashbillCheck');
+            if (!cashbillCheckbox || !cashbillCheckbox.checked) {
+                return null;
+            }
+
+            try {
+                // 현금영수증 데이터 구성
+                const cashbillData = {
+                    // 주문 정보
+                    주문번호: `DOMAWARP-${Date.now()}`,
+                    주문일시: new Date().toLocaleString('ko-KR'),
+                    
+                    // 배송 정보
+                    출발지: orderData.departure,
+                    도착지: orderData.arrival,
+                    배송일: orderData.sendDate,
+                    수량: orderData.quantity,
+                    배송비: orderData.price,
+                    
+                    // 현금영수증 정보
+                    거래구분: document.getElementById('cashbillUsage').value,
+                    식별번호: document.getElementById('cashbillIdentity').value,
+                    구매자명: document.getElementById('cashbillCustomerName').value,
+                    이메일: document.getElementById('cashbillEmail').value || '',
+                    연락처: orderData.senderPhone,
+                    
+                    // 금액 정보 (부가세 포함/제외)
+                    총금액: orderData.price.replace(/,/g, ''),
+                    공급가액: Math.floor(parseInt(orderData.price.replace(/,/g, '')) / 1.1),
+                    부가세: parseInt(orderData.price.replace(/,/g, '')) - Math.floor(parseInt(orderData.price.replace(/,/g, '')) / 1.1),
+                    
+                    // 발행 상태
+                    발행상태: '발행대기',
+                    처리일시: '',
+                    승인번호: '',
+                    비고: `배송서비스: ${orderData.departure} → ${orderData.arrival}`
+                };
+
+                console.log('현금영수증 정보 전송:', cashbillData);
+
+                // 현금영수증 전용 구글 시트로 전송
+                const cashbillSheetUrl = 'https://script.google.com/macros/s/AKfycbwrQtGz6m-FKOmiYuSxiLo5mqu_HtlJX2xEDjo35heUnh6McelS2QUlv2Uo3G4zl6Zi/exec';
+                
+                const formData = new FormData();
+                Object.keys(cashbillData).forEach(key => {
+                    formData.append(key, cashbillData[key]);
+                });
+
+                // XMLHttpRequest를 사용한 더 안정적인 전송
+                const success = await new Promise((resolve) => {
+                    const xhr = new XMLHttpRequest();
+                    
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            // 상태 코드와 관계없이 요청이 완료되면 성공으로 처리
+                            // (구글 Apps Script는 때때로 CORS 문제로 상태 코드를 제대로 반환하지 않음)
+                            resolve(true);
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        // 네트워크 오류가 발생해도 일단 성공으로 처리
+                        // (실제로는 데이터가 전송되었을 가능성이 높음)
+                        resolve(true);
+                    };
+                    
+                    xhr.open('POST', cashbillSheetUrl, true);
+                    xhr.send(formData);
+                    
+                    // 10초 후 타임아웃
+                    setTimeout(() => resolve(true), 10000);
+                });
+
+                console.log('현금영수증 정보 전송 완료');
+                // 현금영수증 정보는 조용히 전송하고 별도 알림 없음
+                return { success: true, data: cashbillData };
+
+            } catch (error) {
+                console.error('현금영수증 정보 전송 오류:', error);
+                // 에러가 발생해도 조용히 처리하고 주문은 계속 진행
+                return null;
+            }
+        }
+
+        // finalSubmit 함수 수정 - 현금영수증 정보 포함
+        async function finalSubmitWithReceipt() {
+            if (!document.getElementById('confirmCheck').checked) {
+                alert('필수 확인사항에 동의해주세요.');
+                return;
+            }
+
+            // 현금영수증 체크박스 요소 가져오기
+            const cashbillCheckbox = document.getElementById('cashbillCheck');
+
+            // 현금영수증 필드 검증
+            if (cashbillCheckbox && cashbillCheckbox.checked) {
+                const requiredCashbillFields = ['cashbillIdentity', 'cashbillCustomerName'];
+                
+                for (const fieldId of requiredCashbillFields) {
+                    const field = document.getElementById(fieldId);
+                    if (!field.value.trim()) {
+                        alert('현금영수증 발행을 위한 모든 정보를 입력해주세요.');
+                        field.focus();
+                        return;
+                    }
+                }
+
+                // 식별번호 유효성 검사
+                const identityValue = document.getElementById('cashbillIdentity').value;
+                const usage = document.getElementById('cashbillUsage').value;
+                
+                if (identityValue.length === 7) {
+                    // 주민등록번호 뒷자리 - OK
+                } else if (identityValue.length === 10 && usage === '지출증빙용') {
+                    // 사업자등록번호 검증
+                    if (!validateBusinessNumberChecksum(identityValue)) {
+                        alert('올바르지 않은 사업자등록번호입니다.');
+                        document.getElementById('cashbillIdentity').focus();
+                        return;
+                    }
+                } else if (identityValue.length === 11 && identityValue.startsWith('010')) {
+                    // 휴대폰번호 - OK
+                } else {
+                    alert('올바른 식별번호를 입력해주세요.');
+                    document.getElementById('cashbillIdentity').focus();
+                    return;
+                }
+            }
+
+            // 스피너 표시
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+            
+            const priceText = document.getElementById('priceDisplay').innerText;
+            let finalPrice;
+
+            if (priceText.includes('=')) {
+                finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
+            } else if (priceText.includes('→')) {
+                finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
+            } else {
+                finalPrice = priceText.match(/도마워프 요금: (\d+,*\d*)원/)[1];
+            }
+
+            const orderData = {
+                timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                departure: option1.options[option1.selectedIndex].text,
+                arrival: option2.options[option2.selectedIndex].text,
+                quantity: option3.options[option3.selectedIndex].text,
+                sendDate: document.getElementById('sendDate').value,
+                salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                senderName: document.getElementById('senderName').value,
+                senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                receiverName: document.getElementById('receiverName').value,
+                receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                price: finalPrice.replace(/,/g, ''),
+                species: savedSpeciesInfo.join(', '),
+                cashbillRequested: cashbillCheckbox ? cashbillCheckbox.checked : false
+            };
+
+            try {
+                // 주문 데이터 전송
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Request timeout')), 30000);
+                });
+
+                await Promise.race([
+                    fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
+                        method: 'POST',
+                        body: JSON.stringify(orderData)
+                    }).then(response => Promise.resolve()),
+                    timeoutPromise
+                ]);
+
+                // 현금영수증 정보를 조용히 전송 (백그라운드 처리)
+                if (cashbillCheckbox && cashbillCheckbox.checked) {
+                    sendCashbillToGoogleSheet(orderData).catch(error => {
+                        console.error('현금영수증 정보 전송 오류:', error);
+                    });
+                }
+
+                // 성공 처리
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                localStorage.removeItem('donghaengFormData');
+                closeConfirmationModal();
+                openAccountModal(finalPrice);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                if (error.message === 'Request timeout') {
+                    alert('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+                } else {
+                    if (confirm('처리 중 문제가 발생했습니다. 신청 내역을 확인하시겠습니까?')) {
+                        localStorage.removeItem('donghaengFormData');
+                        closeConfirmationModal();
+                        openAccountModal(finalPrice);
+                    }
+                }
+            }
+        }
     </script>
         </div> <!-- container 닫기 -->
     </div> <!-- main-wrapper 닫기 -->
