@@ -16,12 +16,14 @@
         body {
             font-family: 'Nunito', sans-serif;
             line-height: 1.6;
-            color: #4a5568;
-            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            color: white;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
             min-height: 100vh;
-            padding: 2rem 1rem;
+            padding: 2rem 0;
             padding-top: 6rem; /* 네비게이션바 공간 확보 */
             margin: 0;
+            animation: gradientShift 20s ease-in-out infinite;
         }
 
         /* 네비게이션 */
@@ -73,6 +75,15 @@
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 30%, #8b5cf6 60%, #1e40af 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 30%, #7c3aed 60%, #6366f1 100%);
+            }
         }
 
         .nav-links {
@@ -147,15 +158,17 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .page-title {
             text-align: center;
             font-size: 3rem;
             font-weight: 900;
-            color: #1e40af;
+            color: white;
             margin-bottom: 3rem;
             position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .page-title::after {
@@ -182,11 +195,13 @@
         .warpzone-grid .warpzone-card:nth-child(7) {
             grid-column: 1;
             transform: translateX(50%);
+            height: 660px !important; /* 다른 카드와 동일한 크기 유지 */
         }
 
         .warpzone-grid .warpzone-card:nth-child(8) {
             grid-column: 3;  
             transform: translateX(-50%);
+            height: 660px !important; /* 다른 카드와 동일한 크기 유지 */
         }
 
         .warpzone-card {
@@ -483,6 +498,75 @@
             }
         }
 
+        /* 푸터 */
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 3rem 0 0;
+            margin-top: 3rem;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-section a:hover {
+            color: #3b82f6;
+        }
+
+        .footer-section p {
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 2px solid #4a5568;
+            padding: 1rem 0;
+            text-align: center;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .business-info {
+            font-size: 12px;
+            line-height: 1.4;
+            color: #a0aec0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .business-row {
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #4a5568;
+        }
+
         /* 반응형 디자인 */
         
         /* 대형 태블릿 (1024px 이하) */
@@ -575,7 +659,7 @@
         /* 태블릿 (768px 이하) */
         @media screen and (max-width: 768px) {
             body {
-                padding: 1rem 0.5rem;
+                padding: 1rem 0;
                 padding-top: 7rem;
             }
 
@@ -747,7 +831,7 @@
         /* 모바일 (480px 이하) */
         @media screen and (max-width: 480px) {
             body {
-                padding: 0.5rem 0.3rem;
+                padding: 0.5rem 0;
                 padding-top: 6.5rem;
             }
 
@@ -822,6 +906,25 @@
                 font-size: 0.95rem;
                 border-radius: 25px;
             }
+
+            .footer {
+                padding: 2rem 0 0;
+                margin-top: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .footer-section h4 {
+                font-size: 1.1rem;
+            }
+
+            .business-info {
+                font-size: 11px;
+                padding: 0 1rem;
+            }
         }
 
         /* 초소형 모바일 (360px 이하) */
@@ -850,6 +953,29 @@
             .shop-location {
                 font-size: 0.7rem;
             }
+
+            .footer {
+                padding: 1.5rem 0 0;
+                margin-top: 1.5rem;
+            }
+
+            .footer-section h4 {
+                font-size: 1rem;
+            }
+
+            .footer-section p,
+            .footer-section a {
+                font-size: 0.9rem;
+            }
+
+            .business-info {
+                font-size: 10px;
+                padding: 0 0.5rem;
+            }
+
+            .business-row {
+                margin-bottom: 6px;
+            }
         }
     </style>
 </head>
@@ -865,7 +991,6 @@
                 <li><a href="index.html">홈</a></li>
                 <li><a href="warpzone.html">워프존</a></li>
                 <li><a href="customer_20250305.html">신청하기</a></li>
-                <li><a href="#price">요금표</a></li>
             </ul>
             <div class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -875,7 +1000,6 @@
             <a href="index.html">홈</a>
             <a href="warpzone.html">워프존</a>
             <a href="customer_20250305.html">신청하기</a>
-            <a href="#price">요금표</a>
         </div>
     </nav>
 
@@ -948,7 +1072,7 @@
                         <div class="shop-name">노랑너랑도마뱀</div>
                         <div class="shop-location">덕양</div>
                     </div>
-                    <div class="shop-item" onclick="searchStore('게코피아2호점', '김포')">
+                    <div class="shop-item" onclick="searchStore('게코피아', '김포')">
                         <div class="shop-name">게코피아2호점</div>
                         <div class="shop-location">김포</div>
                     </div>
@@ -1023,7 +1147,7 @@
                         <div class="shop-name">위드게코</div>
                         <div class="shop-location">계양</div>
                     </div>
-                    <div class="shop-item" onclick="searchStore('게코피아1호점', '남동')">
+                    <div class="shop-item" onclick="searchStore('게코피아', '남동')">
                         <div class="shop-name">게코피아1호점</div>
                         <div class="shop-location">남동</div>
                     </div>
@@ -1102,7 +1226,7 @@
                         <div class="shop-name">방구석도마뱀</div>
                         <div class="shop-location">전북 익산</div>
                     </div>
-                    <div class="shop-item" onclick="searchStore('쭌이네', '전남 완도')">
+                    <div class="shop-item" onclick="searchStore('고금서로24')">
                         <div class="shop-name">쭌이네</div>
                         <div class="shop-location">전남 완도</div>
                     </div>
@@ -1126,7 +1250,7 @@
                 <div class="warpzone-header">
                     <div class="warp-icon">🌀</div>
                     <h3 class="region-name">대구경상</h3>
-                    <span class="shop-count">13개 매장</span>
+                    <span class="shop-count">12개 매장</span>
                 </div>
                 <div class="shops-list">
                     <div class="shop-item" onclick="searchStore('대구곤충마트', '대구 수성')">
@@ -1156,10 +1280,6 @@
                     <div class="shop-item" onclick="searchStore('크레노바', '경남 창원')">
                         <div class="shop-name">크레노바</div>
                         <div class="shop-location">경남 창원</div>
-                    </div>
-                    <div class="shop-item" onclick="searchStore('크레가치', '경남 진주')">
-                        <div class="shop-name">크레가치</div>
-                        <div class="shop-location">경남 진주</div>
                     </div>
                     <div class="shop-item" onclick="searchStore('젤리팜코리아', '울산 북구')">
                         <div class="shop-name">젤리팜코리아</div>
@@ -1220,11 +1340,7 @@
         <div class="action-buttons">
             <a href="customer_20250305.html" class="action-btn">
                 <i class="fas fa-paper-plane"></i>
-                일반 신청하기
-            </a>
-            <a href="partnerpage_20250305.html" class="action-btn">
-                <i class="fas fa-store"></i>
-                사업자 신청하기
+                워프 신청
             </a>
             <a href="index.html" class="action-btn secondary">
                 <i class="fas fa-home"></i>
@@ -1232,6 +1348,53 @@
             </a>
         </div>
     </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>DOMAWARP</h4>
+                    <p>도마워프 - 파충류 전문 배송<br></p>
+                </div>
+                <div class="footer-section">
+                    <h4>배송 서비스</h4>
+                    <p><a href="index.html#services">빠른 배송 시스템</a></p>
+                    <p><a href="index.html#services">환경 제어</a></p>
+                    <p><a href="index.html#services">안전 보장</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <p><a href="customer_20250305.html">고객센터</a></p>
+                    <p><a href="customer_20250305.html">배송 FAQ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>연락처</h4>
+                    <p><i class="fas fa-phone"></i> 010-9909-2103</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 서울시 중구 남대문로9길 24</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="business-info">
+                    <div class="business-row">
+                        <span><strong>상호명 : </strong> 주식회사 와이즈앤골드 <strong>/ 대표자명 : </strong> 송요한</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>사업자</strong> 주소: 04522 서울 중구 남대문로9길 24 패스트파이브타워 1023-1175</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>대표 전화</strong> 010-3130-0180 <strong>사업자 등록번호</strong> 727-86-03538 <strong>통신판매업 신고번호 </strong> 2025-서울중구-816호</span>
+                    </div>
+                    <div class="business-row">
+                        <span><strong>개인정보보호책임자</strong> 송요한</span>
+                    </div>
+                    <div class="copyright">
+                        <p>&copy; 도마워프. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // 네이버 지도에서 매장 검색
