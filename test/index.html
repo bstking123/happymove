@@ -1476,9 +1476,321 @@
             25% { transform: rotate(-5deg) scale(1.1); }
             75% { transform: rotate(5deg) scale(1.1); }
         }
+        /* 팝업 알림창 스타일 */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.3s ease;
+            border: 4px solid #3b82f6;
+        }
+
+        .popup-overlay.active .popup-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .popup-content {
+            padding: 0;
+            text-align: center;
+        }
+
+        .popup-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0;
+        }
+
+        .popup-footer {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .popup-checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .popup-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        .popup-checkbox-label {
+            font-size: 0.95rem;
+            color: #4a5568;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .popup-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .popup-btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .popup-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .popup-btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .popup-btn-secondary:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .popup-container {
+                width: 95%;
+                max-width: 400px;
+                margin: 1rem;
+            }
+
+            .popup-header {
+                padding: 1rem;
+            }
+
+            .popup-title {
+                font-size: 1.1rem;
+            }
+
+            .popup-close {
+                width: 35px;
+                height: 35px;
+                font-size: 1.3rem;
+            }
+
+            .popup-footer {
+                padding: 1.2rem;
+            }
+
+            .popup-checkbox-label {
+                font-size: 0.9rem;
+            }
+
+            .popup-buttons {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .popup-btn {
+                padding: 0.9rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .popup-container {
+                width: 98%;
+                margin: 0.5rem;
+            }
+
+            .popup-header {
+                padding: 0.8rem;
+            }
+
+            .popup-title {
+                font-size: 1rem;
+            }
+
+            .popup-close {
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+            }
+
+            .popup-footer {
+                padding: 1rem;
+            }
+
+            .popup-checkbox-label {
+                font-size: 0.85rem;
+            }
+
+            .popup-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* 팝업 애니메이션 효과 */
+        @keyframes popupBounce {
+            0% {
+                transform: scale(0.3) rotate(-10deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05) rotate(2deg);
+            }
+            70% {
+                transform: scale(0.95) rotate(-1deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .popup-overlay.active .popup-container {
+            animation: popupBounce 0.6s ease-out;
+        }
+
+        /* 팝업 내부 요소들 순차 애니메이션 */
+        .popup-content > * {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .popup-image {
+            animation-delay: 0.1s;
+        }
+
+        .popup-footer {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- 팝업 알림창 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-container">
+            <div class="popup-header">
+                <div class="popup-title">
+                    <i class="fas fa-bell"></i>
+                    공지사항
+                </div>
+                <button class="popup-close" id="popupClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <img src="images/팝업알림1.png" alt="팝업 알림" class="popup-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; padding: 2rem; color: #4a5568;">
+                    <i class="fas fa-image" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                    <p>이미지를 불러올 수 없습니다.</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">images/팝업알림1.png 파일을 확인해주세요.</p>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <div class="popup-checkbox-container">
+                    <input type="checkbox" id="dontShowToday" class="popup-checkbox">
+                    <label for="dontShowToday" class="popup-checkbox-label">오늘 하루 보지 않기</label>
+                </div>
+                <div class="popup-buttons">
+                    <button class="popup-btn popup-btn-primary" id="popupConfirm">
+                        <i class="fas fa-check"></i>
+                        확인
+                    </button>
+                    <button class="popup-btn popup-btn-secondary" id="popupCancel">
+                        <i class="fas fa-times"></i>
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- 네비게이션 -->
     <nav class="navbar">
         <div class="nav-container">
@@ -1489,8 +1801,8 @@
             <ul class="nav-links">
                 <li><a href="#home">홈</a></li>
                 <li><a href="#services">서비스</a></li>
-                <li><a href="customer_20250305.html">워프신청</a></li>
-                <li><a href="warpzone.html">워프존찾기</a></li>
+                <li><a href="https://bstking123.github.io/happymove/test/customer.html">워프신청</a></li>
+                <li><a href="https://bstking123.github.io/happymove/test/warpzone.html">워프존찾기</a></li>
                 <li><a href="#partners">파트너</a></li>
                 <li><a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a></li>
             </ul>
@@ -1500,8 +1812,8 @@
             <div class="mobile-menu">
                 <a href="#home">홈</a>
                 <a href="#services">서비스</a>
-                <a href="customer_20250305.html">워프신청</a>
-                <a href="warpzone.html">워프존찾기</a>
+                <a href="https://bstking123.github.io/happymove/test/customer.html">워프신청</a>
+                <a href="https://bstking123.github.io/happymove/test/warpzone.html">워프존찾기</a>
                 <a href="#partners">파트너</a>
                 <a href="http://pf.kakao.com/_mPNxhn" target="_blank">고객센터</a>
             </div>
@@ -1526,7 +1838,7 @@
                 <div class="warp-portal"></div>
                 <div class="lightning-spark"></div>
             </div>
-            <a href="customer_20250305.html" class="cta-button">
+            <a href="https://bstking123.github.io/happymove/test/customer.html" class="cta-button">
                 <i class="fas fa-rocket"></i>
                 워프 신청!
             </a>
@@ -2069,6 +2381,76 @@
     </footer>
 
     <script>
+        // 팝업 관리 함수들
+        function showPopup() {
+            const popup = document.getElementById('popupOverlay');
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 스크롤 방지
+        }
+
+        function hidePopup() {
+            const popup = document.getElementById('popupOverlay');
+            popup.classList.remove('active');
+            document.body.style.overflow = ''; // 스크롤 복원
+        }
+
+        function checkPopupStatus() {
+            const today = new Date().toDateString();
+            const dontShowToday = localStorage.getItem('dontShowPopupToday');
+            
+            // 오늘 하루 보지 않기가 설정되어 있고, 날짜가 오늘과 같으면 팝업 표시 안함
+            if (dontShowToday === today) {
+                return false;
+            }
+            return true;
+        }
+
+        function setDontShowToday() {
+            const today = new Date().toDateString();
+            localStorage.setItem('dontShowPopupToday', today);
+        }
+
+        // 팝업 이벤트 리스너들
+        document.addEventListener('DOMContentLoaded', function() {
+            // 페이지 로드 후 1초 뒤에 팝업 표시 (애니메이션 완료 후)
+            setTimeout(() => {
+                if (checkPopupStatus()) {
+                    showPopup();
+                }
+            }, 1000);
+
+            // 닫기 버튼 클릭
+            document.getElementById('popupClose').addEventListener('click', hidePopup);
+            
+            // 취소 버튼 클릭
+            document.getElementById('popupCancel').addEventListener('click', hidePopup);
+            
+            // 확인 버튼 클릭
+            document.getElementById('popupConfirm').addEventListener('click', function() {
+                const dontShowCheckbox = document.getElementById('dontShowToday');
+                
+                if (dontShowCheckbox.checked) {
+                    setDontShowToday();
+                }
+                
+                hidePopup();
+            });
+            
+            // 오버레이 클릭 시 팝업 닫기
+            document.getElementById('popupOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hidePopup();
+                }
+            });
+            
+            // ESC 키로 팝업 닫기
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hidePopup();
+                }
+            });
+        });
+
         // 스크롤 애니메이션
         const observerOptions = {
             threshold: 0.1,
