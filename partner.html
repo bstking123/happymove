@@ -2316,7 +2316,10 @@
                 }
             }
 
-            document.getElementById("priceDisplay").innerText = `도마워프 요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            // 10% 부가세 추가
+            price = Math.ceil(price * 1.1);
+
+            document.getElementById("priceDisplay").innerText = `도마워프 요금: ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (부가세 포함)`;
         }
 
         function handleSelectionChange() {
