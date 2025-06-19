@@ -1509,9 +1509,12 @@
             <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
             <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
             <option value="MT-PT-01">경기[평택]-5G크레</option>
+            <option value="MT-GGDGJ-01">경기[광주]-써밋게코</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
             <option value="MT-BPG-01">인천[부평]-게코스도프</option>
+            <option value="MT-ICWC-01">인천[원창]-정글숲을지나서가자 원창점</option>
+            <option value="MT-ICGD-01">인천[마전]-정글숲을지나서가자 본점</option>
             <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
             <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
@@ -1581,9 +1584,12 @@
             <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
             <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
             <option value="MT-PT-01">경기[평택]-5G크레</option>
+            <option value="MT-GGDGJ-01">경기[광주]-써밋게코</option>
             <option value="MT-GY-01">인천[계양]-위드게코</option>
-            <option value="MT-BPG-01">인천[부평]-게코스도프</option>
             <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
+            <option value="MT-BPG-01">인천[부평]-게코스도프</option>
+            <option value="MT-ICWC-01">인천[원창]-정글숲을지나서가자 원창점</option>
+            <option value="MT-ICGD-01">인천[마전]-정글숲을지나서가자 본점</option>
             <option value="MT-NHD-01">인천[논현]-한렙타일</option>
             <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
             <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
@@ -1842,20 +1848,7 @@
         </div>
     </div>
 
-    <!-- 5월 23일 모달 추가 (may8th 모달과 비슷한 스타일로) -->
-    <div id="may23rdModal" class="modal">
-        <div class="modal-content" style="width: 300px; max-width: 90%; padding: 20px 15px 15px;">
-            <span class="close" onclick="closeMay23rdModal()" style="position: absolute; right: 15px; top: 10px;">&times;</span>
-            <h2 style="font-size: 16px; margin: 0 0 15px 0;">안내</h2>
-            <div class="modal-text" style="text-align: center; white-space: nowrap; margin-bottom: 15px;">
-                <p style="margin: 0; font-size: 14px;">5월 넷째주만 대구/경상 지역은 맡기는 요일이</p>
-                <p style="margin: 0; font-size: 14px;">목요일로 변경됩니다.</p>
-            </div>
-            <div class="modal-buttons" style="text-align: center;">
-                <button type="button" class="modal-close-btn" onclick="closeMay23rdModal()" style="width: 80px; height: 35px; font-size: 14px; padding: 0; display: inline-block;">확인</button>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         // 폼 데이터 자동 저장
@@ -1937,11 +1930,6 @@
                 return ['DG', 'BS', 'UL'].includes(region);
             }
             
-            // 광주 렙타일아트뮤지엄(GJ-BG-01)인지 확인
-            function isGwangjuLepMu() {
-                return option1.value === 'GJ-BG-01';
-            }
-            
             function isBlockedDate(date) {
                 if (date.getFullYear() === 2025 && 
                     date.getMonth() === 2 && 
@@ -1957,31 +1945,7 @@
                     return true;
                 }
                 
-                // 광주 렙타일아트뮤지엄의 5월 넷째주 차단 (5월 22일~5월 24일)
-                if (isGwangjuLepMu() && 
-                    date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date)) {
-                    return true;
-                }
-                
-                // 대구/경상/울산/부산 지역 5월 넷째주 차단 추가
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date)) {
-                    const region = option1.value.split('-')[0];
-                    if (['DG', 'BS', 'UL'].includes(region)) {
-                        return true;
-                    }
-                }
-                
-                // 더부쉬(MT-EP-01) 5월 넷째주 차단 추가
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date) && 
-                    option1.value === 'MT-EP-01') {
-                    return true;
-                }
+
                 
                 return false;
             }
@@ -2020,22 +1984,9 @@
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 2025년 5월 22일(목요일) 경상도 지역 특별 처리 (23일에서 22일로 변경)
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && 
-                    date.getDate() === 22 && 
-                    isGyeongsangDeparture()) {
-                    shouldAdd = true;
-                }
-                // 2025년 5월 8일 특별 처리 (제주 제외)
-                else if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && 
-                    date.getDate() === 8 && 
-                    !isJejuDeparture()) {
-                    shouldAdd = true;
-                }
+
                 // 2025년 4월 넷째주 경상도 지역 특별 처리
-                else if (date.getFullYear() === 2025 && 
+                if (date.getFullYear() === 2025 && 
                     date.getMonth() === 3 && 
                     isFourthWeek(date) &&
                     option1.value.startsWith('DG-')) {  // 출발지가 대구경상인 경우만
@@ -2062,13 +2013,7 @@
                     shouldAdd = checkJejuArrivalDate(date);
                 }
                 else {
-                    const isMay2025 = date.getFullYear() === 2025 && date.getMonth() === 4; // 5월
-                    
-                    // 2025년 5월 24일은 경상도 출발지에 대해 제외 (5월 22일로 변경되었으므로)
-                    if (isMay2025 && date.getDate() === 24 && isGyeongsangDeparture()) {
-                        shouldAdd = false;
-                    } 
-                    else if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
+                    if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
                         shouldAdd = (day === 4); // 목요일
                     } else {  // 2그룹(금요일 맡기는 업체)
                         shouldAdd = (day === 5); // 금요일
@@ -2690,6 +2635,9 @@
             "MT-GWSL-01": { holiday: "매주 목요일", hours: "12:00 ~ 20:00" },
             "MT-PJYD-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
             "MT-NGJ-01": { holiday: "휴무일 없음", hours: "평일 13:00 ~ 20:00, 주말 12:00~20:00" },
+            "MT-ICWC-01": { holiday: "휴무일 없음", hours: "월화수금토일 13:00 ~ 21:00" },
+            "MT-ICGD-01": { holiday: "휴무일 없음", hours: "14:00 ~ 21:00" },
+            "MT-GGDGJ-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
         };
 
         function updateStoreInfo() {
@@ -2974,128 +2922,25 @@
                 "BS-YS-01", // 경남-양산
                 "MT-BPG-01", // 인천-부평-게코스도프
                 "MT-EP-01", // 은평-더부쉬
+                "MT-NGJ-01", // 세븐게코
+                "MT-PJYD-01", // 파충류샵캔버스
+                "MT-ICGD-01" // 정글숲을지나서가자 본점
             ];
             
             return thursdayShopCodes.includes(option1Value);
         }
 
+        // sendDate의 change 이벤트 리스너
         document.getElementById('sendDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const option1 = document.getElementById('option1').value;
-            const gyeongsangCodes = ['DG', 'BS', 'UL'];
-            const region = option1.split('-')[0];
-            
-            // 2025년 5월 22일 선택 시 모달 표시 (경상도 출발 지역만)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 22 && 
-                gyeongsangCodes.includes(region)) {
-                openMay23rdModal();
-            }
-            
             updateArrivalNotice();
         });
 
-        // 5월 23일 모달 표시/닫기 함수 추가
-        function openMay23rdModal() {
-            document.getElementById('may23rdModal').style.display = 'block';
-        }
-
-        function closeMay23rdModal() {
-            document.getElementById('may23rdModal').style.display = 'none';
-        }
-
-        // 여수점 모달 표시/닫기 함수 추가
-        function openYeosuModal() {
-            document.getElementById('yeosuModal').style.display = 'block';
-        }
-
-        function closeYeosuModal() {
-            document.getElementById('yeosuModal').style.display = 'none';
-        }
-
-        // 여수점 관련 체크 함수 추가
-        function isYeosuInvolved() {
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            return option1 === 'YE-YS-01' || option2 === 'YE-YS-01';
-        }
-
-        // sendDate의 change 이벤트 리스너 수정
-        document.getElementById('sendDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const gyeongsangCodes = ['DG', 'BS', 'UL'];
-            const region = option1.split('-')[0];
-            
-            // 여수점 5월 15일~18일 체크 추가
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 5 && 
-                (selectedDate.getDate() >= 29 && selectedDate.getDate() <= 30) && 
-                isYeosuInvolved()) {
-                openYeosuModal();
-            }
-            
-            // 2025년 5월 22일 선택 시 모달 표시 (경상도 출발 지역만)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 22 && 
-                gyeongsangCodes.includes(region)) {
-                openMay23rdModal();
-            }
-            
-            // 2025년 5월 8일 선택 시 모달 표시 (목요일 상점코드 제외)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 8) {
-                
-                // 목요일 상점코드 목록
-                const thursdayShopCodes = [
-                    "UL-BG-01", "BS-GJZ-01", "MT-YDP-01", "BS-HU-01", 
-                    "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
-                    "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
-                    "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
-                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", 
-                    "BS-YS-01"
-                ];
-                
-                // 출발지가 목요일 상점코드가 아닌 경우에만 모달 표시
-                if (!thursdayShopCodes.includes(option1)) {
-                    openMay8thModal();
-                }
-            }
-            
-            updateArrivalNotice();
-            updatePrice();
-        });
-
-        // 출발지, 도착지 선택 시에도 여수점 체크 추가
+        // 출발지, 도착지 선택 이벤트 리스너
         document.getElementById('option1').addEventListener('change', function() {
-            const sendDate = document.getElementById('sendDate').value;
-            if (sendDate) {
-                const selectedDate = new Date(sendDate);
-                if (selectedDate.getFullYear() === 2025 && 
-                    selectedDate.getMonth() === 4 && 
-                    (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
-                    isYeosuInvolved()) {
-                    openYeosuModal();
-                }
-            }
             handleSelectionChange();
         });
 
         document.getElementById('option2').addEventListener('change', function() {
-            const sendDate = document.getElementById('sendDate').value;
-            if (sendDate) {
-                const selectedDate = new Date(sendDate);
-                if (selectedDate.getFullYear() === 2025 && 
-                    selectedDate.getMonth() === 4 && 
-                    (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
-                    isYeosuInvolved()) {
-                    openYeosuModal();
-                }
-            }
             handleSelectionChange();
         });
     </script>
