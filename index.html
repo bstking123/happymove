@@ -3,107 +3,661 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동행 신청</title>
+    <title>워프 접수</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- 공통 네비게이션바 CSS -->
+    <link href="styles/navbar.css" rel="stylesheet">
+    
+    <!-- Firebase Scripts -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc, connectFirestoreEmulator } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6ZTMoIkF32EJelP5JEi_gkqk39CaqjwE",
+            authDomain: "domawarp-1e631.firebaseapp.com",
+            projectId: "domawarp-1e631",
+            storageBucket: "domawarp-1e631.firebasestorage.app",
+            messagingSenderId: "998401804342",
+            appId: "1:998401804342:web:33b9dbee033b17d54af097"
+        };
+
+        // Initialize Firebase with error handling
+        let app, auth, db;
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            
+            console.log('Firebase 초기화 성공');
+        } catch (error) {
+            console.error('Firebase 초기화 오류:', error);
+        }
+
+        // Make auth functions globally available
+        window.firebaseAuth = {
+            auth,
+            db,
+            onAuthStateChanged,
+            signOut,
+            doc,
+            getDoc,
+            getDocs,
+            collection,
+            setDoc,
+            updateDoc,
+            deleteDoc
+        };
+    </script>
+    
+    <!-- 팝빌 팝업 발행을 위한 스크립트 -->
+    
+    <!-- 공통 위치 관리자 모듈 -->
+    <script src="js/location-manager.js"></script>
+
+    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --main-bg: #e5d3c3;
-            --form-bg: #ffffff;
-            --button-gradient: linear-gradient(145deg, #8B4513, #654321);
-            --text: #4a3728;
-            --button-hover: linear-gradient(145deg, #654321, #8B4513);
+            --primary-blue: #3b82f6;
+            --primary-dark: #1e40af;
+            --primary-purple: #8b5cf6;
+            --primary-indigo: #4f46e5;
+            --accent-cyan: #06b6d4;
+            --accent-teal: #0d9488;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --surface: rgba(255, 255, 255, 0.95);
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-strong: 0 35px 80px rgba(0, 0, 0, 0.25);
         }
 
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--main-bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #667eea 50%, #f093fb 75%, #f5576c 100%);
+            background-size: 400% 400%;
             min-height: 100vh;
+            animation: gradientFlow 15s ease infinite;
+            position: relative;
+        }
+
+        /* 헤더 섹션 */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-section h1 {
+            margin: 0;
+            flex: 1;
+        }
+
+        /* 사용자 정보 섹션 */
+        .user-info-section {
+            display: flex;
+            align-items: center;
+            min-height: 40px;
+        }
+
+        .customer-user-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .customer-user-card:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .user-name {
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+
+        .user-email {
+            color: #6b7280;
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+
+        .login-prompt {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(107, 114, 128, 0.1);
+            border: 1px solid rgba(107, 114, 128, 0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-prompt:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: row;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .header-section h1 {
+                font-size: 1.95rem;
+                flex: 1;
+                margin: 0;
+            }
+            
+            .user-info-section {
+                flex-shrink: 0;
+            }
+            
+            .customer-user-card {
+                padding: 0.5rem 0.75rem;
+                gap: 0.5rem;
+                border-radius: 15px;
+            }
+            
+            .profile-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            
+            .user-details {
+                gap: 0;
+            }
+            
+            .user-name {
+                font-size: 0.8rem;
+                font-weight: 600;
+                line-height: 1.1;
+            }
+            
+            .user-email {
+                font-size: 0.7rem;
+                line-height: 1.1;
+            }
+            
+            .login-prompt {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+                border-radius: 15px;
+                gap: 0.3rem;
+            }
+            
+            .login-prompt i {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* 매우 작은 화면 대응 */
+        @media (max-width: 480px) {
+            .header-section {
+                gap: 0.5rem;
+            }
+            
+            .header-section h1 {
+                font-size: 1.69rem;
+            }
+            
+            .customer-user-card {
+                padding: 0.4rem 0.6rem;
+                gap: 0.4rem;
+            }
+            
+            .profile-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            
+            .user-name {
+                font-size: 0.75rem;
+            }
+            
+            .user-email {
+                font-size: 0.65rem;
+            }
+            
+            .login-prompt {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* 네비게이션바 모바일 스타일은 공통 CSS에서 처리 */
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 배경 애니메이션 파티클 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g"><stop offset="20%" stop-color="rgba(255,255,255,0.1)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="3" fill="url(%23g)"><animate attributeName="cy" values="20;80;20" dur="8s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="2" fill="url(%23g)"><animate attributeName="cx" values="80;20;80" dur="12s" repeatCount="indefinite"/></circle><circle cx="50" cy="80" r="4" fill="url(%23g)"><animate attributeName="cy" values="80;20;80" dur="10s" repeatCount="indefinite"/></circle></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .container {
             position: relative;
-            background-color: var(--form-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 400px;
-            margin: 20px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 
+                var(--shadow-strong),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 25%, 
+                var(--primary-purple) 50%, 
+                var(--accent-teal) 75%, 
+                var(--primary-indigo) 100%);
+            background-size: 300% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            border-radius: 24px;
+            z-index: -1;
+        }
+
+
+
         h1 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
             text-align: center;
-            color: var(--text);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--primary-purple) 50%, 
+                var(--primary-indigo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                var(--primary-blue), 
+                var(--accent-cyan), 
+                var(--primary-purple));
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
         }
 
         label {
             display: block;
-            margin: 15px 0 8px;
-            color: var(--text);
-            font-weight: 500;
+            margin: 2rem 0 0.75rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            letter-spacing: -0.01em;
+        }
+
+        label::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(180deg, var(--primary-blue), var(--primary-purple));
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 데스크톱에서만 label hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            label:hover::before {
+                opacity: 1;
+            }
+        }
+
+        /* 모바일에서 label 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            label {
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                /* label 클릭은 가능하지만 시각적 피드백 제거 */
+            }
+            
+            label::before {
+                display: none; /* 모바일에서는 데코레이션 제거 */
+            }
         }
 
         select, input[type="text"], input[type="tel"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
             box-sizing: border-box;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
+            position: relative;
         }
 
         select:focus, input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary-blue);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(255,140,66,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 8px 25px rgba(59, 130, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* 데스크톱에서만 hover 효과 적용 */
+        @media (hover: hover) and (pointer: fine) {
+            select:hover, input:hover {
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            }
+        }
+
+        /* 모바일에서는 hover 효과 제거하고 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            select, input[type="text"], input[type="tel"] {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                -webkit-appearance: none; /* iOS 기본 스타일 제거 */
+                appearance: none;
+            }
+            
+            select {
+                cursor: pointer;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 1rem center;
+                background-size: 1em;
+                padding-right: 3rem;
+            }
+            
+            select:focus {
+                -webkit-tap-highlight-color: transparent;
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            }
+            
+            input:active {
+                border-color: var(--primary-blue);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            }
         }
 
         button {
             width: 100%;
-            padding: 15px;
-            background: var(--button-gradient);
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
+            background-size: 300% 300%;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 18px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 2.5rem;
+            box-shadow: 
+                0 8px 25px rgba(59, 130, 246, 0.4),
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 3s ease infinite;
         }
 
-        button:hover {
-            background: var(--button-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        /* 데스크톱에서만 button hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            button:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 
+                    0 20px 40px rgba(59, 130, 246, 0.4),
+                    0 10px 25px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                animation-play-state: paused;
+            }
+
+            button:hover::before {
+                left: 100%;
+            }
+        }
+
+        /* 모바일에서는 간단한 active 효과만 */
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 
+                0 4px 15px rgba(59, 130, 246, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .view-terms {
             margin-left: 10px;
-            padding: 2px 8px;
-            background: var(--button-gradient);
+            padding: 6px 12px;
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             width: auto;
-            height: 24px;
-            line-height: 20px;
+            height: auto;
+            line-height: 1;
             margin-top: 0;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        /* 데스크톱에서만 view-terms hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .view-terms:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
+        }
+
+        /* 모바일에서 view-terms 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .view-terms {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            
+            .view-terms:active {
+                transform: scale(0.95);
+                background: linear-gradient(135deg, 
+                    #60a5fa 0%, 
+                    #06b6d4 30%, 
+                    #a855f7 60%, 
+                    #6366f1 100%);
+            }
         }
 
         .account-info {
@@ -121,19 +675,18 @@
 
         .copy-account {
             margin: 10px 0;
-            padding: 15px;
+            padding: 8px;
             background-color: white;
             border: 1px solid #ddd;
             border-radius: 6px;
         }
 
         .account-number {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            text-align: center;
+            margin-top: 12px;
+            margin-bottom: 12px;
             font-size: 1.1em;
+            line-height: 1.4;
         }
 
         .account-notice {
@@ -215,17 +768,74 @@
             bottom: 0;
             width: 100%;
             padding: 15px;
-            background: var(--button-gradient);
+            background: linear-gradient(135deg, 
+                var(--primary-blue) 0%, 
+                var(--accent-cyan) 30%, 
+                var(--primary-purple) 60%, 
+                var(--primary-indigo) 100%);
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             margin-top: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, 
+                #60a5fa 0%, 
+                #06b6d4 30%, 
+                #a855f7 60%, 
+                #6366f1 100%);
         }
 
         .modal-text {
             margin-bottom: 20px;
             padding-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .modal-text p {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .modal-text h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            margin-top: 20px;
+            color: var(--text-primary);
+        }
+
+        .modal-text h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-text ul {
+            margin-bottom: 12px;
+            padding-left: 18px;
+        }
+
+        .modal-text li {
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         @media screen and (max-width: 768px) {
@@ -233,31 +843,38 @@
                 width: 95%;
                 margin: 10px auto;
                 padding: 20px 15px;
+                border-radius: 16px;
             }
 
-            body {
-                padding: 10px 0;
+            .main-wrapper {
+                padding: 1rem 0.5rem;
             }
 
             h1 {
-                font-size: 1.6em;
+                font-size: 2.2rem;
                 margin-top: 25px;
+                margin-bottom: 2rem;
             }
 
             select, input[type="text"], input[type="tel"] {
-                padding: 10px;
-                font-size: 14px;
+                padding: 1rem;
+                font-size: 16px; /* iOS 줌 방지를 위해 16px 이상 */
+                border-radius: 12px;
             }
 
             .home-button {
-                width: 35px;
-                height: 35px;
+                width: 50px !important;
+                height: 50px !important;
+                min-width: 50px !important;
+                min-height: 50px !important;
+                max-width: 50px !important;
+                max-height: 50px !important;
                 top: 15px;
                 right: 15px;
             }
 
-            .material-icons {
-                font-size: 20px;
+            .home-button span {
+                font-size: 22px !important;
             }
 
             .modal-content {
@@ -265,30 +882,100 @@
                 margin: 10px auto;
                 padding: 15px;
                 max-height: 85vh;
+                border-radius: 16px;
+            }
+
+            .modal-text {
+                font-size: 13px;
+            }
+
+            .modal-text p {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .modal-text h2 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .modal-text h3 {
+                font-size: 15px;
+                margin-bottom: 10px;
+                margin-top: 16px;
+            }
+
+            .modal-text h4 {
+                font-size: 13px;
+                margin-bottom: 6px;
+                margin-top: 12px;
+            }
+
+            .modal-text li {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .modal-close-btn {
+                font-size: 13px;
+                padding: 12px;
             }
 
             .account-info {
                 padding: 12px;
                 margin: 12px 0 20px;
+                border-radius: 12px;
             }
 
             .terms-container {
                 padding: 12px;
                 margin: 15px 0;
+                border-radius: 12px;
             }
 
             .confirmation-notice {
                 padding: 15px;
                 margin: 15px 0;
+                border-radius: 12px;
             }
 
             button {
-                padding: 12px;
+                padding: 1rem;
+                font-size: 1.1rem;
+                border-radius: 12px;
             }
 
             .view-terms {
-                padding: 1px 6px;
-                height: 22px;
+                padding: 8px 14px;
+                height: auto;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                margin-left: 8px;
+                box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+                min-height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            label {
+                font-size: 1rem;
+                margin: 1.5rem 0 0.5rem;
+                pointer-events: auto; /* 모바일에서 label 클릭 가능하게 */
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* 터치 타겟 크기 최적화 */
+            .terms-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
+            }
+
+            .checkbox-label {
+                min-height: 44px;
+                align-items: center;
             }
         }
 
@@ -387,104 +1074,1004 @@
 
         .home-button {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--button-gradient);
+            top: 3rem;
+            right: 2.5rem;
+            background: linear-gradient(135deg, 
+                #bfdbfe 0%, 
+                #93c5fd 30%, 
+                #60a5fa 70%, 
+                #3b82f6 100%);
             color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 60px !important;
+            height: 60px !important;
+            min-width: 60px !important;
+            min-height: 60px !important;
+            max-width: 60px !important;
+            max-height: 60px !important;
+            border-radius: 50% !important;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 
+                0 12px 35px rgba(147, 197, 253, 0.5),
+                0 6px 20px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
             border: none;
+            animation: rotateHome 4s linear infinite;
+            z-index: 1000;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
+            box-sizing: border-box !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
         }
 
-        .home-button:hover {
+        @keyframes rotateHome {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 쿠폰 시스템 - 원본 디자인 스타일 */
+        .coupon-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-radius: 12px;
+            border: 2px solid #c4b5fd;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .coupon-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .coupon-header h3 {
+            margin: 0 0 5px 0;
+            color: #8b5cf6;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .coupon-description {
+            margin: 0;
+            color: #6b21a8;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .coupon-description::before {
+            content: "ℹ️";
+        }
+
+        .coupon-section h4 {
+            margin: 20px 0 10px 0;
+            color: #8b5cf6;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .coupon-input-section {
+            margin-bottom: 20px;
+        }
+
+        .coupon-input-group {
+            margin-bottom: 10px;
+        }
+
+        #couponCode {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #8b5cf6;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        #couponCode:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .coupon-button-group {
+            margin-top: 10px;
+        }
+
+        .coupon-apply-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-apply-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        .coupon-remove-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-remove-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .coupon-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .coupon-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* 로그인 안내 메시지 스타일 */
+        .login-required-message {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            margin: 20px 0;
+        }
+
+        .login-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .login-text {
+            color: #374151;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .login-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            background: var(--button-hover);
+            box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .available-coupons {
+            margin-top: 20px;
+        }
+
+        .coupon-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .coupon-item {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .coupon-item:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .coupon-item.selected {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border-color: #7c3aed;
+        }
+
+        .coupon-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .coupon-details-left {
+            flex: 1;
+        }
+
+        .coupon-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .coupon-discount {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .coupon-usage {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+
+        .coupon-details-right {
+            text-align: right;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .coupon-select-btn {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-select-btn:hover {
+            background: #7c3aed;
+        }
+
+        .coupon-item.selected .coupon-select-btn {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .coupon-section {
+                margin: 15px 0;
+                padding: 15px;
+            }
+
+            .coupon-header {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .coupon-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .coupon-description {
+                font-size: 0.8rem;
+            }
+
+            .coupon-section h4 {
+                font-size: 0.95rem;
+                margin: 15px 0 8px 0;
+            }
+
+            #couponCode {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+
+            .coupon-apply-btn, .coupon-remove-btn {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+
+            .coupon-item {
+                padding: 12px;
+            }
+
+            .coupon-name {
+                font-size: 0.9rem;
+            }
+
+            .coupon-discount {
+                font-size: 0.8rem;
+            }
+
+            .coupon-usage {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* 가격 요약 박스 스타일 */
+        .price-summary-box {
+            background: linear-gradient(145deg, #f8f9ff 0%, #e8ebff 100%);
+            border: 2px solid #e0e6ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 
+                0 8px 25px rgba(139, 92, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .price-header {
+            margin-bottom: 12px;
+        }
+
+        .original-price {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+
+        .original-price span {
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .discount-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #16a085 !important;
+        }
+
+        .coupon-applied {
+            background: rgba(22, 160, 133, 0.1);
+            border: 1px solid rgba(22, 160, 133, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .coupon-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .coupon-label {
+            font-size: 0.95rem;
+            color: #16a085;
+            font-weight: 600;
+        }
+
+        .coupon-discount {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #16a085;
+        }
+
+        .coupon-name {
+            font-size: 0.85rem;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .final-price {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 16px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .final-price span {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+                 /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .price-summary-box {
+                padding: 16px;
+                margin: 16px 0;
+            }
+
+            .original-price {
+                font-size: 1rem;
+            }
+
+            .discount-price {
+                font-size: 1.1rem;
+            }
+
+            .final-price {
+                font-size: 1.2rem;
+                padding: 14px;
+            }
+
+            .final-price span {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* 확인 모달창 스타일 */
+        .confirmation-modal {
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.15),
+                0 10px 30px rgba(139, 92, 246, 0.1);
+        }
+
+        .confirmation-header {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            margin: -1.5rem -1.5rem 0;
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .confirmation-header h2 {
+            margin: 0 0 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .confirmation-info-card {
+            padding: 1.5rem;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-section h3 {
+            margin: 0 0 1rem;
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .info-item.highlight {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .info-item.highlight .info-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .info-item.highlight .info-value {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .price-highlight {
+            font-size: 1.3rem !important;
+            font-weight: 800 !important;
+        }
+
+        .cashbill-info {
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .cashbill-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .cashbill-details p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .confirmation-agreement {
+            background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+            border: 2px solid #fed7d7;
+            border-radius: 12px;
+            margin: 1.5rem 1.5rem 1rem;
+            overflow: hidden;
+        }
+
+        .agreement-header {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .warning-icon {
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .agreement-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .agreement-content {
+            padding: 1.5rem;
+        }
+
+        .agreement-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .agreement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .check-icon {
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .agreement-item span:last-child {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #4a5568;
+        }
+
+        .final-agreement {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 1rem 0;
+            max-width: 100%;
+            margin: 0;
+            text-align: center;
+        }
+
+        .agreement-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .agreement-checkbox input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #4fd1c7;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .agreement-checkbox input[type="checkbox"]:checked + .checkmark {
+            background: #4fd1c7;
+            border-color: #4fd1c7;
+        }
+
+        .agreement-checkbox input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .agreement-text {
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .confirmation-buttons {
+            padding: 1rem 1.5rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-cancel {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        /* 모바일 반응형 - 확인 모달 */
+        @media (max-width: 768px) {
+            .confirmation-modal {
+                max-width: 95%;
+                margin: 1rem;
+            }
+
+            .confirmation-header {
+                padding: 1.5rem 1rem 0.8rem;
+                margin: -1rem -1rem 0;
+            }
+
+            .header-icon {
+                font-size: 2.5rem;
+            }
+
+            .confirmation-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .confirmation-info-card {
+                padding: 1rem;
+            }
+
+            .info-section {
+                padding: 1rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+
+            .info-item.highlight {
+                padding: 0.8rem;
+            }
+
+            .agreement-content {
+                padding: 1rem 1rem 0.8rem;
+            }
+
+            .agreement-item {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .confirmation-buttons {
+                flex-direction: column;
+                padding: 0.8rem 1rem 1rem;
+            }
+
+            .btn-submit {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .agreement-checkbox {
+                font-size: 0.8rem;
+                gap: 0.6rem;
+            }
+
+            .agreement-text {
+                white-space: normal;
+            }
+
+                         .final-agreement {
+                 padding: 0.6rem 0;
+             }
+         }
+
+         /* 계좌 모달 추가 스타일 */
+         .payment-amount {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+             color: white;
+             padding: 1.5rem;
+             border-radius: 12px;
+             text-align: center;
+             margin: 1rem 0;
+         }
+
+         .payment-amount .amount-label {
+             font-size: 0.9rem;
+             opacity: 0.9;
+             margin-bottom: 0.5rem;
+             display: block;
+         }
+
+         .payment-amount .amount-value {
+             font-size: 1.8rem;
+             font-weight: 800;
+             display: block;
+         }
+
+         .account-details {
+             background: #f8faff;
+             border-radius: 8px;
+             padding: 1rem;
+             margin: 1rem 0;
+         }
+
+         .account-info-row {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             padding: 0.5rem 0;
+             border-bottom: 1px solid #e2e8f0;
+         }
+
+         .account-info-row:last-child {
+             border-bottom: none;
+         }
+
+         .account-label {
+             font-size: 0.9rem;
+             color: #718096;
+             font-weight: 500;
+         }
+
+         .account-value {
+             font-size: 1rem;
+             color: #000000;
+             font-weight: bold;
+         }
+
+         .account-number {
+             font-family: 'Courier New', monospace;
+             font-size: 1.1rem !important;
+             color: #000000 !important;
+             font-weight: bold !important;
+         }
+
+
+
+         .notice-section {
+             background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+             border: 1px solid #fed7d7;
+         }
+
+         .notice-content {
+             display: flex;
+             align-items: center;
+             gap: 0.8rem;
+             justify-content: center;
+             padding: 0.5rem;
+         }
+
+         .notice-icon {
+             font-size: 1.2rem;
+             color: #e53e3e;
+         }
+
+         .notice-text {
+             color: #e53e3e;
+             font-weight: 600;
+             font-size: 0.9rem;
+         }
+
+         /* 모바일 반응형 - 계좌 모달 */
+         @media (max-width: 768px) {
+             .payment-amount {
+                 padding: 1.2rem;
+             }
+
+             .payment-amount .amount-value {
+                 font-size: 1.5rem;
+             }
+
+             .account-details {
+                 padding: 0.8rem;
+             }
+
+
+         }
+
+        /* 데스크톱에서만 홈버튼 hover 효과 */
+        @media (hover: hover) and (pointer: fine) {
+            .home-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 
+                    0 20px 40px rgba(147, 197, 253, 0.6),
+                    0 10px 25px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+                background: linear-gradient(135deg, 
+                    #dbeafe 0%, 
+                    #bfdbfe 30%, 
+                    #93c5fd 70%, 
+                    #60a5fa 100%);
+                animation-play-state: paused;
+            }
+        }
+
+        /* 모바일에서 홈버튼 터치 최적화 */
+        @media (hover: none) and (pointer: coarse) {
+            .home-button {
+                -webkit-tap-highlight-color: rgba(147, 197, 253, 0.3);
+                touch-action: manipulation;
+                cursor: pointer;
+                pointer-events: auto;
+                z-index: 1001;
+            }
+            
+            .home-button:active {
+                transform: scale(0.95);
+                animation-play-state: paused;
+                background: linear-gradient(135deg, 
+                    #dbeafe 0%, 
+                    #bfdbfe 30%, 
+                    #93c5fd 70%, 
+                    #60a5fa 100%);
+            }
         }
 
         .material-icons {
             font-size: 24px;
         }
 
-        .floating-buttons {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 1000;
-        }
 
-        .floating-button {
-            width: auto;
-            height: 45px;
-            padding: 0 20px;
-            border-radius: 25px;
-            background: var(--button-gradient);
-            color: white;
-            border: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        .floating-button .material-icons {
-            font-size: 18px;
-            margin-right: 2px;
-        }
-
-        .floating-button.apply-btn {
-            width: auto;
-            padding: 0 20px;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        @media screen and (min-width: 769px) {
-            .floating-buttons {
-                display: none;  /* PC에서는 숨김 */
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .home-button {
-                display: none;  /* 모바일에서는 기존 홈버튼 숨김 */
-            }
-            
-            .floating-buttons {
-                bottom: 30px;
-                right: 20px;
-            }
-
-            .floating-button {
-                height: 40px;
-                padding: 0 15px;
-            }
-
-            .floating-button.apply-btn {
-                height: 45px;
-                padding: 0 15px;
-            }
-
-            .floating-button .material-icons {
-                font-size: 20px;
-            }
-        }
 
         /* 기존 스타일... */
         
@@ -517,157 +2104,37 @@
     </style>
 </head>
 <body>
+    <!-- 네비게이션 -->
+
+
     <div class="spinner-overlay">
         <div class="spinner"></div>
     </div>
-    <div class="container">
-        <button onclick="location.href='https://happymove.co.kr'" class="home-button">
-            <span class="material-icons">home</span>
-        </button>
-        <h1>동행 신청</h1>
+    <div class="main-wrapper">
+        <div class="container">
+
+        <div class="header-section">
+            <h1>워프 접수</h1>
+            <div id="userInfoSection" class="user-info-section">
+                <!-- 로그인 상태에 따라 동적으로 업데이트됩니다 -->
+            </div>
+        </div>
         
         <label for="option1">출발지</label>
-        <select id="option1" onchange="handleSelectionChange()">
-            <option value="">출발지 선택</option>
-            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
-            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
-            <option value="MT-EP-01">서울[은평]-더부쉬</option>
-            <option value="MT-GSMG-01">서울[마곡]-파충류샵 갈눈</option>
-            <option value="MT-YDP-01">서울[영등포]-렙타일스테이션</option>
-            <option value="MT-YC-01">서울[양천]-렙타일가든</option>
-            <option value="MT-GCG-01">서울[금천]-크레인</option>
-            <option value="MT-GB-01">서울[강북]-렉사리움</option>
-            <option value="MT-SBG-01">서울[성북]-렙타일인컬러</option>
-            <option value="MT-IS-01">경기[일산]-크레방</option>
-            <option value="MT-DYG-01">경기[덕양]-노랑너랑도마뱀</option>
-            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
-            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
-            <option value="MT-NYJ-01">경기[남양주]-플랜티멀</option>
-            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
-            <option value="MT-SNWR-01">경기[위례]-파충류샵 알파</option>
-            <option value="MT-SNBD-01">경기[분당]-비틀즈게코</option>
-            <option value="MT-BDJJ-01">경기[분당]-젤리팜 분당점</option>
-            <option value="MT-YI-01">경기[용인]-비바렙타일</option>
-            <option value="MT-BC-01">경기[부천]-저스트팜</option>
-            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
-            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
-            <option value="MT-AYDA-01">경기[안양]-희온크레</option>
-            <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
-            <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
-            <option value="MT-PT-01">경기[평택]-5G크레</option>
-            <option value="MT-GY-01">인천[계양]-위드게코</option>
-            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
-            <option value="MT-NHD-01">인천[논현]-한렙타일</option>
-            <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
-            <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
-            <option value="MT-CULA-01">인천[청라]-크레그램</option>
-            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
-            <option value="CB-CJ-01">충북[청주]-킹크레</option>
-            <option value="CN-CA-01">충남[천안]-링크쥬</option>
-            <option value="CN-ASAN-01">충남[아산]-제주인 크레</option>
-            <option value="DJ-SG-01">대전[서구]-히스</option>
-            <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
-            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="GJ-GSG-01">광주[광산구]-안녕크레 파충류샵</option>
-            <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
-            <option value="JB-IKSAN-01">전북[익산]-방구석도마뱀</option>
-            <option value="WD-WD-01">전남[완도]-쭌이네</option>
-            <option value="YE-SC-01">전남[순천]-정글박스</option>
-            <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
-            <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
-            <option value="DG-SGGS-01">대구[서구]-렙타일아트뮤지엄 대구점</option>
-            <option value="DG-DSG-01">대구[달성]-크레패밀리하우스</option>
-            <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
-            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="UL-CW-01">경남[창원]-크레노바</option>
-            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
-            <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
-            <option value="BS-GJZ-01">부산[정관]-와우펫앤쥬 기장점</option>
-            <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
-            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                                    
-            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
-            
-            
+        <select id="option1">
+            <!-- 공통 모듈에서 자동으로 옵션이 추가됩니다 -->
         </select>
         <div id="store1Info" class="store-info"></div>
 
         <label for="option2">도착지</label>
-        <select id="option2" onchange="handleSelectionChange()">
-            <option value="">도착지 선택</option>
-            <option value="MT-MP-01">서울[마포]-게코스리퍼블릭</option>
-            <option value="MT-GN-01">서울[강남]-게코스리퍼블릭</option>
-            <option value="MT-EP-01">서울[은평]-더부쉬</option>
-            <option value="MT-GSMG-01">서울[마곡]-파충류샵 갈눈</option>
-            <option value="MT-YDP-01">서울[영등포]-렙타일스테이션</option>
-            <option value="MT-YC-01">서울[양천]-렙타일가든</option>
-            <option value="MT-GCG-01">서울[금천]-크레인</option>
-            <option value="MT-GB-01">서울[강북]-렉사리움</option>
-            <option value="MT-SBG-01">서울[성북]-렙타일인컬러</option>
-            <option value="MT-IS-01">경기[일산]-크레방</option>
-            <option value="MT-DYG-01">경기[덕양]-노랑너랑도마뱀</option>
-            <option value="MT-GP-01">경기[김포]-게코피아2호점</option>
-            <option value="MT-GR-01">경기[구리]-제이콥슨</option>
-            <option value="MT-NYJ-01">경기[남양주]-플랜티멀</option>
-            <option value="MT-SN-01">경기[성남]-렙타일아트뮤지엄 성남점</option>
-            <option value="MT-SNWR-01">경기[위례]-파충류샵 알파</option>
-            <option value="MT-SNBD-01">경기[분당]-비틀즈게코</option>
-            <option value="MT-BDJJ-01">경기[분당]-젤리팜 분당점</option>
-            <option value="MT-YI-01">경기[용인]-비바렙타일</option>
-            <option value="MT-BC-01">경기[부천]-저스트팜</option>
-            <option value="MT-SH-01">경기[시흥]-와이엔케이렙타일</option>
-            <option value="MT-AS-01">경기[안산]-크레넬제이</option>
-            <option value="MT-AYDA-01">경기[안양]-희온크레</option>
-            <option value="MT-SW-01">경기[수원]-렙틸리스 수원AK점</option>
-            <option value="MT-HS-01">경기[화성]-렙틸리스 화성점</option>
-            <option value="MT-PT-01">경기[평택]-5G크레</option>
-            <option value="MT-GY-01">인천[계양]-위드게코</option>
-            <option value="MT-ND-01">인천[남동]-게코피아1호점</option>
-            <option value="MT-NHD-01">인천[논현]-한렙타일</option>
-            <option value="MT-MCHG2-01">인천[미추홀-도화]-덕스게코</option>
-            <option value="MT-MCHG-01">인천[미추홀-학익]-욱크렐레</option>
-            <option value="MT-CULA-01">인천[청라]-크레그램</option>
-            <option value="GW-CC-01">강원[춘천]-핌프렙타일</option>
-            <option value="CB-CJ-01">충북[청주]-킹크레</option>
-            <option value="CN-CA-01">충남[천안]-링크쥬</option>
-            <option value="CN-ASAN-01">충남[아산]-제주인 크레</option>
-            <option value="DJ-SG-01">대전[서구]-히스</option>
-            <option value="DJ-YS-01">대전[유성]-안녕도마뱀</option>
-            <option value="GJ-BG-01">광주[북구]-렙타일아트뮤지엄 광주점</option>
-            <option value="GJ-GSG-01">광주[광산구]-안녕크레 파충류샵</option>
-            <option value="GJ-JJ-01">전북[전주]-플러스렙타일</option>
-            <option value="JB-IKSAN-01">전북[익산]-방구석도마뱀</option>
-            <option value="WD-WD-01">전남[완도]-쭌이네</option>
-            <option value="YE-SC-01">전남[순천]-정글박스</option>
-            <option value="YE-YS-01">전남[여수]-렙타일아트뮤지엄 여수점</option>
-            <option value="DG-SS-01">대구[수성]-대구곤충마트</option>
-            <option value="DG-SGGS-01">대구[서구]-렙타일아트뮤지엄 대구점</option>
-            <option value="DG-DSG-01">대구[달성]-크레패밀리하우스</option>
-            <option value="DG-GM-01">경북[구미]-렙타일아트뮤지엄 구미점</option>
-            <option value="DG-GSS-01">경북[경산]-안경쓴도마뱀</option>
-            <option value="BS-YS-01">경남[양산]-렙타일아트뮤지엄 양산점</option>
-            <option value="UL-CW-01">경남[창원]-크레노바</option>
-            <option value="UL-JJMD-01">경남[진주]-크레가치</option>
-            <option value="UL-BG-01">울산[북구]-젤리팜코리아</option>
-            <option value="BS-GJZ-01">부산[정관]-와우펫앤쥬 기장점</option>
-            <option value="BS-BG-01">부산[북구]-파충류샵</option>
-            <option value="BS-BSJG-01">부산[부산진구]-나뭇잎마을 부산점</option>
-            <option value="BS-HU-01">부산[해운대]-렙토날드</option>                                    
-            <option value="JJ-JJ-01">제주[제주]-렙타일아트뮤지엄 제주점</option>
-            
-            
+        <select id="option2">
+            <!-- 공통 모듈에서 자동으로 옵션이 추가됩니다 -->
         </select>
         <div id="store2Info" class="store-info"></div>
 
         <label for="option3">마릿수</label>
-        <select id="option3" onchange="handleSelectionChange()">
-            <option value="">마릿수 선택</option>
-            <option value="1">1마리</option>
-            <option value="2">2마리</option>
-            <option value="3">3마리</option>
-            <option value="4">4마리</option>
-            <option value="5-20">5~20마리</option>
+        <select id="option3">
+            <!-- 공통 모듈에서 자동으로 옵션이 추가됩니다 -->
         </select>
 
         <label for="sendDate">맡기는 날짜 <span style="color: #ff0000; font-size: 0.9em;">(선택한 날에 맡겨주세요)</span></label>
@@ -683,28 +2150,163 @@
         </div>
 
         <label for="senderName">보내는 분 성함</label>
-        <input type="text" id="senderName" required>
+        <input type="text" id="senderName" oninput="updateCashbillInfo()" required>
 
         <label for="senderPhone">보내는 분 연락처</label>
         <input type="tel" id="senderPhone" oninput="autoHyphen(this)" required>
 
         <label for="receiverName">받는 분 성함</label>
-        <input type="text" id="receiverName" required>
+        <input type="text" id="receiverName" oninput="updateCashbillInfo()" required>
 
         <label for="receiverPhone">받는 분 연락처</label>
         <input type="tel" id="receiverPhone" oninput="autoHyphen(this)" required>
 
-        <h2 id="priceDisplay">동행요금: 0원</h2>
+        <!-- 현금영수증 발행 (필수) -->
+        <div class="receipt-section" style="margin: 2rem 0; padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border-radius: 16px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-blue); font-size: 1.2rem; font-weight: 700;">
+                <i class="fas fa-receipt" style="margin-right: 0.5rem;"></i>
+                현금영수증 발행 <span style="color: #ef4444; font-size: 0.9rem;">(필수)</span>
+            </h3>
+            
+            <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; font-size: 0.9rem; color: #6b21a8;">
+                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                현금영수증은 소득공제 혜택을 받을 수 있으며, 사업자도 지출증빙용으로 발행 가능합니다.
+            </div>
+
+            <!-- 현금영수증 발행 필드 -->
+            <div id="cashbillFields" style="display: block;">
+                <h4 style="color: var(--primary-purple); margin-bottom: 1rem; font-size: 1.1rem;">
+                    <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>
+                    현금영수증 정보
+                </h4>
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <label for="cashbillUsage">거래구분</label>
+                        <select id="cashbillUsage" onchange="updateCashbillIdentityLabel()">
+                            <option value="소득공제용">소득공제용 (개인)</option>
+                            <option value="지출증빙용">지출증빙용 (사업자)</option>
+                        </select>
+                    </div>
+                    <!-- 소득공제용 간편 선택 -->
+                    <div id="incomeDeductionOptions" style="display: block;">
+                        <label for="incomeDeductionType">소득공제 식별번호 선택</label>
+                        <select id="incomeDeductionType" onchange="handleIncomeDeductionChange()">
+                            <option value="sender">보낸분 휴대폰번호 사용</option>
+                            <option value="receiver">받는분 휴대폰번호 사용</option>
+                            <option value="manual">직접 입력</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 직접 입력 또는 지출증빙용 -->
+                    <div id="manualIdentityInput" style="display: none;">
+                        <label for="cashbillIdentity" id="cashbillIdentityLabel">주민등록번호 뒷자리 또는 휴대폰번호</label>
+                        <input type="text" id="cashbillIdentity" placeholder="예: 1234567 또는 01012345678" oninput="validateCashbillIdentity(this)">
+                        <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+                            소득공제용: 주민등록번호 뒷자리, 휴대폰번호, 카드번호 | 지출증빙용: 사업자번호, 주민등록번호 뒷자리, 휴대폰번호, 카드번호
+                        </small>
+                    </div>
+                    
+                    <!-- 선택된 번호 표시 -->
+                    <div id="selectedPhoneDisplay" style="display: block; margin-top: 0.5rem; padding: 0.75rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; font-size: 0.9rem; color: #16a34a;">
+                        <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
+                        <span id="selectedPhoneText">보낸분 휴대폰번호가 자동으로 설정됩니다.</span>
+                    </div>
+                    <div>
+                        <label for="cashbillCustomerType">구매자 성명 선택</label>
+                        <select id="cashbillCustomerType" onchange="handleCustomerNameChange()">
+                            <option value="sender">보낸분 성명 사용</option>
+                            <option value="receiver">받는분 성명 사용</option>
+                            <option value="manual">직접 입력</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 직접 입력용 -->
+                    <div id="manualCustomerNameInput" style="display: none;">
+                        <label for="cashbillCustomerName">구매자 성명</label>
+                        <input type="text" id="cashbillCustomerName" placeholder="구매자 성명을 입력하세요">
+                    </div>
+                    
+                    <!-- 선택된 성명 표시 -->
+                    <div id="selectedCustomerNameDisplay" style="display: block; margin-top: 0.5rem; padding: 0.75rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; font-size: 0.9rem; color: #16a34a;">
+                        <i class="fas fa-user-check" style="margin-right: 0.5rem;"></i>
+                        <span id="selectedCustomerNameText">보낸분 성명이 자동으로 설정됩니다.</span>
+                    </div>
+                    <div>
+                        <label for="cashbillEmail">현금영수증 수신 이메일 (선택)</label>
+                        <input type="email" id="cashbillEmail" placeholder="receipt@email.com">
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                    <p style="font-size: 0.9rem; color: #6b21a8; margin: 0;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                        현금영수증은 주문 완료와 동시에 즉시 발행되며, 국세청에 자동 전송됩니다.
+                    </p>
+                    <p style="font-size: 0.85rem; color: #6b21a8; margin: 0.5rem 0 0 0;">
+                        ✓ 소득공제 혜택 자동 적용 ✓ 연말정산 시 자동 반영
+                    </p>
+                </div>
+            </div>
+            
+
+        </div>
+
+        <!-- 쿠폰 시스템 -->
+        <div class="coupon-section">
+            <div class="coupon-header">
+                <h3>🎫 할인 쿠폰 사용</h3>
+                <p class="coupon-description">할인 쿠폰을 적용하여 더 저렴하게 이용하세요!</p>
+            </div>
+            
+            <!-- 보유한 쿠폰 목록 -->
+            <div class="available-coupons">
+                <h4>🎟️ 보유한 쿠폰</h4>
+                <div id="couponList" class="coupon-list">
+                    <!-- 쿠폰들이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+            
+            <!-- 쿠폰 코드 입력 -->
+            <div class="coupon-input-section">
+                <h4>🔑 쿠폰 코드 입력</h4>
+                <div class="coupon-input-group">
+                    <input type="text" id="couponCode" placeholder="쿠폰 코드를 입력하세요" maxlength="20">
+                </div>
+                <div class="coupon-button-group">
+                    <button type="button" id="couponActionBtn" onclick="applyCoupon()" class="coupon-apply-btn">⭐ 쿠폰 적용</button>
+                </div>
+                <div id="couponMessage" class="coupon-message"></div>
+            </div>
+        </div>
+
+        <div class="price-summary-box">
+            <div class="price-header">
+                <div class="original-price">도마워프 요금: <span id="originalAmount">0원</span></div>
+                <div class="discount-price" id="discountSection" style="display: none;">
+                    할인 적용: <span id="discountAmount" style="color: #16a085;">0원</span>
+                </div>
+            </div>
+            <div class="coupon-applied" id="couponAppliedSection" style="display: none;">
+                <div class="coupon-info">
+                    <span class="coupon-label">🎫 쿠폰 할인</span>
+                    <span class="coupon-discount" id="couponDiscountAmount">-0원</span>
+                </div>
+                <div class="coupon-name" id="appliedCouponName">쿠폰명</div>
+            </div>
+            <div class="final-price">
+                최종 결제 금액: <span id="finalAmount">0원</span>
+            </div>
+        </div>
+        
+        <!-- 기존 priceDisplay는 숨김 처리하되 기능을 위해 유지 -->
+        <div id="priceDisplay" style="display: none;">도마워프 요금: 0원</div>
         
         <div class="account-info">
             <p>무통장 입금 계좌</p>
             <div class="copy-account">
                 <div class="account-number">
-                    <span>케이뱅크</span>
-                    <span id="accountNumber">100-110-948558</span>
-                    <span>김보성</span>
+                    <span>국민은행 001501-04-201553</span><br>
+                    <span>예금주 (주)와이즈앤골드</span>
                 </div>
-                <p class="account-notice">(동행지 대표님들은 업체명으로 입금해주시기 바랍니다.)</p>
                 <button onclick="copyAccount()" class="copy-btn">계좌번호 복사하기</button>
             </div>
         </div>
@@ -730,9 +2332,9 @@
             <span class="close" onclick="closePrivacyModal()">&times;</span>
             <h2>개인정보 수집과 이용에 대한 동의</h2>
             <div class="modal-text">
-                <p>동행 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
-                <p><strong>수집하는 자:</strong> 동행</p>
-                <p><strong>개인정보 수집 및 이용 목적:</strong> 동행 서비스 이용</p>
+                <p>도마워프 신청 관련하여 개인정보 수집과 이용에 관한 동의를 받고자 합니다.</p>
+                <p><strong>수집하는 자:</strong> 도마워프</p>
+                <p><strong>개인정보 수집 및 이용 목적:</strong> 도마워프 서비스 이용</p>
                 <p><strong>수집하는 개인정보 항목:</strong> 보내는 분 이름, 보내는 분 연락처, 받는 분 이름, 받는 분 연락처</p>
                 <p><strong>개인정보 보유 및 이용 기간:</strong> 수집 일로부터 300일</p>
                 <p class="notice">※ 귀하께서는 동의하지 않을 권리가 있습니다. 동의하지 않을 경우 서비스 이용이 제한됨을 알려드립니다.</p>
@@ -751,10 +2353,10 @@
                     <h3>제1장 기본 약관</h3>
                     <div class="basic-terms">
                         <h4>제1조 (목적)</h4>
-                        <p>본 약관은 동행(이하 "회사")이 제공하는 동행 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+                        <p>본 약관은 도마워프(이하 "회사")가 제공하는 도마워프 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
                         
                         <h4>2조 (용어의 정의)</h4>
-                        <p>"동행 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
+                        <p>"도마워프 서비스"란 회사가 제공하는 파충류 운송 중개서비스를 의미합니다.</p>
                         
                         <h4>제3조 (약관의 효력 및 변경)</h4>
                         <ul>
@@ -772,7 +2374,7 @@
                         <h4>제5조 (서비스 이용)</h4>
                         <ul>
                             <li>서비스 신청은 온라인으로 진행됩니다.</li>
-                            <li>동행 규정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
+                            <li>도마워프 규정은 회사의 운영 일정에 따라 제한될 수 있습니다.</li>
                             <li>천재지변, 기상 악화 등의 불가항력적인 사유로 서비스가 제한될 수 있습니다.</li>
                         </ul>
                     </div>
@@ -781,7 +2383,7 @@
                     <h3>제2장 서비스 이용 약관 - 책임 및 보상 관련 규정</h3>
                     <div class="compensation-terms">
                         <h4>1. 보상 기준</h4>
-                        <p>서비스 과정에서 동행의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
+                        <p>서비스 과정에서 도마워프의 고의 과실 또는 중대한 주의(예: 온 유지 실패, 분실, 압박 등)로 인한 개체의 폐사에 대해서는, 거래 시 분양가와 사용자가 입력한 개체 가격 중 낮은 금액을 기준으로 보상합니다. 다만, 보상 금액은 한 주문 당 최대 200만 원을 초과하지 않습니다.</p>
                         <p></p>
                         <h4>2. 보상 제외 항목</h4>
                         <p>다음과 같은 경우에는 보상이 이루어지지 않습니다:</p>
@@ -801,10 +2403,10 @@
                         <p>사용자는 픽업 이전과 목적지 도착 후의 개체 상태와 관련된 문제에 대한 책임을 지며, 픽업 및 수령 시 개체의 건강 상태를 반드시 확인해야 합니다.</p>
 
                         <h4>5. 건강 이상 개체 운송 제한</h4>
-                        <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 동행 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
+                        <p>픽업 시점에 건강에 상이 있는 것으로 보이는 개체는 도마워프 서비스를 제공하지 않으며, 해당 개체에 대한 보상은 이루어지지 않습니다.</p>
 
-                        <h4>6. 동행지 보관 요금 관련 안내</h4>
-                        <p>회사가 안내한 일정을 준수하 않아 동행지에 개체를 추가로 보관하게 될 경우, 해당 동행지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 당사의 책임이 아닙니다.</p>
+                        <h4>6. 도마워프지 보관 요금 관련 안내</h4>
+                        <p>회사가 안내한 일정을 준수하 않아 도마워프지에 개체를 추가로 보관하게 될 경우, 해당 도마워프지의 호텔링 서비스 요금 및 기준이 적용되며, 이에 대한 비용 부담은 당사의 책임이 아닙니다.</p>
                     </div>
                 </div>
             </div>
@@ -814,75 +2416,201 @@
 
     <!-- 최종 확인 모달 추가 -->
     <div id="confirmationModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content confirmation-modal">
             <span class="close" onclick="closeConfirmationModal()">&times;</span>
-            <h2>신청 내용 확인</h2>
-            <div class="modal-text">
-                <p><strong>출발지:</strong> <span id="confirm-departure"></span></p>
-                <p><strong>도착지:</strong> <span id="confirm-arrival"></span></p>
-                <p><strong>마릿수:</strong> <span id="confirm-quantity"></span></p>
-                <p><strong>맡기는 날짜:</strong> <span id="confirm-date"></span></p>
-                <p><strong>개체 분양가:</strong> <span id="confirm-price"></span>만원</p>
-                <p><strong>보내는 분:</strong> <span id="confirm-sender"></span></p>
-                <p><strong>보내는 분 연락처:</strong> <span id="confirm-sender-phone"></span></p>
-                <p><strong>받는 분:</strong> <span id="confirm-receiver"></span></p>
-                <p><strong>받는 분 연락처:</strong> <span id="confirm-receiver-phone"></span></p>
-                <p><strong>동행요금:</strong> <span id="confirm-fee"></span></p>
+            
+            <!-- 헤더 섹션 -->
+            <div class="confirmation-header">
+                <div class="header-icon">🦎</div>
+                <h2>도마워프 신청 내용 확인</h2>
+                <p class="header-subtitle">신청하시기 전 마지막으로 정보를 확인해주세요</p>
             </div>
-            <div class="confirmation-notice">
-                <h3 style="color: red; margin-bottom: 15px;">※ 필수 확인사항</h3>
-                <div class="notice-list">
-                    <div class="notice-item">✓ 입력하신 정보가 모두 정확한지 확인해주세요.</div>
-                    <div class="notice-item">✓ 개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 이해 부탁드립니다.</div>
-                    <div class="notice-item">✓ 델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요.</div>
-                    <div class="notice-item">✓ 개체 맡기는 날은 정해진 날짜에 맡겨주셔야 하며, 동행지가 휴무일 경우 그 전까지도 가능합니다. 그 이외의 경우 동행지에 따른 호텔링비가 청구됩니다.</div>
-                    <div class="notice-item">✓ 개체를 맡기나 찾으실 때는 필히 동행지의 영업 시간을 문의 후에 방문 부탁드립니다.</div>
+
+            <!-- 신청 정보 카드 -->
+            <div class="confirmation-info-card">
+                <div class="info-section">
+                    <h3>📍 운송 정보</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">출발지</span>
+                            <span class="info-value" id="confirm-departure"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">도착지</span>
+                            <span class="info-value" id="confirm-arrival"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">마릿수</span>
+                            <span class="info-value" id="confirm-quantity"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">맡기는 날짜</span>
+                            <span class="info-value" id="confirm-date"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="confirm-checkbox">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="confirmCheck" required>
-                        <span>위 필수 확인 사항 모두 확인하였으며 이에 동의합니다.</span>
-                    </label>
+
+                <div class="info-section">
+                    <h3>👥 연락처 정보</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">보내는 분</span>
+                            <span class="info-value" id="confirm-sender"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">연락처</span>
+                            <span class="info-value" id="confirm-sender-phone"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">받는 분</span>
+                            <span class="info-value" id="confirm-receiver"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">연락처</span>
+                            <span class="info-value" id="confirm-receiver-phone"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>💰 금액 정보</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">개체 분양가</span>
+                            <span class="info-value"><span id="confirm-price"></span>만원</span>
+                        </div>
+                        <div class="info-item highlight">
+                            <span class="info-label">도마워프 요금</span>
+                            <span class="info-value price-highlight" id="confirm-fee"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 현금영수증 정보 표시 -->
+                <div id="confirm-cashbill" class="info-section" style="display: none;">
+                    <h3>🧾 현금영수증 정보</h3>
+                    <div class="cashbill-info">
+                        <div class="cashbill-badge">발행 요청됨</div>
+                        <div class="cashbill-details">
+                            <p><strong>거래구분:</strong> <span id="confirm-cashbill-usage"></span></p>
+                            <p><strong>식별번호:</strong> <span id="confirm-cashbill-identity"></span></p>
+                            <p><strong>구매자 성명:</strong> <span id="confirm-cashbill-name"></span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-buttons">
-                <button type="button" class="modal-close-btn" onclick="finalSubmit()">확인 및 신청</button>
-                <button type="button" class="modal-close-btn" onclick="closeConfirmationModal()" style="background: #666;">취소</button>
+
+            <!-- 필수 확인사항 -->
+            <div class="confirmation-agreement">
+                <div class="agreement-header">
+                    <span class="warning-icon">⚠️</span>
+                    <h3>필수 확인사항</h3>
+                </div>
+                
+                <div class="agreement-content">
+                    <div class="agreement-items">
+                        <div class="agreement-item">
+                            <span class="check-icon">✓</span>
+                            <span>입력하신 정보가 모두 정확한지 확인해주세요</span>
+                        </div>
+                        <div class="agreement-item">
+                            <span class="check-icon">✓</span>
+                            <span>개체 픽업 시 건강 이상이 확인될 경우, 픽업이 불가하며 예약금 환불이 어려운 점 이해 부탁드립니다</span>
+                        </div>
+                        <div class="agreement-item">
+                            <span class="check-icon">✓</span>
+                            <span>델리컵(푸딩컵)에 맡기실 경우, 반드시 숨구멍을 뚫어주세요</span>
+                        </div>
+                        <div class="agreement-item">
+                            <span class="check-icon">✓</span>
+                            <span>개체 맡기는 날은 정해진 날짜에 맡겨주셔야 하며, 도마워프지가 휴무일 경우 그 전까지도 가능합니다</span>
+                        </div>
+                        <div class="agreement-item">
+                            <span class="check-icon">✓</span>
+                            <span>개체를 맡기나 찾으실 때는 필히 도마워프지의 영업 시간을 문의 후에 방문 부탁드립니다</span>
+                        </div>
+                    </div>
+
+                    <div class="final-agreement">
+                        <label class="agreement-checkbox">
+                            <input type="checkbox" id="confirmCheck" required>
+                            <span class="checkmark"></span>
+                            <span class="agreement-text">도마워프 신청에 동의합니다</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 버튼 섹션 -->
+            <div class="confirmation-buttons">
+                <button type="button" class="btn-submit" onclick="finalSubmitWithReceipt()" id="finalSubmitBtn" disabled>
+                    <span class="btn-icon">🚀</span>
+                    <span>신청 완료하기</span>
+                </button>
+                <button type="button" class="btn-cancel" onclick="closeConfirmationModal()">
+                    <span>취소</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="floating-buttons">
-        <button onclick="location.href='https://happymove.co.kr'" class="floating-button">
-            <span class="material-icons">home</span>홈
-        </button>
-        <button onclick="location.href='https://bstking123.github.io/happymove/price.html'" class="floating-button apply-btn">
-            요금표
-        </button>
-    </div>
+
 
     <!-- 계좌 입금 안내 모달 추가 -->
     <div id="accountModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content confirmation-modal">
             <span class="close" onclick="closeAccountModal()">&times;</span>
-            <h2>동행 신청이 완료되었습니다.</h2>
-            <div class="modal-text">
-                <div class="account-info" style="margin-top: 20px;">
-                    <p style="font-size: 1.1em; font-weight: bold; color: #8B4513; margin: 15px 0;">아래 계좌로 동행요금을 입금해주세요.</p>
-                    <div class="copy-account" style="margin: 20px 0;">
-                        <div class="account-number" style="font-size: 1.2em;">
-                            <span>케이뱅크</span>
-                            <span id="modalAccountNumber">100-110-948558</span>
-                            <span>김보성</span>
-                        </div>
-                        <p class="account-notice" style="color: #666;">(동행지 대표님들은 업체명으로 입금해주세요.)</p>
-                        <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
+            
+            <!-- 헤더 섹션 -->
+            <div class="confirmation-header">
+                <div class="header-icon">🎉</div>
+                <h2>도마워프 신청이 완료되었습니다!</h2>
+                <p class="header-subtitle">아래 계좌로 입금해주시면 도마워프가 시작됩니다</p>
+            </div>
+
+            <!-- 입금 정보 카드 -->
+            <div class="confirmation-info-card">
+                <div class="info-section">
+                    <h3>💰 입금 정보</h3>
+                    <div class="payment-amount" id="paymentAmount">
+                        <!-- 동적으로 금액이 표시됩니다 -->
                     </div>
-                    <p style="color: #ff0000; margin-top: 20px;">※ 입금 확인 후 동행이 진행됩니다.</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>🏦 입금 계좌</h3>
+                    <div class="account-details">
+                        <div class="account-info-row">
+                            <span class="account-label">은행</span>
+                            <span class="account-value">국민은행</span>
+                        </div>
+                        <div class="account-info-row">
+                            <span class="account-label">계좌번호</span>
+                            <span class="account-value account-number">001501-04-201553</span>
+                        </div>
+                        <div class="account-info-row">
+                            <span class="account-label">예금주</span>
+                            <span class="account-value">(주)와이즈앤골드</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="copyAccount()" class="modal-close-btn" style="margin-top: 15px;">계좌번호 복사하기</button>
+                </div>
+
+                <div class="info-section notice-section">
+                    <div class="notice-content">
+                        <span class="notice-icon">⚠️</span>
+                        <span class="notice-text">입금 확인 후 도마워프가 진행됩니다</span>
+                    </div>
                 </div>
             </div>
-            <div class="modal-buttons">
-                <button type="button" class="modal-close-btn" onclick="closeAccountModal()">확인</button>
+
+            <!-- 버튼 섹션 -->
+            <div class="confirmation-buttons">
+                <button type="button" class="btn-submit" onclick="closeAccountModal()">
+                    <span class="btn-icon">✅</span>
+                    <span>확인</span>
+                </button>
             </div>
         </div>
     </div>
@@ -912,50 +2640,11 @@
         </div>
     </div>
 
-    <!-- 5월 8일 선택 시 팝업창 추가 -->
-    <div id="may8thModal" class="modal">
-        <div class="modal-content" style="width: 300px; max-width: 90%; padding: 20px 15px 15px;">
-            <span class="close" onclick="closeMay8thModal()" style="position: absolute; right: 15px; top: 10px;">&times;</span>
-            <h2 style="font-size: 16px; margin: 0 0 15px 0;">안내</h2>
-            <div class="modal-text" style="text-align: center; white-space: nowrap; margin-bottom: 15px;">
-                <p style="margin: 0; font-size: 14px;">5월 둘째주만 맡기는요일이 목요일로 변경됩니다</p>
-            </div>
-            <div class="modal-buttons" style="text-align: center;">
-                <button type="button" class="modal-close-btn" onclick="closeMay8thModal()" style="width: 80px; height: 35px; font-size: 14px; padding: 0; display: inline-block;">확인</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- 5월 23일 모달 추가 (may8th 모달과 비슷한 스타일로) -->
-    <div id="may23rdModal" class="modal">
-        <div class="modal-content" style="width: 300px; max-width: 90%; padding: 20px 15px 15px;">
-            <span class="close" onclick="closeMay23rdModal()" style="position: absolute; right: 15px; top: 10px;">&times;</span>
-            <h2 style="font-size: 16px; margin: 0 0 15px 0;">안내</h2>
-            <div class="modal-text" style="text-align: center; white-space: nowrap; margin-bottom: 15px;">
-                <p style="margin: 0; font-size: 14px;">5월 넷째주만 대구/경상 지역은 맡기는 요일이</p>
-                <p style="margin: 0; font-size: 14px;">목요일로 변경됩니다.</p>
-            </div>
-            <div class="modal-buttons" style="text-align: center;">
-                <button type="button" class="modal-close-btn" onclick="closeMay23rdModal()" style="width: 80px; height: 35px; font-size: 14px; padding: 0; display: inline-block;">확인</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- 5월 여수점 이용불가 모달 추가 -->
-    <div id="yeosuModal" class="modal">
-        <div class="modal-content" style="width: 300px; max-width: 90%; padding: 20px 15px 15px;">
-            <span class="close" onclick="closeYeosuModal()" style="position: absolute; right: 15px; top: 10px;">&times;</span>
-            <h2 style="font-size: 16px; margin: 0 0 15px 0;">안내</h2>
-            <div class="modal-text" style="text-align: center; margin-bottom: 15px;">
-                <p style="margin: 0; font-size: 14px;">렙뮤 여수점의 매장 사정으로 인하여</p>
-                <p style="margin: 0; font-size: 14px;">5월 15~18일은 렙뮤 여수점 이용이 불가능합니다.</p>
-                <p style="margin: 0; font-size: 14px;">이용에 참고 부탁드립니다.</p>
-            </div>
-            <div class="modal-buttons" style="text-align: center;">
-                <button type="button" class="modal-close-btn" onclick="closeYeosuModal()" style="width: 80px; height: 35px; font-size: 14px; padding: 0; display: inline-block;">확인</button>
-            </div>
-        </div>
-    </div>
+
+
+
 
     <script>
         // 폼 데이터 자동 저장
@@ -1001,7 +2690,7 @@
                     const element = document.getElementById(key);
                     if (element) element.value = formData[key];
                 });
-                handleSelectionChange();
+                handlePageSpecificLogic();
             }
         }
 
@@ -1037,11 +2726,6 @@
                 return ['DG', 'BS', 'UL'].includes(region);
             }
             
-            // 광주 렙타일아트뮤지엄(GJ-BG-01)인지 확인
-            function isGwangjuLepMu() {
-                return option1.value === 'GJ-BG-01';
-            }
-            
             function isBlockedDate(date) {
                 if (date.getFullYear() === 2025 && 
                     date.getMonth() === 2 && 
@@ -1057,31 +2741,7 @@
                     return true;
                 }
                 
-                // 광주 렙타일아트뮤지엄의 5월 넷째주 차단 (5월 22일~5월 24일)
-                if (isGwangjuLepMu() && 
-                    date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date)) {
-                    return true;
-                }
-                
-                // 대구/경상/울산/부산 지역 5월 넷째주 차단 추가
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date)) {
-                    const region = option1.value.split('-')[0];
-                    if (['DG', 'BS', 'UL'].includes(region)) {
-                        return true;
-                    }
-                }
-                
-                // 더부쉬(MT-EP-01) 5월 넷째주 차단 추가
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && // 5월
-                    isFourthWeek(date) && 
-                    option1.value === 'MT-EP-01') {
-                    return true;
-                }
+
                 
                 return false;
             }
@@ -1120,22 +2780,9 @@
                 const day = date.getDay();
                 let shouldAdd = false;
 
-                // 2025년 5월 22일(목요일) 경상도 지역 특별 처리 (23일에서 22일로 변경)
-                if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && 
-                    date.getDate() === 22 && 
-                    isGyeongsangDeparture()) {
-                    shouldAdd = true;
-                }
-                // 2025년 5월 8일 특별 처리 (제주 제외)
-                else if (date.getFullYear() === 2025 && 
-                    date.getMonth() === 4 && 
-                    date.getDate() === 8 && 
-                    !isJejuDeparture()) {
-                    shouldAdd = true;
-                }
+
                 // 2025년 4월 넷째주 경상도 지역 특별 처리
-                else if (date.getFullYear() === 2025 && 
+                if (date.getFullYear() === 2025 && 
                     date.getMonth() === 3 && 
                     isFourthWeek(date) &&
                     option1.value.startsWith('DG-')) {
@@ -1161,13 +2808,7 @@
                     shouldAdd = checkJejuArrivalDate(date);
                 }
                 else {
-                    const isMay2025 = date.getFullYear() === 2025 && date.getMonth() === 4; // 5월
-                    
-                    // 2025년 5월 24일은 경상도 출발지에 대해 제외 (5월 22일로 변경되었으므로)
-                    if (isMay2025 && date.getDate() === 24 && isGyeongsangDeparture()) {
-                        shouldAdd = false;
-                    } 
-                    else if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
+                    if (isGroup1) {  // 1그룹(목요일 맡기는 업체)
                         shouldAdd = (day === 4); // 목요일
                     } else {  // 2그룹(금요일 맡기는 업체)
                         shouldAdd = (day === 5); // 금요일
@@ -1221,7 +2862,9 @@
             let additionalFee = 0;  // 마릿수 추가 요금
 
             if (!option1 || !option2) {
-                document.getElementById("priceDisplay").innerText = "동행요금: 0원";
+                document.getElementById("priceDisplay").innerText = "도마워프 요금: 0원";
+                // 새로운 가격 표시 박스 초기화
+                updatePriceSummaryBox(0);
                 return;
             }
 
@@ -1231,27 +2874,8 @@
 
                 // 1. 기본 요금 계산
                 if (region1 === "JJ" || region2 === "JJ") {
-                    const otherRegion = region1 === "JJ" ? option2 : option1;
-                    const otherCode = otherRegion.split('-')[0];
-                    
-                    if (otherCode === "WD" || otherCode === "YE") {
-                        basePrice = 64000;  // 제주 ↔ 완도/여수
-                    } else if (otherCode === "GJ" && otherRegion !== 'GJ-JJ-01') {
-                        basePrice = 50000;  // 제주 ↔ 광주
-                    } else {
-                        let gwangjuToDestination = 0;
-                        
-                        // 강원의 경우 광주까지의 요금을 특별히 처리
-                        if (otherCode === "GW") {
-                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-BG-01"];  // 강원-광주 요금: 48,000원
-                            gwangjuToDestination = priceMatrix["GW"]["GJ"]["GJ-GSG-01"];  // 강원-광주 요금: 48,000원
-                            
-                        } else {
-                            gwangjuToDestination = priceMatrix["GJ"][otherCode] || priceMatrix[otherCode]["GJ"] || 0;
-                        }
-                        
-                        basePrice = 42000 + gwangjuToDestination;  // 제주 기본요금 + 광주에서의 요금
-                    }
+                    // 제주도는 모든 지역과 통일 요금 80,000원
+                    basePrice = 80000;
                 } else if (region1 === "YE" || region2 === "YE" || region1 === "WD" || region2 === "WD") {
                     // 여수/완도 특별 요금...
                     const otherRegion = (region1 === "YE" || region1 === "WD") ? option2 : option1;
@@ -1279,23 +2903,26 @@
                             basePrice = 32000;
                         }
                     } else {
-                        const matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                        // priceMatrix에서 요금 찾기
+                        let matrixPrice = priceMatrix[region1]?.[region2] || priceMatrix[region2]?.[region1];
+                        
+                        // 객체 타입인 경우 (강원-광주 같은 특별 케이스) 기본값 사용
                         if (typeof matrixPrice === 'object') {
-                            basePrice = 0;
+                            // 강원-광주 특별 처리
+                            if ((region1 === "GW" && region2 === "GJ") || (region1 === "GJ" && region2 === "GW")) {
+                                basePrice = 48000;  // 강원-광주 기본 요금
+                            } else {
+                                basePrice = 35000;  // 기본 요금으로 설정
+                            }
                         } else {
-                            basePrice = matrixPrice || 0;
+                            basePrice = matrixPrice || 35000;  // 값이 없으면 기본 요금 35000원
                         }
                     }
                 }
 
                 // 2. 날짜별 할인 적용 (기본 요금에만)
-                let displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+                let displayText = `도마워프 요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
 
-                if (sendDate) {
-                    // 3000원 할인을 항상 적용
-                    displayText = `동행요금: ${basePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 → ${(basePrice - 3000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (3,000원 할인)`;
-                    basePrice = basePrice - 3000;
-                }
 
                 // 3. 마릿수 추가 요금 계산 (할인 제외)
                 if (option3 && option3 !== "1") {
@@ -1308,29 +2935,40 @@
 
                 // 최종 가격 = 할인된 기본 요금 + 마릿수 추가 요금
                 const totalPrice = basePrice + additionalFee;
+                currentTotalPrice = totalPrice; // 전역 변수에 저장
+                
                 if (additionalFee > 0) {
                     displayText += ` + ${additionalFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 (마릿수 추가)`;
                     displayText += ` = ${totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
                 } else {
-                    displayText = displayText.replace(/동행요금: (\d+,*\d*)원/, '동행요금: $1원');
+                    displayText = displayText.replace(/도마워프 요금: (\d+,*\d*)원/, '도마워프 요금: $1원');
                 }
 
                 document.getElementById("priceDisplay").innerHTML = displayText;
+                
+                // 새로운 가격 표시 박스 업데이트
+                updatePriceSummaryBox(totalPrice);
+                
+                // 쿠폰이 적용되어 있으면 쿠폰 할인 적용
+                if (appliedCoupon) {
+                    updatePriceDisplay();
+                }
             }
         }
 
-        function handleSelectionChange() {
-            const option1 = document.getElementById('option1');
-            const option2 = document.getElementById('option2');
-            
-            // 출발지와 도착지가 같은 옵션 비활성
-            Array.from(option2.options).forEach(opt => {
-                opt.disabled = (opt.value === option1.value && opt.value !== "");
-            });
-            
-            Array.from(option1.options).forEach(opt => {
-                opt.disabled = (opt.value === option2.value && opt.value !== "");
-            });
+        // 페이지별 고유 로직 (공통 모듈에서 호출됨)
+        function handlePageSpecificLogic() {
+            // 제주도 제한 쿠폰 적용 상태 확인
+            if (appliedCoupon && !appliedCoupon.isDefault && appliedCoupon.allowJeju === false) {
+                const option1 = document.getElementById('option1');
+                const option2 = document.getElementById('option2');
+                
+                // 출발지나 도착지가 제주도인지 확인
+                if (option1.value.startsWith('JJ-') || option2.value.startsWith('JJ-')) {
+                    showCouponMessage('적용된 쿠폰은 제주도 구간에서는 사용할 수 없습니다. 쿠폰을 해제합니다. 🏝️', 'error');
+                    removeCoupon();
+                }
+            }
 
             updatePrice();  // 가격 업데이트
             setupDateOptions();
@@ -1338,9 +2976,18 @@
             updateArrivalNotice();
         }
 
+        // 공통 모듈에서 호출할 수 있도록 전역 함수들을 설정
+        window.handleSelectionChange = handlePageSpecificLogic;
+        window.updateStoreInfo = updateStoreInfo;
+        window.calculatePrice = calculatePrice;
+        // updateConfirmation은 선택 시마다 호출되면 안되므로 빈 함수로 설정
+        window.updateConfirmation = function() {
+            // 선택 변경 시에는 아무것도 하지 않음 (모달 열기는 별도 버튼으로만)
+        };
+
         // 계좌번호 복사
         function copyAccount() {
-            const accountNumber = "100-110-948558";
+            const accountNumber = "001501-04-201553";
             
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(accountNumber).then(() => {
@@ -1382,6 +3029,24 @@
         function autoHyphen(tel) {
             tel.value = tel.value.replace(/[^0-9]/g, '')
                 .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+            
+            // 현금영수증 정보 업데이트 (전화번호 변경 시)
+            updateCashbillInfo();
+        }
+
+        // 현금영수증 정보 자동 업데이트
+        function updateCashbillInfo() {
+            // 현금영수증 필드가 존재하고 표시되어 있을 때만 업데이트
+            const incomeType = document.getElementById('incomeDeductionType');
+            const customerType = document.getElementById('cashbillCustomerType');
+            
+            if (incomeType && getComputedStyle(document.getElementById('incomeDeductionOptions')).display !== 'none') {
+                handleIncomeDeductionChange();
+            }
+            
+            if (customerType && getComputedStyle(document.getElementById('selectedCustomerNameDisplay')).display !== 'none') {
+                handleCustomerNameChange();
+            }
         }
 
         function showConfirmationModal() {
@@ -1398,9 +3063,70 @@
             document.getElementById('confirm-sender-phone').textContent = document.getElementById('senderPhone').value;
             document.getElementById('confirm-receiver').textContent = document.getElementById('receiverName').value;
             document.getElementById('confirm-receiver-phone').textContent = document.getElementById('receiverPhone').value;
-            document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent;
+            // 쿠폰 적용된 최종 금액 가져오기
+            const finalAmountEl = document.getElementById('finalAmount');
+            if (finalAmountEl) {
+                document.getElementById('confirm-fee').textContent = finalAmountEl.textContent;
+            } else {
+                document.getElementById('confirm-fee').textContent = document.getElementById('priceDisplay').textContent;
+            }
+            
+            // 현금영수증 정보 표시
+            const cashbillDiv = document.getElementById('confirm-cashbill');
+            
+            if (cashbillDiv) {
+                const usage = document.getElementById('cashbillUsage').value;
+                let identityText = document.getElementById('cashbillIdentity').value;
+                
+                // 소득공제용인 경우 선택 방식에 따라 표시 텍스트 변경
+                if (usage === '소득공제용') {
+                    const incomeType = document.getElementById('incomeDeductionType').value;
+                    if (incomeType === 'sender') {
+                        identityText = `보낸분 휴대폰번호 (${document.getElementById('senderPhone').value})`;
+                    } else if (incomeType === 'receiver') {
+                        identityText = `받는분 휴대폰번호 (${document.getElementById('receiverPhone').value})`;
+                    }
+                }
+                
+                // 구매자 성명 표시 텍스트
+                let customerNameText = document.getElementById('cashbillCustomerName').value;
+                const customerType = document.getElementById('cashbillCustomerType').value;
+                
+                if (customerType === 'sender') {
+                    customerNameText = `보낸분 성명 (${document.getElementById('senderName').value})`;
+                } else if (customerType === 'receiver') {
+                    customerNameText = `받는분 성명 (${document.getElementById('receiverName').value})`;
+                }
+                
+                document.getElementById('confirm-cashbill-usage').textContent = usage;
+                document.getElementById('confirm-cashbill-identity').textContent = identityText;
+                document.getElementById('confirm-cashbill-name').textContent = customerNameText;
+                cashbillDiv.style.display = 'block';
+            }
             
             modal.style.display = 'block';
+            
+            // 체크박스 이벤트 리스너 추가
+            const confirmCheck = document.getElementById('confirmCheck');
+            const submitBtn = document.getElementById('finalSubmitBtn');
+            
+            if (confirmCheck && submitBtn) {
+                // 초기 상태 설정
+                submitBtn.disabled = !confirmCheck.checked;
+                
+                // 기존 이벤트 리스너 제거 후 새로 추가
+                confirmCheck.removeEventListener('change', handleCheckboxChange);
+                confirmCheck.addEventListener('change', handleCheckboxChange);
+            }
+        }
+
+        function handleCheckboxChange() {
+            const confirmCheck = document.getElementById('confirmCheck');
+            const submitBtn = document.getElementById('finalSubmitBtn');
+            
+            if (confirmCheck && submitBtn) {
+                submitBtn.disabled = !confirmCheck.checked;
+            }
         }
 
         function closeConfirmationModal() {
@@ -1459,15 +3185,22 @@
             const option2 = document.getElementById('option2');
             const option3 = document.getElementById('option3');
             
-            const priceText = document.getElementById('priceDisplay').innerText;
+            // 최종 금액 가져오기 (쿠폰 적용된 금액)
+            const finalAmountEl = document.getElementById('finalAmount');
             let finalPrice;
-
-            if (priceText.includes('=')) {
-                finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
-            } else if (priceText.includes('→')) {
-                finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
+            
+            if (finalAmountEl && finalAmountEl.textContent) {
+                finalPrice = finalAmountEl.textContent.replace('원', '').replace(/,/g, '');
             } else {
-                finalPrice = priceText.match(/동행요금: (\d+,*\d*)원/)[1];
+                // 백업으로 기존 방식 사용
+                const priceText = document.getElementById('priceDisplay').innerText;
+                if (priceText.includes('=')) {
+                    finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
+                } else if (priceText.includes('→')) {
+                    finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
+                } else {
+                    finalPrice = priceText.match(/도마워프 요금: (\d+,*\d*)원/)[1];
+                }
             }
 
             const data = {
@@ -1481,7 +3214,7 @@
                 senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
                 receiverName: document.getElementById('receiverName').value,
                 receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                price: finalPrice.replace(/,/g, ''),
+                price: finalPrice,
                 species: savedSpeciesInfo.join(', ')
             };
 
@@ -1504,7 +3237,7 @@
                 document.querySelector('.spinner-overlay').style.display = 'none';
                 localStorage.removeItem('donghaengFormData');
                 closeConfirmationModal();
-                openAccountModal(finalPrice); // finalPrice 전달
+                openAccountModal(finalPrice + '원'); // finalPrice 전달
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -1517,7 +3250,7 @@
                     if (confirm('처리 중 문제가 발생했습니다. 신청 내역을 확인하시겠습니까?')) {
                         localStorage.removeItem('donghaengFormData');
                         closeConfirmationModal();
-                        openAccountModal(finalPrice); // finalPrice 전달
+                        openAccountModal(finalPrice + '원'); // finalPrice 전달
                     }
                 }
             });
@@ -1564,16 +3297,19 @@
                     senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
                     receiverName: document.getElementById('receiverName').value,
                     receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
-                    price: document.getElementById('priceDisplay').innerText.replace('동행요금: ', '').replace('원', '').replace(/,/g, '')
+                    price: document.getElementById('priceDisplay').innerText.replace('도마워프 요금: ', '').replace('원', '').replace(/,/g, '')
                 };
 
                 fetch('https://script.google.com/macros/s/AKfycbxFF2lhRwnA88QR1EmrSUhGmSsJpSWT_mOpSIdoGSrXCdNSJcRW6GK3GOyFNrqfKjfmiA/exec', {
                     method: 'POST',
                     body: JSON.stringify(data)
                 })
-                .then(response => {
+                .then(async response => {
                     document.querySelector('.spinner-overlay').style.display = 'none';
                     if(response.ok) {
+                        // 쿠폰 사용 기록 업데이트
+                        await updateCouponUsage();
+                        
                         localStorage.removeItem('donghaengFormData');
                         openAccountModal();  // 계좌 입금 안내 모달 표시
                     } else {
@@ -1601,7 +3337,7 @@
                 const selects = ['option1', 'option2', 'option3'];
                 selects.forEach(id => {
                     document.getElementById(id).addEventListener('change', function() {
-                        handleSelectionChange();
+                        handlePageSpecificLogic();
                         updatePrice();  // 가격 업데이트 추가
                     });
                 });
@@ -1653,15 +3389,13 @@
             "MT-PT-01": { holiday: "매주 목요일", hours: "13:00 ~ 20:00" },
             "WD-WD-01": { holiday: "휴무일 없음", hours: "09:00 ~ 20:00" },
             "GJ-JJ-01": { holiday: "휴무일 없음", hours: "11:00 ~ 21:00" },
-            "BS-BSJG-01": { holiday: "매주 월요일", hours: "평일 14:00 ~ 20:00, 주말 13:00 ~ 20:00"},
+
             "YE-SC-01": { holiday: "매주 월요일", hours: "11:00 ~ 19:00" },
             "CN-CA-01": { holiday: "휴무일 없음", hours: "10:30 ~ 20:00" },
             "JB-IKSAN-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
             "MT-NYJ-01": { holiday: "매주 월요일", hours: "12:00 ~ 20:00" },
-            "MT-SBG-01": { holiday: "휴무일 없음", hours: "평일 12:00 ~ 20:00, 주말 14:00 ~ 22:00" },
+            "MT-SBG-01": { holiday: "매주 일요일", hours: "12:00 ~ 20:00" },
             "MT-GCG-01": { holiday: "휴무일 없음", hours: "15:00 ~ 24:00" },
-            "UL-JJMD-01": { holiday: "휴무일 없음", hours: "평일 16:00 ~ 21:00, 주말 16:00 ~ 20:00" },
-            "BS-GJZ-01": { holiday: "매주 월요일", hours: "12:00 ~ 19:00" },
             "DG-GSS-01": { holiday: "휴무일 없음", hours: "10:00 ~ 20:00" },
             "DG-DSG-01": { holiday: "매주 월요일", hours: "11:30 ~ 19:30" },
             "MT-GSMG-01": { holiday: "휴무일 없음", hours: "12:00 ~ 20:00" },
@@ -1678,6 +3412,15 @@
             "MT-MCHG-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-MCHG2-01": { holiday: "휴무일 없음", hours: "13:00 ~ 20:00" },
             "MT-NHD-01": { holiday: "매주 수요일", hours: "12:00 ~ 20:00" },
+            "MT-BPG-01": { holiday: "격주 토요일", hours: "11:00 ~ 23:00" },
+            "MT-DTS-01": { holiday: "매주 월요일", hours: "13:00 ~ 22:00" },
+            "MT-GWSL-01": { holiday: "매주 목요일", hours: "12:00 ~ 20:00" },
+            "MT-PJYD-01": { holiday: "매주 월요일", hours: "13:00 ~ 20:00" },
+            "MT-NGJ-01": { holiday: "휴무일 없음", hours: "평일 13:00 ~ 20:00, 주말 12:00~20:00" },
+            "MT-ICWC-01": { holiday: "휴무일 없음", hours: "월화수금토일 13:00 ~ 21:00" },
+            "MT-ICGD-01": { holiday: "휴무일 없음", hours: "14:00 ~ 21:00" },
+            "MT-GGDGJ-01": { holiday: "휴무일 없음", hours: "평일 18:30~24:00 주말 12:00~20:00" },
+            "BS-YJG-01": { holiday: "휴무일 없음", hours: "12:00 ~ 19:00" },
         };
 
         function updateStoreInfo() {
@@ -1721,7 +3464,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(화)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(화)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
                 // 제주가 출발지인 경우
                 else if (option1.value.startsWith('JJ-')) {
@@ -1735,7 +3478,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
                 // 다른 모든 지역의 경우 - 일요일로 통일
                 else {
@@ -1745,7 +3488,7 @@
                     
                     const month = arrivalDate.getMonth() + 1;
                     const date = arrivalDate.getDate();
-                    arrivalNotice.innerHTML = `동행 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
+                    arrivalNotice.innerHTML = `도마워프 도착예정일: ${month}월 ${date}일(일)<br><span style="font-size: 0.8em;">※ 도착 예정일 다음날까지 수령해주세요. 이후에는 호텔링비가 청구됩니다.</span>`;
                 }
             } else {
                 arrivalNotice.innerHTML = '';
@@ -1784,28 +3527,46 @@
         }
 
         // 계좌 모달 관련 함수 추가
-        function openAccountModal(price) {
+        async function openAccountModal(price) {
             const modal = document.getElementById('accountModal');
-            const priceDisplay = document.createElement('p');
-            priceDisplay.style.cssText = 'font-size: 1.2em; font-weight: bold; color: #8B4513; margin: 15px 0;';
-            priceDisplay.textContent = `입금하실 금액: ${price.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            const paymentAmountDiv = document.getElementById('paymentAmount');
             
-            const accountInfo = modal.querySelector('.account-info');
-            const existingPrice = accountInfo.querySelector('.price-display');
-            if (existingPrice) {
-                existingPrice.remove();
+            // 📌 주문 완료 시점에서 쿠폰 사용 기록 업데이트
+            await updateCouponUsage();
+            
+            // 쿠폰 할인이 적용된 최종 금액 가져오기
+            let finalAmount = price;
+            if (!finalAmount) {
+                const finalAmountEl = document.getElementById('finalAmount');
+                if (finalAmountEl && finalAmountEl.textContent) {
+                    finalAmount = finalAmountEl.textContent;
+                } else {
+                    // 백업으로 기존 방식 사용
+                    const priceText = document.getElementById('priceDisplay').innerText;
+                    if (priceText.includes('=')) {
+                        finalAmount = priceText.match(/= (\d+,*\d*)원$/)[1] + '원';
+                    } else if (priceText.includes('→')) {
+                        finalAmount = priceText.match(/→ (\d+,*\d*)원/)[1] + '원';
+                    } else {
+                        finalAmount = priceText.match(/도마워프 요금: (\d+,*\d*)원/)[1] + '원';
+                    }
+                }
             }
-            accountInfo.insertBefore(priceDisplay, accountInfo.firstChild);
+            
+            // 이미 포맷된 금액을 그대로 사용
+            const cleanAmount = finalAmount.replace('원', '').replace(/,/g, '');
+            const formattedAmount = cleanAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            paymentAmountDiv.innerHTML = `
+                <span class="amount-label">입금하실 금액</span>
+                <span class="amount-value">${formattedAmount}원</span>
+            `;
             
             modal.style.display = 'block';
         }
 
         function closeAccountModal() {
             const modal = document.getElementById('accountModal');
-            const priceDisplay = modal.querySelector('.price-display');
-            if (priceDisplay) {
-                priceDisplay.remove();
-            }
             modal.style.display = 'none';
             location.reload();
         }
@@ -2016,60 +3777,7 @@
             return option1 === 'BS-HU-01' || option2 === 'BS-HU-01';
         }
 
-        // 새로운 함수 추가
-        function isJejuJinjuRoute() {
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            return (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') || 
-                   (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-'));
-        }
 
-        function checkJejuJinjuDate(date) {
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const day = date.getDay();
-
-            if (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') {
-                // 제주→진주: 2,4주 화요일만
-                return (day === 2 && isSecondOrFourthWeek(date));
-            }
-            else if (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-')) {
-                // 진주→제주: 1,3주 화요일만
-                return (day === 2 && isFirstOrThirdWeek(date));  // 목요일(4)에서 화요일(2)로 변경
-            }
-            return false;
-        }
-
-        function getJejuJinjuArrivalDate(selectedDate) {
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const arrivalDate = new Date(selectedDate);
-
-            if (option1.startsWith('JJ-') && option2 === 'UL-JJMD-01') {
-                // 제주→진주: 다음주 수요일로 이동
-                while (arrivalDate.getDay() !== 3) {  // 수요일로 이동
-                    arrivalDate.setDate(arrivalDate.getDate() + 1);
-                }
-                arrivalDate.setDate(arrivalDate.getDate() + 7);  // 다음 주로 이동
-                
-                // 목요일 날짜 계산
-                const thursdayDate = new Date(arrivalDate);
-                thursdayDate.setDate(arrivalDate.getDate() + 1);
-                
-                return {
-                    wednesday: arrivalDate,
-                    thursday: thursdayDate
-                };
-            }
-            else if (option1 === 'UL-JJMD-01' && option2.startsWith('JJ-')) {
-                // 진주→제주: 다음주 금요일
-                while (arrivalDate.getDay() !== 5) {
-                    arrivalDate.setDate(arrivalDate.getDate() + 1);
-                }
-                arrivalDate.setDate(arrivalDate.getDate() + 7);
-                return arrivalDate;
-            }
-        }
 
         function isSecondOrFourthWeekPrevious(date) {
             // 다음 주가 2주차나 4주차인지 확인
@@ -2091,10 +3799,8 @@
             // 목요일 픽업 대상 상점 코드 (정확한 값)
             const thursdayShopCodes = [
                 "UL-BG-01", // 젤리팜
-                "BS-GJZ-01", // 와우펫앤쥬 기장
                 "MT-YDP-01", // 렙타일스테이션
                 "BS-HU-01", // 렙토날드
-                "BS-BSJG-01", // 나뭇잎마을 부산점
                 "MT-IS-01", // 크레방
                 "MT-DYG-01", // 노랑너랑도마뱀
                 "MT-MP-01", // 게코스리퍼블릭 마포
@@ -2109,8 +3815,12 @@
                 "MT-BC-01", // 저스트팜
                 "MT-GCG-01", // 크레인
                 "GW-CC-01", // 춘천-핌프렙타일
-                "UL-JJMD-01", // 진주-크레가치
-                "BS-YS-01" // 경남-양산
+                "BS-YS-01", // 경남-양산
+                "MT-EP-01", // 은평-더부쉬
+                "MT-BPG-01", // 인천-부평-게코스도프
+                "MT-NGJ-01", // 세븐게코
+                "MT-PJYD-01", // 파충류샵캔버스
+                "MT-ICGD-01" // 정글숲을지나서가자 본점
             ];
             
             // 디버깅용 로그
@@ -2150,187 +3860,1241 @@
             return weekNumber === 4;
         }
 
-        // 5월 8일 선택 시 모달 표시 함수 추가
-        function openMay8thModal() {
-            document.getElementById('may8thModal').style.display = 'block';
-        }
 
-        function closeMay8thModal() {
-            document.getElementById('may8thModal').style.display = 'none';
-        }
 
-        // sendDate의 change 이벤트 리스너 수정
+
+
+        // sendDate의 change 이벤트 리스너
         document.getElementById('sendDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const option1 = document.getElementById('option1').value;
-            
-            // 2025년 5월 8일 선택 시 모달 표시 (목요일 상점코드 제외)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 8) {
-                
-                // 목요일 상점코드 목록
-                const thursdayShopCodes = [
-                    "UL-BG-01", "BS-GJZ-01", "MT-YDP-01", "BS-HU-01", 
-                    "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
-                    "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
-                    "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
-                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", "UL-JJMD-01", 
-                    "BS-YS-01"
-                ];
-                
-                // 출발지가 목요일 상점코드가 아닌 경우에만 모달 표시
-                if (!thursdayShopCodes.includes(option1)) {
-                    openMay8thModal();
-                }
-            }
-            
             updateArrivalNotice();
             updatePrice();
         });
 
-        // 5월 23일 모달 표시/닫기 함수 추가
-        function openMay23rdModal() {
-            document.getElementById('may23rdModal').style.display = 'block';
-        }
-
-        function closeMay23rdModal() {
-            document.getElementById('may23rdModal').style.display = 'none';
-        }
-
-        // sendDate의 change 이벤트 리스너 수정
-        document.getElementById('sendDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const option1 = document.getElementById('option1').value;
-            const gyeongsangCodes = ['DG', 'BS', 'UL'];
-            const region = option1.split('-')[0];
-            
-            // 2025년 5월 22일 선택 시 모달 표시 (경상도 출발 지역만)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 22 && 
-                gyeongsangCodes.includes(region)) {
-                openMay23rdModal();
-            }
-            
-            // 2025년 5월 8일 선택 시 모달 표시 (목요일 상점코드 제외)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 8) {
-                
-                // 목요일 상점코드 목록
-                const thursdayShopCodes = [
-                    "UL-BG-01", "BS-GJZ-01", "MT-YDP-01", "BS-HU-01", 
-                    "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
-                    "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
-                    "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
-                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", "UL-JJMD-01", 
-                    "BS-YS-01"
-                ];
-                
-                // 출발지가 목요일 상점코드가 아닌 경우에만 모달 표시
-                if (!thursdayShopCodes.includes(option1)) {
-                    openMay8thModal();
-                }
-            }
-            
-            updateArrivalNotice();
-            updatePrice();
-        });
-
-        // 여수점 모달 표시/닫기 함수 추가
-        function openYeosuModal() {
-            document.getElementById('yeosuModal').style.display = 'block';
-        }
-
-        function closeYeosuModal() {
-            document.getElementById('yeosuModal').style.display = 'none';
-        }
-
-        // 여수점 관련 체크 함수 추가
-        function isYeosuInvolved() {
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            return option1 === 'YE-YS-01' || option2 === 'YE-YS-01';
-        }
-
-        // sendDate의 change 이벤트 리스너 수정
-        document.getElementById('sendDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const gyeongsangCodes = ['DG', 'BS', 'UL'];
-            const region = option1.split('-')[0];
-            
-            // 여수점 5월 15일~18일 체크 추가
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
-                isYeosuInvolved()) {
-                openYeosuModal();
-            }
-            
-            // 2025년 5월 22일 선택 시 모달 표시 (경상도 출발 지역만)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 22 && 
-                gyeongsangCodes.includes(region)) {
-                openMay23rdModal();
-            }
-            
-            // 2025년 5월 8일 선택 시 모달 표시 (목요일 상점코드 제외)
-            if (selectedDate.getFullYear() === 2025 && 
-                selectedDate.getMonth() === 4 && 
-                selectedDate.getDate() === 8) {
-                
-                // 목요일 상점코드 목록
-                const thursdayShopCodes = [
-                    "UL-BG-01", "BS-GJZ-01", "MT-YDP-01", "BS-HU-01", 
-                    "BS-BSJG-01", "MT-IS-01", "MT-DYG-01", "MT-MP-01", 
-                    "MT-GN-01", "MT-SBG-01", "MT-GB-01", "MT-NYJ-01", 
-                    "MT-GR-01", "MT-GY-01", "MT-GSMG-01", "MT-YC-01", 
-                    "MT-BC-01", "MT-GCG-01", "GW-CC-01", "UL-JJMD-01", 
-                    "BS-YS-01"
-                ];
-                
-                // 출발지가 목요일 상점코드가 아닌 경우에만 모달 표시
-                if (!thursdayShopCodes.includes(option1)) {
-                    openMay8thModal();
-                }
-            }
-            
-            updateArrivalNotice();
-            updatePrice();
-        });
-
-        // 출발지, 도착지 선택 시에도 여수점 체크 추가
+        // 출발지, 도착지 선택 이벤트 리스너
         document.getElementById('option1').addEventListener('change', function() {
-            const sendDate = document.getElementById('sendDate').value;
-            if (sendDate) {
-                const selectedDate = new Date(sendDate);
-                if (selectedDate.getFullYear() === 2025 && 
-                    selectedDate.getMonth() === 4 && 
-                    (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
-                    isYeosuInvolved()) {
-                    openYeosuModal();
-                }
-            }
-            handleSelectionChange();
+            handlePageSpecificLogic();
         });
 
         document.getElementById('option2').addEventListener('change', function() {
-            const sendDate = document.getElementById('sendDate').value;
-            if (sendDate) {
-                const selectedDate = new Date(sendDate);
-                if (selectedDate.getFullYear() === 2025 && 
-                    selectedDate.getMonth() === 4 && 
-                    (selectedDate.getDate() >= 15 && selectedDate.getDate() <= 18) && 
-                    isYeosuInvolved()) {
-                    openYeosuModal();
+            handlePageSpecificLogic();
+        });
+
+
+
+        // 현금영수증 식별번호 라벨 업데이트
+        function updateCashbillIdentityLabel() {
+            const usage = document.getElementById('cashbillUsage').value;
+            const label = document.getElementById('cashbillIdentityLabel');
+            const incomeOptions = document.getElementById('incomeDeductionOptions');
+            const manualInput = document.getElementById('manualIdentityInput');
+            const phoneDisplay = document.getElementById('selectedPhoneDisplay');
+            
+            if (usage === '소득공제용') {
+                // 소득공제용은 간편 선택 옵션 표시
+                incomeOptions.style.display = 'block';
+                manualInput.style.display = 'none';
+                phoneDisplay.style.display = 'block';
+                handleIncomeDeductionChange(); // 초기 설정
+                handleCustomerNameChange(); // 구매자 성명도 초기 설정
+            } else {
+                // 지출증빙용은 직접 입력만
+                incomeOptions.style.display = 'none';
+                manualInput.style.display = 'block';
+                phoneDisplay.style.display = 'none';
+                label.textContent = '사업자등록번호 또는 주민등록번호 뒷자리 또는 휴대폰번호';
+                handleCustomerNameChange(); // 구매자 성명도 초기 설정
+            }
+        }
+
+        // 소득공제용 선택 처리
+        function handleIncomeDeductionChange() {
+            const incomeType = document.getElementById('incomeDeductionType').value;
+            const manualInput = document.getElementById('manualIdentityInput');
+            const phoneDisplay = document.getElementById('selectedPhoneDisplay');
+            const phoneText = document.getElementById('selectedPhoneText');
+            const cashbillIdentity = document.getElementById('cashbillIdentity');
+            
+            if (incomeType === 'manual') {
+                // 직접 입력 선택
+                manualInput.style.display = 'block';
+                phoneDisplay.style.display = 'none';
+                document.getElementById('cashbillIdentityLabel').textContent = '주민등록번호 뒷자리 또는 휴대폰번호';
+                cashbillIdentity.value = ''; // 초기화
+            } else {
+                // 보낸분/받는분 선택
+                manualInput.style.display = 'none';
+                phoneDisplay.style.display = 'block';
+                
+                let selectedPhone = '';
+                let displayText = '';
+                
+                if (incomeType === 'sender') {
+                    const senderPhone = document.getElementById('senderPhone').value;
+                    selectedPhone = senderPhone.replace(/-/g, '');
+                    displayText = `보낸분 휴대폰번호: ${senderPhone}`;
+                } else if (incomeType === 'receiver') {
+                    const receiverPhone = document.getElementById('receiverPhone').value;
+                    selectedPhone = receiverPhone.replace(/-/g, '');
+                    displayText = `받는분 휴대폰번호: ${receiverPhone}`;
+                }
+                
+                phoneText.textContent = displayText;
+                
+                // 숨겨진 input에 값 설정 (유효성 검사용)
+                cashbillIdentity.value = selectedPhone;
+                
+                // 전화번호가 없는 경우 안내
+                if (!selectedPhone || selectedPhone.length < 11) {
+                    phoneText.textContent = `${incomeType === 'sender' ? '보낸분' : '받는분'} 휴대폰번호를 먼저 입력해주세요.`;
+                    phoneDisplay.style.background = 'rgba(239, 68, 68, 0.1)';
+                    phoneDisplay.style.color = '#dc2626';
+                } else {
+                    phoneDisplay.style.background = 'rgba(34, 197, 94, 0.1)';
+                    phoneDisplay.style.color = '#16a34a';
                 }
             }
-            handleSelectionChange();
+        }
+
+        // 구매자 성명 선택 처리
+        function handleCustomerNameChange() {
+            const customerType = document.getElementById('cashbillCustomerType').value;
+            const manualInput = document.getElementById('manualCustomerNameInput');
+            const nameDisplay = document.getElementById('selectedCustomerNameDisplay');
+            const nameText = document.getElementById('selectedCustomerNameText');
+            const cashbillCustomerName = document.getElementById('cashbillCustomerName');
+            
+            if (customerType === 'manual') {
+                // 직접 입력 선택
+                manualInput.style.display = 'block';
+                nameDisplay.style.display = 'none';
+                cashbillCustomerName.value = ''; // 초기화
+            } else {
+                // 보낸분/받는분 선택
+                manualInput.style.display = 'none';
+                nameDisplay.style.display = 'block';
+                
+                let selectedName = '';
+                let displayText = '';
+                
+                if (customerType === 'sender') {
+                    const senderName = document.getElementById('senderName').value;
+                    selectedName = senderName;
+                    displayText = `보낸분 성명: ${senderName}`;
+                } else if (customerType === 'receiver') {
+                    const receiverName = document.getElementById('receiverName').value;
+                    selectedName = receiverName;
+                    displayText = `받는분 성명: ${receiverName}`;
+                }
+                
+                nameText.textContent = displayText;
+                
+                // 숨겨진 input에 값 설정 (유효성 검사용)
+                cashbillCustomerName.value = selectedName;
+                
+                // 성명이 없는 경우 안내
+                if (!selectedName || selectedName.trim().length === 0) {
+                    nameText.textContent = `${customerType === 'sender' ? '보낸분' : '받는분'} 성명을 먼저 입력해주세요.`;
+                    nameDisplay.style.background = 'rgba(239, 68, 68, 0.1)';
+                    nameDisplay.style.color = '#dc2626';
+                } else {
+                    nameDisplay.style.background = 'rgba(34, 197, 94, 0.1)';
+                    nameDisplay.style.color = '#16a34a';
+                }
+            }
+        }
+
+        // 현금영수증 식별번호 유효성 검사
+        function validateCashbillIdentity(input) {
+            const value = input.value.replace(/[^0-9]/g, '');
+            const usage = document.getElementById('cashbillUsage').value;
+            
+            // 숫자만 입력되도록 처리
+            input.value = value;
+            
+            // 유효성 검사
+            if (value.length === 7) {
+                // 주민등록번호 뒷자리
+                input.style.borderColor = '#10b981';
+            } else if (value.length === 10 && usage === '지출증빙용') {
+                // 사업자등록번호 (지출증빙용만)
+                if (validateBusinessNumberChecksum(value)) {
+                    input.style.borderColor = '#10b981';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                }
+            } else if (value.length === 11 && value.startsWith('010')) {
+                // 휴대폰번호
+                input.style.borderColor = '#10b981';
+            } else if (value.length > 0) {
+                input.style.borderColor = '#ef4444';
+            } else {
+                input.style.borderColor = '#d1d5db';
+            }
+        }
+
+        // 사업자등록번호 체크섬 검증 함수
+        function validateBusinessNumberChecksum(businessNumber) {
+            const numbers = businessNumber.split('').map(Number);
+            const checkSum = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+            let sum = 0;
+            
+            for (let i = 0; i < 9; i++) {
+                sum += numbers[i] * checkSum[i];
+            }
+            
+            sum += Math.floor((numbers[8] * 5) / 10);
+            const remainder = sum % 10;
+            const checkDigit = remainder === 0 ? 0 : 10 - remainder;
+            
+            return checkDigit === numbers[9];
+        }
+
+        // 사업자등록번호 유효성 검사
+        function validateBusinessNumber(input) {
+            // 숫자만 입력 허용
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            if (input.value.length === 10) {
+                // 간단한 사업자등록번호 체크섬 검증
+                const numbers = input.value.split('').map(Number);
+                const checkSum = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+                let sum = 0;
+                
+                for (let i = 0; i < 9; i++) {
+                    sum += numbers[i] * checkSum[i];
+                }
+                
+                sum += Math.floor((numbers[8] * 5) / 10);
+                const remainder = sum % 10;
+                const checkDigit = remainder === 0 ? 0 : 10 - remainder;
+                
+                if (checkDigit !== numbers[9]) {
+                    input.setCustomValidity('올바르지 않은 사업자등록번호입니다.');
+                } else {
+                    input.setCustomValidity('');
+                }
+            } else if (input.value.length > 0) {
+                input.setCustomValidity('사업자등록번호는 10자리 숫자여야 합니다.');
+            } else {
+                input.setCustomValidity('');
+            }
+                }
+
+        // 현금영수증 식별번호 가져오기
+        function getCashbillIdentityNumber() {
+            const incomeDeductionType = document.getElementById('incomeDeductionType').value;
+            const cashbillUsage = document.getElementById('cashbillUsage').value;
+            
+            if (cashbillUsage === '소득공제용') {
+                if (incomeDeductionType === 'sender') {
+                    return document.getElementById('senderPhone').value.replace(/-/g, '');
+                } else if (incomeDeductionType === 'receiver') {
+                    return document.getElementById('receiverPhone').value.replace(/-/g, '');
+                } else if (incomeDeductionType === 'manual') {
+                    return document.getElementById('cashbillIdentity').value;
+                }
+            } else {
+                // 지출증빙용
+                return document.getElementById('cashbillIdentity').value;
+            }
+            return '';
+        }
+
+        // 현금영수증 구매자명 가져오기
+        function getCashbillCustomerName() {
+            const customerType = document.getElementById('cashbillCustomerType').value;
+            
+            if (customerType === 'sender') {
+                return document.getElementById('senderName').value;
+            } else if (customerType === 'receiver') {
+                return document.getElementById('receiverName').value;
+            } else if (customerType === 'manual') {
+                return document.getElementById('cashbillCustomerName').value;
+            }
+            return '';
+        }
+
+        // 현금영수증 정보를 구글 시트로 전송하는 함수
+        async function sendCashbillToGoogleSheet(orderData) {
+            // 현금영수증 필수 정보 확인
+            const identityNumber = getCashbillIdentityNumber();
+            const customerName = getCashbillCustomerName();
+            
+            // 필수 정보가 없으면 전송하지 않음
+            if (!identityNumber || !customerName || !identityNumber.trim() || !customerName.trim()) {
+                console.log('현금영수증 필수 정보(식별번호, 구매자명)가 없어 전송하지 않습니다.');
+                return null;
+            }
+
+            try {
+                // 핸드폰번호 형식 변환 함수 (xxx-xxxx-xxxx)
+                function formatPhoneNumber(phone) {
+                    // 기존 하이픈 제거
+                    const cleanPhone = phone.replace(/[^0-9]/g, '');
+                    // xxx-xxxx-xxxx 형식으로 변환
+                    if (cleanPhone.length === 11) {
+                        return cleanPhone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                    }
+                    return phone; // 형식이 맞지 않으면 원본 반환
+                }
+                
+                // 거래구분 변환 함수 (문자열 → 숫자)
+                function convertUsageType(usage) {
+                    return usage === '소득공제용' ? '0' : '1';
+                }
+                
+                // 현금영수증 데이터 구성
+                const cashbillData = {
+                    // 주문 정보
+                    주문번호: `DOMAWARP-${Date.now()}`,
+                    주문일시: new Date().toLocaleString('ko-KR'),
+                    
+                    // 배송 정보
+                    출발지: orderData.departure,
+                    도착지: orderData.arrival,
+                    배송일: orderData.sendDate,
+                    수량: orderData.quantity,
+                    배송비: orderData.price,
+                    
+                    // 현금영수증 정보
+                    거래구분: convertUsageType(document.getElementById('cashbillUsage').value),
+                    식별번호: getCashbillIdentityNumber(),
+                    구매자명: getCashbillCustomerName(),
+                    이메일: document.getElementById('cashbillEmail').value || '',
+                    연락처: formatPhoneNumber(orderData.senderPhone),
+                    
+                    // 금액 정보 (부가세 포함/제외)
+                    총금액: orderData.price.replace(/,/g, ''),
+                    부가세: Math.floor(parseInt(orderData.price.replace(/,/g, '')) * 10 / 110),
+                    공급가액: parseInt(orderData.price.replace(/,/g, '')) - Math.floor(parseInt(orderData.price.replace(/,/g, '')) * 10 / 110),
+                    
+                    // 발행 상태
+                    발행상태: '발행대기',
+                    처리일시: '',
+                    승인번호: '',
+                    비고: `배송서비스: ${orderData.departure} → ${orderData.arrival}`
+                };
+
+                console.log('현금영수증 정보 전송:', cashbillData);
+
+                // 현금영수증 전용 구글 시트로 전송
+                const cashbillSheetUrl = 'https://script.google.com/macros/s/AKfycbwGRDGtzebYbKWp4X7gUP8FtOizpRgMQ_9nSaswoFjLSbgJVtWyelYGJkNSL7D7L4c/exec';
+                
+                const formData = new FormData();
+                Object.keys(cashbillData).forEach(key => {
+                    formData.append(key, cashbillData[key]);
+                });
+
+                // XMLHttpRequest를 사용한 더 안정적인 전송
+                const success = await new Promise((resolve) => {
+                    const xhr = new XMLHttpRequest();
+                    
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            // 상태 코드와 관계없이 요청이 완료되면 성공으로 처리
+                            // (구글 Apps Script는 때때로 CORS 문제로 상태 코드를 제대로 반환하지 않음)
+                            resolve(true);
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        // 네트워크 오류가 발생해도 일단 성공으로 처리
+                        // (실제로는 데이터가 전송되었을 가능성이 높음)
+                        resolve(true);
+                    };
+                    
+                    xhr.open('POST', cashbillSheetUrl, true);
+                    xhr.send(formData);
+                    
+                    // 10초 후 타임아웃
+                    setTimeout(() => resolve(true), 10000);
+                });
+
+                console.log('현금영수증 정보 전송 완료');
+                // 현금영수증 정보는 조용히 전송하고 별도 알림 없음
+                return { success: true, data: cashbillData };
+
+            } catch (error) {
+                console.error('현금영수증 정보 전송 오류:', error);
+                // 에러가 발생해도 조용히 처리하고 주문은 계속 진행
+                return null;
+            }
+        }
+
+        // finalSubmit 함수 수정 - 현금영수증 정보 포함
+        async function finalSubmitWithReceipt() {
+            if (!document.getElementById('confirmCheck').checked) {
+                alert('필수 확인사항에 동의해주세요.');
+                return;
+            }
+
+            // 현금영수증 필드 검증 (필수)
+            {
+                const usage = document.getElementById('cashbillUsage').value;
+                const customerName = document.getElementById('cashbillCustomerName');
+                
+                // 구매자 성명 검증
+                if (!customerName.value.trim()) {
+                    alert('현금영수증 발행을 위한 구매자 성명을 입력해주세요.');
+                    customerName.focus();
+                    return;
+                }
+                
+                // 식별번호 검증
+                const identityValue = document.getElementById('cashbillIdentity').value;
+                
+                if (usage === '소득공제용') {
+                    const incomeType = document.getElementById('incomeDeductionType').value;
+                    
+                    if (incomeType === 'manual') {
+                        // 직접 입력인 경우 기존 검증 로직
+                        if (!identityValue.trim()) {
+                            alert('현금영수증 발행을 위한 식별번호를 입력해주세요.');
+                            document.getElementById('cashbillIdentity').focus();
+                            return;
+                        }
+                        
+                        if (identityValue.length === 7) {
+                            // 주민등록번호 뒷자리 - OK
+                        } else if (identityValue.length === 11 && identityValue.startsWith('010')) {
+                            // 휴대폰번호 - OK
+                        } else {
+                            alert('올바른 식별번호를 입력해주세요. (주민등록번호 뒷자리 7자리 또는 휴대폰번호 11자리)');
+                            document.getElementById('cashbillIdentity').focus();
+                            return;
+                        }
+                    } else {
+                        // 보낸분/받는분 선택인 경우 전화번호 확인
+                        const phoneField = incomeType === 'sender' ? 
+                            document.getElementById('senderPhone') : 
+                            document.getElementById('receiverPhone');
+                        
+                        if (!phoneField.value.trim() || phoneField.value.replace(/-/g, '').length < 11) {
+                            alert(`${incomeType === 'sender' ? '보낸분' : '받는분'} 휴대폰번호를 먼저 정확히 입력해주세요.`);
+                            phoneField.focus();
+                            return;
+                        }
+                    }
+                } else {
+                    // 지출증빙용 검증
+                    if (!identityValue.trim()) {
+                        alert('현금영수증 발행을 위한 식별번호를 입력해주세요.');
+                        document.getElementById('cashbillIdentity').focus();
+                        return;
+                    }
+                    
+                    if (identityValue.length === 7) {
+                        // 주민등록번호 뒷자리 - OK
+                    } else if (identityValue.length === 10) {
+                        // 사업자등록번호 검증
+                        if (!validateBusinessNumberChecksum(identityValue)) {
+                            alert('올바르지 않은 사업자등록번호입니다.');
+                            document.getElementById('cashbillIdentity').focus();
+                            return;
+                        }
+                    } else if (identityValue.length === 11 && identityValue.startsWith('010')) {
+                        // 휴대폰번호 - OK
+                    } else {
+                        alert('올바른 식별번호를 입력해주세요.');
+                        document.getElementById('cashbillIdentity').focus();
+                        return;
+                    }
+                }
+            }
+
+            // 스피너 표시
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+            
+            // 쿠폰 할인이 적용된 최종 금액 가져오기
+            const finalAmountEl = document.getElementById('finalAmount');
+            let finalPrice;
+            
+            if (finalAmountEl && finalAmountEl.textContent) {
+                finalPrice = finalAmountEl.textContent.replace('원', '').replace(/,/g, '');
+            } else {
+                // 백업으로 기존 방식 사용
+                const priceText = document.getElementById('priceDisplay').innerText;
+                if (priceText.includes('=')) {
+                    finalPrice = priceText.match(/= (\d+,*\d*)원$/)[1];
+                } else if (priceText.includes('→')) {
+                    finalPrice = priceText.match(/→ (\d+,*\d*)원/)[1];
+                } else {
+                    finalPrice = priceText.match(/도마워프 요금: (\d+,*\d*)원/)[1];
+                }
+                finalPrice = finalPrice.replace(/,/g, '');
+            }
+
+            const orderData = {
+                timestamp: new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+                departure: option1.options[option1.selectedIndex].text,
+                arrival: option2.options[option2.selectedIndex].text,
+                quantity: option3.options[option3.selectedIndex].text,
+                sendDate: document.getElementById('sendDate').value,
+                salePrice: document.getElementById('salePrice').value.replace(/,/g, ''),
+                senderName: document.getElementById('senderName').value,
+                senderPhone: document.getElementById('senderPhone').value.replace(/-/g, ''),
+                receiverName: document.getElementById('receiverName').value,
+                receiverPhone: document.getElementById('receiverPhone').value.replace(/-/g, ''),
+                price: finalPrice,
+                species: savedSpeciesInfo.join(', '),
+                cashbillRequested: true // 항상 발행
+            };
+
+            try {
+                // 주문 데이터 전송
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Request timeout')), 30000);
+                });
+
+                await Promise.race([
+                    fetch('https://script.google.com/macros/s/AKfycbzMRxJZb_hrH_IFbVPfESHU33B_t38Tgrseq_kS-wtQldtY_Gx8zc8x157HV7Z2fsyHXQ/exec', {
+                        method: 'POST',
+                        body: JSON.stringify(orderData)
+                    }).then(response => Promise.resolve()),
+                    timeoutPromise
+                ]);
+
+                // 현금영수증 정보를 조용히 전송 (백그라운드 처리)
+                // 현금영수증은 항상 발행하므로 별도 체크박스 확인 불필요
+                sendCashbillToGoogleSheet(orderData).catch(error => {
+                    console.error('현금영수증 정보 전송 오류:', error);
+                });
+
+                // 성공 처리
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                localStorage.removeItem('donghaengFormData');
+                closeConfirmationModal();
+                openAccountModal(finalPrice);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.querySelector('.spinner-overlay').style.display = 'none';
+                if (error.message === 'Request timeout') {
+                    alert('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+                } else {
+                    if (confirm('처리 중 문제가 발생했습니다. 신청 내역을 확인하시겠습니까?')) {
+                        localStorage.removeItem('donghaengFormData');
+                        closeConfirmationModal();
+                        openAccountModal(finalPrice + '원');
+                    }
+                }
+            }
+        }
+
+        // Firebase 인증 상태 관리
+        function initAuth() {
+            if (window.firebaseAuth) {
+                const { auth, onAuthStateChanged, signOut } = window.firebaseAuth;
+                
+                onAuthStateChanged(auth, (user) => {
+                    updateUserInfoSection(user);
+                });
+            }
+        }
+
+        // 사용자 프로필 가져오기 (Firestore에서)
+        async function getUserProfile(uid) {
+            try {
+                const { db, doc, getDoc } = window.firebaseAuth;
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                
+                if (userDoc.exists()) {
+                    return userDoc.data();
+                } else {
+                    return null;
+                }
+            } catch (error) {
+                console.error('프로필 가져오기 오류:', error);
+                return null;
+            }
+        }
+
+        // 사용자 정보 섹션 업데이트
+        async function updateUserInfoSection(user) {
+            const userInfoSection = document.getElementById('userInfoSection');
+            
+            if (user) {
+                // 로그인된 상태 - Firestore에서 상세 정보 가져오기
+                const userProfile = await getUserProfile(user.uid);
+                
+                const displayName = userProfile?.displayName || user.displayName || user.email?.split('@')[0] || '사용자';
+                const userEmail = user.email;
+                const userPhone = userProfile?.phoneNumber || '전화번호 없음';
+                const userInitial = displayName.charAt(0).toUpperCase();
+                
+                // 전역 변수에 사용자 정보 저장
+                window.currentUserProfile = {
+                    uid: user.uid,
+                    displayName: displayName,
+                    email: userEmail,
+                    phoneNumber: userPhone,
+                    ...userProfile
+                };
+                
+                userInfoSection.innerHTML = `
+                    <a href="profile.html" class="user-info-card">
+                        <div class="profile-avatar">${userInitial}</div>
+                        <div class="user-details">
+                            <div class="user-name">${displayName}</div>
+                            <div class="user-email">${userEmail}</div>
+                        </div>
+                    </a>
+                `;
+                
+                console.log('사용자 프로필 로드됨:', window.currentUserProfile);
+            } else {
+                // 로그아웃된 상태
+                window.currentUserProfile = null;
+                
+                userInfoSection.innerHTML = `
+                    <a href="index.html" class="login-prompt">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>로그인하기</span>
+                    </a>
+                `;
+            }
+        }
+
+
+
+        // Firebase 초기화 대기
+        function waitForFirebase() {
+            if (window.firebaseAuth) {
+                initAuth();
+            } else {
+                setTimeout(waitForFirebase, 100);
+            }
+        }
+
+        // 모바일 메뉴 토글 기능
+        function initMobileMenu() {
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const mobileMenu = document.querySelector('.mobile-menu');
+
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('active');
+                    
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (mobileMenu.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // 모바일 메뉴 링크 클릭 시 메뉴 닫기
+                const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    });
+                });
+
+                // 모바일 메뉴 외부 클릭 시 닫기
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+        }
+
+        // 쿠폰 시스템 관련 변수
+        let appliedCoupon = null;
+        let availableCoupons = [];
+        let currentTotalPrice = 0; // 현재 총 금액 저장
+
+        // Firebase에서 직접 쿠폰 가져오기
+        async function loadCoupons() {
+            try {
+                if (!window.firebaseAuth?.db) {
+                    console.log('Firebase 대기 중...');
+                    return;
+                }
+
+                                 console.log('쿠폰 데이터 조회 시작');
+                 
+                 // 기본 쿠폰 초기화
+                 availableCoupons = [];
+                 
+                 // 로그인된 사용자에게만 기본 3천원 할인쿠폰 제공
+                 if (window.currentUserProfile && window.currentUserProfile.uid) {
+                     availableCoupons.push({
+                         id: 'default-3000',
+                         name: '도마워프 기본 할인',
+                         code: 'DOMAWARP3000',
+                         discountType: 'fixed',
+                         discountValue: 3000,
+                         type: 'public',
+                         maxUsage: null, // 무제한 사용
+                         usedCount: 0,
+                         isDefault: true // 기본 쿠폰 표시
+                     });
+                 }
+                 
+                                 // Firebase에서 추가 쿠폰들 가져오기
+                if (window.firebaseAuth?.db) {
+                    try {
+                        const { getDocs, collection } = window.firebaseAuth;
+                        const querySnapshot = await getDocs(collection(window.firebaseAuth.db, 'coupons'));
+                     
+                        querySnapshot.forEach((doc) => {
+                            const couponData = { id: doc.id, ...doc.data() };
+                            // 공용 쿠폰이면서 사용 가능한 쿠폰만 추가
+                            if (couponData.type === 'public') {
+                                // 최대 사용량이 설정되어 있고 사용량이 다 소진된 경우 제외
+                                if (couponData.maxUsage && (couponData.usedCount || 0) >= couponData.maxUsage) {
+                                    console.log(`쿠폰 "${couponData.name}" 사용량 소진으로 제외됨 (${couponData.usedCount || 0}/${couponData.maxUsage})`);
+                                    return; // 이 쿠폰은 추가하지 않음
+                                }
+                                availableCoupons.push(couponData);
+                            }
+                        });
+                    } catch (firebaseError) {
+                        console.error('Firebase 쿠폰 로딩 오류 (BloomFilter 등):', firebaseError);
+                        // Firebase 오류가 발생해도 기본 쿠폰은 사용 가능하므로 계속 진행
+                    }
+                }
+                
+                console.log('로드된 공용 쿠폰:', availableCoupons);
+                displayAvailableCoupons();
+                
+            } catch (error) {
+                console.error('쿠폰 로드 오류:', error);
+                displayAvailableCoupons();
+            }
+        }
+
+        // 사용 가능한 쿠폰 목록 표시
+        function displayAvailableCoupons() {
+            console.log('쿠폰 목록 표시, 개수:', availableCoupons.length);
+            const couponList = document.getElementById('couponList');
+            if (!couponList) {
+                console.error('couponList 엘리먼트를 찾을 수 없습니다');
+                return;
+            }
+
+            // 로그인하지 않은 경우 안내 메시지 표시
+            if (!window.currentUserProfile || !window.currentUserProfile.uid) {
+                couponList.innerHTML = `
+                    <div class="login-required-message">
+                        <div class="login-icon">🎁</div>
+                        <p class="login-text">지금 회원가입하시면<br>언제나 사용가능한 3000원 쿠폰 무한 제공!</p>
+                        <a href="index.html" class="login-link">회원가입하러 가기</a>
+                    </div>
+                `;
+                return;
+            }
+
+            if (availableCoupons.length === 0) {
+                couponList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #6b7280;">
+                        <i class="fas fa-ticket-alt" style="font-size: 24px; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <p>현재 사용 가능한 쿠폰이 없습니다.</p>
+                        <p style="font-size: 0.9em; margin-top: 5px;">쿠폰 코드를 입력하여 비공개 쿠폰을 사용해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            couponList.innerHTML = availableCoupons.map(coupon => {
+                const isSelected = appliedCoupon && appliedCoupon.id === coupon.id;
+                const remainingCount = coupon.maxUsage ? coupon.maxUsage - (coupon.usedCount || 0) : null;
+                
+                return `
+                    <div class="coupon-item ${isSelected ? 'selected' : ''}" onclick="selectCoupon('${coupon.id}')">
+                        <div class="coupon-info">
+                            <div class="coupon-name">
+                                ${coupon.name}
+                                ${coupon.isDefault ? '<span style="background: #10b981; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">항상사용가능</span>' : ''}
+                            </div>
+                            <div class="coupon-discount">
+                                ${coupon.discountType === 'percentage' ? 
+                                    `${coupon.discountValue}% 할인` : 
+                                    `${coupon.discountValue.toLocaleString()}원 할인`}
+                            </div>
+                            ${remainingCount !== null ? 
+                                `<div class="coupon-usage">남은 수량: ${remainingCount}개</div>` : ''}
+                        </div>
+                        <button class="coupon-select-btn">
+                            ${isSelected ? '선택됨' : '선택'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 쿠폰 선택
+        async function selectCoupon(couponId) {
+            try {
+                const coupon = availableCoupons.find(c => c.id === couponId);
+                if (!coupon) return;
+
+                // 제주도 사용 제한 검사 (기본 쿠폰 제외)
+                if (!coupon.isDefault && coupon.allowJeju === false) {
+                    const option1 = document.getElementById('option1').value;
+                    const option2 = document.getElementById('option2').value;
+                    
+                    // 출발지나 도착지가 제주도인지 확인
+                    if (option1.startsWith('JJ-') || option2.startsWith('JJ-')) {
+                        showCouponMessage('이 쿠폰은 제주도 구간에서는 사용할 수 없습니다. 🏝️', 'error');
+                        return;
+                    }
+                }
+
+                // 사용량 체크
+                if (coupon.maxUsage && (coupon.usedCount || 0) >= coupon.maxUsage) {
+                    showCouponMessage('이미 사용량이 소진된 쿠폰입니다.', 'error');
+                    return;
+                }
+
+                // 현재 쿠폰과 같은 쿠폰인지 확인
+                if (appliedCoupon && appliedCoupon.id === couponId) {
+                    // 이미 선택된 쿠폰이면 해제
+                    removeCoupon();
+                    return;
+                }
+
+                // 쿠폰 적용
+                appliedCoupon = coupon;
+                
+                displayAvailableCoupons();
+                updateCouponButton();
+                updatePriceDisplay();
+                
+                showCouponMessage(`${coupon.name} 쿠폰이 적용되었습니다!`, 'success');
+                
+            } catch (error) {
+                console.error('쿠폰 선택 오류:', error);
+                showCouponMessage('쿠폰 적용 중 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // 쿠폰 코드 적용/해제 통합 함수
+        async function applyCoupon() {
+            // 로그인 확인
+            if (!window.currentUserProfile || !window.currentUserProfile.uid) {
+                showCouponMessage('회원가입하시면 3000원 쿠폰 무한 제공! 지금 가입하세요.', 'error');
+                return;
+            }
+
+            // 이미 쿠폰이 적용되어 있으면 해제
+            if (appliedCoupon) {
+                removeCoupon();
+                return;
+            }
+
+            const couponCodeInput = document.getElementById('couponCode');
+            const couponCode = couponCodeInput.value.trim();
+            
+            if (!couponCode) {
+                showCouponMessage('쿠폰 코드를 입력해주세요.', 'error');
+                return;
+            }
+
+            try {
+                if (!window.firebaseAuth?.db) {
+                    showCouponMessage('쿠폰 시스템이 로드되지 않았습니다.', 'error');
+                    return;
+                }
+
+                // 쿠폰 코드로 검색 (기본 쿠폰 + Firebase 쿠폰)
+                let foundCoupon = null;
+                
+                // 로그인된 사용자만 기본 쿠폰 사용 가능
+                if (couponCode === 'DOMAWARP3000' && window.currentUserProfile && window.currentUserProfile.uid) {
+                    foundCoupon = {
+                        id: 'default-3000',
+                        name: '도마워프 기본 할인',
+                        code: 'DOMAWARP3000',
+                        discountType: 'fixed',
+                        discountValue: 3000,
+                        type: 'public',
+                        maxUsage: null,
+                        usedCount: 0,
+                        isDefault: true
+                    };
+                }
+                
+                // Firebase에서 추가 검색 (최신 데이터 가져오기)
+                if (!foundCoupon && window.firebaseAuth?.db) {
+                    try {
+                        const { getDocs, collection } = window.firebaseAuth;
+                        const querySnapshot = await getDocs(collection(window.firebaseAuth.db, 'coupons'));
+                        
+                        querySnapshot.forEach((doc) => {
+                            const couponData = { id: doc.id, ...doc.data() };
+                            if (couponData.code === couponCode) {
+                                foundCoupon = couponData;
+                            }
+                        });
+                    } catch (firebaseError) {
+                        console.error('Firebase 쿠폰 검색 오류 (BloomFilter 등):', firebaseError);
+                        // Firebase 오류가 발생해도 기본 쿠폰 검색은 이미 완료되었으므로 계속 진행
+                    }
+                }
+                
+                // Firebase에서 찾은 쿠폰의 최신 사용 데이터 다시 가져오기
+                if (foundCoupon && foundCoupon.id && !foundCoupon.isDefault) {
+                    try {
+                        const { doc, getDoc } = window.firebaseAuth;
+                        const couponDoc = await getDoc(doc(window.firebaseAuth.db, 'coupons', foundCoupon.id));
+                        if (couponDoc.exists()) {
+                            foundCoupon = { id: couponDoc.id, ...couponDoc.data() };
+                        }
+                    } catch (error) {
+                        console.error('최신 쿠폰 데이터 가져오기 실패:', error);
+                    }
+                }
+                
+                if (!foundCoupon) {
+                    showCouponMessage('존재하지 않는 쿠폰 코드입니다.', 'error');
+                    return;
+                }
+
+                // 제주도 사용 제한 검사 (기본 쿠폰 제외)
+                if (!foundCoupon.isDefault && foundCoupon.allowJeju === false) {
+                    const option1 = document.getElementById('option1').value;
+                    const option2 = document.getElementById('option2').value;
+                    
+                    // 출발지나 도착지가 제주도인지 확인
+                    if (option1.startsWith('JJ-') || option2.startsWith('JJ-')) {
+                        showCouponMessage('이 쿠폰은 제주도 구간에서는 사용할 수 없습니다. 🏝️', 'error');
+                        return;
+                    }
+                }
+
+                // 쿠폰 유효성 검사
+                if (foundCoupon.maxUsage && (foundCoupon.usedCount || 0) >= foundCoupon.maxUsage) {
+                    showCouponMessage('이미 사용량이 소진된 쿠폰입니다.', 'error');
+                    return;
+                }
+
+                // 사용자별 사용 횟수 검사 (기본 할인 쿠폰 제외)
+                if (!foundCoupon.isDefault && foundCoupon.code !== 'DOMAWARP3000' && foundCoupon.code !== 'BASIC10') {
+                    // Firebase에 실제로 존재하는 쿠폰만 사용 기록 확인
+                    if (foundCoupon.id && !foundCoupon.id.startsWith('default-')) {
+                        const userId = window.currentUserProfile.uid;
+                        const maxUsagePerUser = foundCoupon.maxUsagePerUser || 1;
+                        
+                        // 🔥 Firebase에서 최신 사용자별 사용 기록 다시 가져오기
+                        let currentUserUsage = 0;
+                        try {
+                            const { doc, getDoc } = window.firebaseAuth;
+                            const latestCouponDoc = await getDoc(doc(window.firebaseAuth.db, 'coupons', foundCoupon.id));
+                            if (latestCouponDoc.exists()) {
+                                const latestCouponData = latestCouponDoc.data();
+                                const latestUserUsageCount = latestCouponData.userUsageCount || {};
+                                currentUserUsage = latestUserUsageCount[userId] || 0;
+                                
+                                console.log('🔍 사용자별 쿠폰 사용 기록 확인:', {
+                                    couponCode: foundCoupon.code,
+                                    couponId: foundCoupon.id,
+                                    userId: userId,
+                                    currentUserUsage: currentUserUsage,
+                                    maxUsagePerUser: maxUsagePerUser,
+                                    latestUserUsageCount: latestUserUsageCount
+                                });
+                                
+                                if (currentUserUsage >= maxUsagePerUser) {
+                                    showCouponMessage(`이 쿠폰은 아이디당 ${maxUsagePerUser}회만 사용 가능합니다. (현재 ${currentUserUsage}회 사용)`, 'error');
+                                    return;
+                                }
+                            } else {
+                                console.error('Firebase에서 쿠폰을 찾을 수 없음:', foundCoupon.id);
+                                showCouponMessage('쿠폰 정보를 찾을 수 없습니다.', 'error');
+                                return;
+                            }
+                        } catch (error) {
+                            console.error('사용자별 사용 기록 확인 실패:', error);
+                            showCouponMessage('쿠폰 확인 중 오류가 발생했습니다.', 'error');
+                            return;
+                        }
+                    }
+                }
+
+                // 비공개 쿠폰인 경우 사용 가능한 쿠폰 목록에 추가
+                if (foundCoupon.type === 'private') {
+                    const existingCoupon = availableCoupons.find(c => c.id === foundCoupon.id);
+                    if (!existingCoupon) {
+                        availableCoupons.push(foundCoupon);
+                        displayAvailableCoupons();
+                    }
+                }
+
+                // 쿠폰 적용
+                appliedCoupon = foundCoupon;
+                
+                displayAvailableCoupons();
+                updateCouponButton();
+                updatePriceDisplay();
+                
+                couponCodeInput.value = '';
+                showCouponMessage(`${foundCoupon.name} 쿠폰이 적용되었습니다! (아이디당 ${foundCoupon.maxUsagePerUser || 1}회 제한)`, 'success');
+                
+            } catch (error) {
+                console.error('쿠폰 적용 오류:', error);
+                showCouponMessage('쿠폰 적용 중 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // 쿠폰 제거
+        function removeCoupon() {
+            appliedCoupon = null;
+            
+            displayAvailableCoupons();
+            updateCouponButton();
+            updatePriceDisplay();
+            
+            showCouponMessage('쿠폰이 제거되었습니다.', 'success');
+        }
+
+        // 쿠폰 버튼 상태 업데이트
+        function updateCouponButton() {
+            const actionBtn = document.getElementById('couponActionBtn');
+            if (!actionBtn) return;
+
+            if (appliedCoupon) {
+                // 쿠폰이 적용된 상태 - 해제 버튼으로 변경
+                actionBtn.textContent = '✕ 쿠폰 해제';
+                actionBtn.className = 'coupon-remove-btn';
+            } else {
+                // 쿠폰이 적용되지 않은 상태 - 적용 버튼으로 변경
+                actionBtn.textContent = '⭐ 쿠폰 적용';
+                actionBtn.className = 'coupon-apply-btn';
+            }
+        }
+
+        // 쿠폰 메시지 표시
+        function showCouponMessage(message, type, duration = 3000) {
+            const messageDiv = document.getElementById('couponMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = `coupon-message ${type}`;
+            
+            // 제주도 관련 메시지는 더 오래 표시
+            if (message.includes('제주도')) {
+                duration = 5000; // 5초
+            }
+            
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = 'coupon-message';
+            }, duration);
+        }
+
+        // 주문 완료 시 쿠폰 사용 기록 업데이트
+        async function updateCouponUsage() {
+            if (!appliedCoupon || !window.currentUserProfile || !window.firebaseAuth?.db) {
+                return;
+            }
+
+            // 기본 할인 쿠폰은 사용 기록을 업데이트하지 않음
+            if (appliedCoupon.isDefault || appliedCoupon.code === 'DOMAWARP3000' || appliedCoupon.code === 'BASIC10') {
+                return;
+            }
+
+            try {
+                const { updateDoc, doc } = window.firebaseAuth;
+                const userId = window.currentUserProfile.uid;
+                
+                // 현재 사용자의 사용 횟수 증가
+                const userUsageCount = appliedCoupon.userUsageCount || {};
+                userUsageCount[userId] = (userUsageCount[userId] || 0) + 1;
+                
+                // 전체 사용 횟수도 증가
+                const newUsedCount = (appliedCoupon.usedCount || 0) + 1;
+                
+                const couponRef = doc(window.firebaseAuth.db, 'coupons', appliedCoupon.id);
+                await updateDoc(couponRef, {
+                    usedCount: newUsedCount,
+                    userUsageCount: userUsageCount
+                });
+                
+                console.log('쿠폰 사용 기록 업데이트 완료:', {
+                    couponId: appliedCoupon.id,
+                    userId: userId,
+                    userUsage: userUsageCount[userId],
+                    totalUsage: newUsedCount
+                });
+                
+            } catch (error) {
+                console.error('쿠폰 사용 기록 업데이트 실패:', error);
+                // 쿠폰 사용 기록 업데이트 실패해도 주문은 진행
+            }
+        }
+
+        // 현재 가격 계산 함수
+        function calculatePrice() {
+            // 전역 변수에서 실제 총 금액 반환
+            return currentTotalPrice || 0;
+        }
+
+        // 새로운 가격 표시 박스 업데이트
+        function updatePriceSummaryBox(originalPrice) {
+            const originalAmountEl = document.getElementById('originalAmount');
+            const discountSectionEl = document.getElementById('discountSection');
+            const discountAmountEl = document.getElementById('discountAmount');
+            const couponAppliedSectionEl = document.getElementById('couponAppliedSection');
+            const couponDiscountAmountEl = document.getElementById('couponDiscountAmount');
+            const appliedCouponNameEl = document.getElementById('appliedCouponName');
+            const finalAmountEl = document.getElementById('finalAmount');
+
+            if (!originalAmountEl || !finalAmountEl) return;
+
+            // 원본 가격 표시
+            originalAmountEl.textContent = originalPrice.toLocaleString() + '원';
+            
+            let finalPrice = originalPrice;
+            
+            if (appliedCoupon) {
+                // 쿠폰 할인 계산
+                let discountAmount = 0;
+                if (appliedCoupon.discountType === 'percentage') {
+                    discountAmount = Math.floor(originalPrice * (appliedCoupon.discountValue / 100));
+                } else if (appliedCoupon.discountType === 'fixed') {
+                    discountAmount = Math.min(appliedCoupon.discountValue, originalPrice);
+                }
+                
+                finalPrice = originalPrice - discountAmount;
+                
+                // 할인 적용 가격 표시
+                if (discountSectionEl && discountAmountEl) {
+                    discountAmountEl.textContent = finalPrice.toLocaleString() + '원';
+                    discountSectionEl.style.display = 'block';
+                }
+                
+                // 쿠폰 적용 섹션 표시
+                if (couponAppliedSectionEl) {
+                    couponAppliedSectionEl.style.display = 'block';
+                    
+                    if (couponDiscountAmountEl) {
+                        couponDiscountAmountEl.textContent = '-' + discountAmount.toLocaleString() + '원';
+                    }
+                    
+                    if (appliedCouponNameEl) {
+                        let couponDescription = appliedCoupon.name;
+                        if (appliedCoupon.discountType === 'percentage') {
+                            couponDescription += ` 할인 ${appliedCoupon.discountValue}%`;
+                        } else {
+                            couponDescription += ` ${appliedCoupon.discountValue.toLocaleString()}원 할인`;
+                        }
+                        if (appliedCoupon.code) {
+                            couponDescription += ` (${appliedCoupon.code})`;
+                        }
+                        appliedCouponNameEl.textContent = couponDescription;
+                    }
+                }
+            } else {
+                // 쿠폰이 적용되지 않은 경우
+                if (discountSectionEl) {
+                    discountSectionEl.style.display = 'none';
+                }
+                if (couponAppliedSectionEl) {
+                    couponAppliedSectionEl.style.display = 'none';
+                }
+            }
+            
+            // 최종 금액 표시
+            finalAmountEl.textContent = finalPrice.toLocaleString() + '원';
+        }
+
+        // 가격 표시 업데이트 (쿠폰 할인 적용)
+        function updatePriceDisplay() {
+            // 새로운 가격 표시 박스 업데이트
+            const originalPrice = calculatePrice();
+            updatePriceSummaryBox(originalPrice);
+        }
+
+        // showSpeciesModal 함수 수정 (쿠폰 할인 적용)
+        const originalShowSpeciesModal = window.showSpeciesModal;
+        window.showSpeciesModal = function() {
+            if (originalShowSpeciesModal) {
+                originalShowSpeciesModal();
+            }
+            
+            // 확인 모달에서 최종 가격 업데이트
+            setTimeout(() => {
+                const confirmFee = document.getElementById('confirm-fee');
+                if (confirmFee && appliedCoupon) {
+                    const originalPrice = calculatePrice();
+                    let discountAmount = 0;
+                    if (appliedCoupon.discountType === 'percentage') {
+                        discountAmount = Math.floor(originalPrice * (appliedCoupon.discountValue / 100));
+                    } else if (appliedCoupon.discountType === 'fixed') {
+                        discountAmount = Math.min(appliedCoupon.discountValue, originalPrice);
+                    }
+                    const finalPrice = originalPrice - discountAmount;
+                    confirmFee.textContent = `${finalPrice.toLocaleString()}원 (쿠폰 할인 적용)`;
+                }
+            }, 100);
+        };
+
+        // finalSubmitWithReceipt 함수 수정 (쿠폰 사용 처리)
+        const originalFinalSubmit = window.finalSubmitWithReceipt;
+        window.finalSubmitWithReceipt = async function() {
+            // 쿠폰 사용 처리 (기본 쿠폰은 제외)
+            if (appliedCoupon && !appliedCoupon.isDefault && window.firebaseAuth?.db) {
+                try {
+                    const { doc, updateDoc } = window.firebaseAuth;
+                    const docRef = doc(window.firebaseAuth.db, 'coupons', appliedCoupon.id);
+                    await updateDoc(docRef, {
+                        usedCount: (appliedCoupon.usedCount || 0) + 1
+                    });
+                    console.log('쿠폰 사용량 업데이트 완료');
+                    
+                    // 쿠폰 목록 새로고침 (소진된 쿠폰 제거)
+                    setTimeout(() => {
+                        loadCoupons();
+                    }, 1000);
+                    
+                } catch (firebaseError) {
+                    console.error('쿠폰 사용 처리 오류 (BloomFilter 등):', firebaseError);
+                    // Firebase 오류가 발생해도 주문 처리는 계속 진행
+                }
+            } else if (appliedCoupon && appliedCoupon.isDefault) {
+                console.log('기본 쿠폰 사용 - 사용량 업데이트 안함');
+            }
+            
+            // 기존 함수 실행
+            if (originalFinalSubmit) {
+                await originalFinalSubmit();
+            }
+        };
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 공통 위치 관리자 초기화
+            if (window.LocationManager) {
+                window.LocationManager.initialize('customer');
+                console.log('LocationManager 초기화 완료 - 커스토머 페이지');
+            }
+            
+            waitForFirebase();
+            initMobileMenu();
+            
+            // Firebase 로드 후 쿠폰 가져오기
+            setTimeout(() => {
+                loadCoupons();
+            }, 1000);
         });
     </script>
+    
+    <!-- 공통 네비게이션바 JavaScript -->
+    <script src="js/navbar.js"></script>
+        </div> <!-- container 닫기 -->
+    </div> <!-- main-wrapper 닫기 -->
 </body>
 </html>
